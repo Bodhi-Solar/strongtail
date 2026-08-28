@@ -310,7 +310,7 @@ h1,h2,h3,h4,p{margin:0}
 .logo-slot--bodhi            { --strip-fix: 1.05 }   /* 23 -> 24 */
 .logo-slot--scanifly         { --strip-fix: .96 }    /* 24 -> 23 */
 .logo-slot--ja-solar         { --strip-fix: .75 }    /* 24 -> 18 */
-.logo-slot--damaris-solutions{ --strip-fix: 1.18 }   /* 17 -> 20 */
+.logo-slot--damaris-solutions{ --strip-fix: .80 }    /* 30 -> 24, stacked lockup */
 /* No step-down at the breakpoints on purpose. Shrinking the marks to hold one
    line is the thing DESIGN-SYSTEM section 9 rules out: "the strip wraps to two
    rows on tablet and three on mobile", and minimum legible height is about
