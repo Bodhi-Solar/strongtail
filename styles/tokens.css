@@ -1,0 +1,18 @@
+/* ---------------------------------------------------------------------------
+   Strong Tail Solar Alliance — design tokens
+   Single source of truth for colour, geometry, type and spacing.
+   Never re-derive a value from a screenshot. Change it here or nowhere.
+   --------------------------------------------------------------------------- */
+:root{
+  --blue:#00142D; --yellow:#FFD110; --yellow-h:#FFDA45; --salmon:#FF6F47;
+  --blue-1:#C0D1E7; --salmon-1:#FFC7B8; --yellow-1:#FFF0B2;
+  --ink:#00142D; --ink-soft:#4B637C; --accent-text:#C9481F;
+  --on-dark:#FFFFFF; --on-dark-soft:#A9BCCE;
+  --white:#FFFFFF; --tint:#F2F5F7; --cream:#FFFCF5;
+  --rule:rgba(0,20,45,.13); --rule-soft:rgba(0,20,45,.09);
+  --l1:rgba(0,20,45,.17); --l2:rgba(0,20,45,.13); --l3:rgba(0,20,45,.095); --l4:rgba(0,20,45,.068);
+  --cx:365px; --cy:-42px; --r0:235px; --skew:0.8;
+  --grain:0.20; --font:'Montserrat',Arial,sans-serif;
+  --gutter:48px; --maxw:1180px;
+  --s3:16px; --s4:24px; --s5:40px; --s6:64px; --s7:96px; --s8:120px;
+}
