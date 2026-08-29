@@ -328,3 +328,164 @@ h1,h2,h3,h4,p{margin:0}
    up to hold it on two. */
 .sec--close .h2{ margin-bottom: var(--s4); max-width: 800px }
 .close-sub{ max-width: 40em; margin: 0 auto var(--s5); text-align: center }
+/* ===========================================================================
+   Partner detail pages — components
+   Append verbatim to styles/site.css.
+
+   Adds only new selectors and modifiers. Nothing here overrides a selector the
+   landing page uses: the join form's .form is untouched, the partner form is
+   .form.form--partner. No new tokens are needed; every value below comes from
+   tokens.css.
+
+   Verified against the live styles/site.css: no selector here collides with
+   one the landing page uses. `.mini` appears there only inside a comment, and
+   `.cat` and `.ph` are scoped to `.card`, which is why the two below are
+   scoped to `.idtext` and `.tile`.
+
+   Spec: docs-internal/PARTNER-PAGES.md
+   Reference: docs-internal/reference/partner-page-mockup-v6.html
+   =========================================================================== */
+
+/* ---- type modifiers -------------------------------------------------------
+   Partner pages run a slightly smaller scale than the landing page, so the
+   partner name does not out-shout the offer line directly beneath it.        */
+.h1--name{font-size:clamp(30px,3.2vw,42px)}
+.h2--tight{font-size:clamp(22px,2.2vw,29px)}
+.h3--sm{font-size:18px}
+
+/* ---- a band the video can break out of ---------------------------------- */
+.sec--open{overflow:visible;isolation:auto;padding-top:76px}
+
+/* the wordmark is a link on partner pages, a div on index.html */
+.wm{text-decoration:none;color:var(--ink)}
+
+/* ---- identity band ------------------------------------------------------- */
+.ident{min-height:636px;display:flex;align-items:center;padding:0;margin-top:-82px}
+.ident .wrap{width:100%;padding-top:128px;padding-bottom:54px}
+
+.back{display:flex;width:max-content;align-items:center;gap:8px;font-size:13px;font-weight:600;
+  color:var(--ink-soft);text-decoration:none;margin:0 0 32px;letter-spacing:.01em}
+.back:hover{color:var(--accent-text)}
+
+.idrow{display:flex;align-items:center;gap:24px;margin:0 0 28px}
+.tile{flex:0 0 auto;width:96px;height:96px;border-radius:18px;background:var(--white);
+  border:1px solid rgba(0,20,45,.08);box-shadow:0 6px 20px rgba(0,20,45,.07);
+  display:flex;align-items:center;justify-content:center;padding:15px}
+.tile img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+/* a partner with no square logo yet gets type, never an invented mark. Same
+   approach as the dashed typographic placeholder in the landing page grid. */
+.tile .ph{font-size:13px;font-weight:700;letter-spacing:.04em;line-height:1.2;text-align:center;
+  color:#3E5468;text-transform:uppercase}
+.idtext h1{margin:0 0 12px}
+
+/* scoped to the identity band, so it cannot touch .card .cat on the landing grid */
+.idtext .cat{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#6E8093;border:1px solid rgba(0,20,45,.18);border-radius:999px;padding:7px 12px}
+
+.hero-offer{font-size:clamp(24px,2.7vw,34px);font-weight:600;line-height:1.2;letter-spacing:-.022em;
+  color:var(--ink);margin:0 0 32px;max-width:26ch}
+
+/* ---- the 9:16 partner video card ----------------------------------------
+   .vidwrap's negative margin is what stops the card floating: it anchors the
+   card to the gradient band's lower edge. Set margin-top to 0 to sit it flat
+   in the body instead. That is the only value that changes.                 */
+.vidwrap{max-width:262px;margin:-180px 0 var(--s6) auto}
+.vid{display:block;width:100%;aspect-ratio:9/16;border-radius:18px;overflow:hidden;position:relative;
+  background:linear-gradient(168deg,#D7E2EF 0%,#C4D3E5 46%,#CFC9D6 100%);
+  border:1px solid rgba(0,20,45,.10);box-shadow:0 16px 38px rgba(0,20,45,.16);
+  text-decoration:none;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.vid:hover,.vid:focus-visible{transform:translateY(-3px);box-shadow:0 22px 48px rgba(0,20,45,.22)}
+.vid:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.vid img,.vid video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vid .play{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.92);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,20,45,.20)}
+.vid .play::after{content:"";width:0;height:0;margin-left:4px;
+  border-left:17px solid var(--blue);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.vid .cap{display:block;position:absolute;left:0;right:0;bottom:0;padding:22px 16px 15px;
+  background:linear-gradient(to top,rgba(0,20,45,.78),rgba(0,20,45,0));color:var(--on-dark)}
+.vid .cap .who{display:block;font-size:14px;font-weight:600;line-height:1.3;margin:0 0 3px}
+.vid .cap .rol{display:block;font-size:11.5px;font-weight:500;line-height:1.35;margin:0;color:rgba(255,255,255,.82)}
+
+/* ---- body grid: transaction left, credibility right ---------------------- */
+.split{display:grid;grid-template-columns:minmax(0,1fr) 300px;column-gap:64px;row-gap:56px;
+  align-items:start}
+.col-a{grid-column:1;grid-row:1}
+.col-b{grid-column:1;grid-row:2}
+.rail{grid-column:2;grid-row:1 / span 2}
+/* .rail stays block layout on purpose. As a flex column it would collapse
+   .vidwrap, whose width comes from max-width plus margin-left:auto.        */
+
+/* ---- offer copy ---------------------------------------------------------- */
+.offer-body{font-size:17px;line-height:1.66;color:var(--ink-soft);max-width:62ch;margin:0 0 18px}
+.know{max-width:62ch;margin:var(--s5) 0 0}
+.know .h3,.know .h3--sm{margin:0 0 14px}
+.know ul{margin:0;padding-left:18px}
+.know li{font-size:15px;line-height:1.6;color:var(--ink-soft);margin:0 0 9px}
+
+/* ---- the rail's About block ---------------------------------------------- */
+.about .h3,.about .h3--sm{margin:0 0 14px}
+.about p{font-size:15px;line-height:1.62;color:var(--ink-soft);margin:0 0 18px}
+
+/* ---- the partner enrollment form ----------------------------------------
+   A modifier, not an override. A white card on a white ground is not a
+   surface, and the white inputs need something to be white against.        */
+.form--partner{background:var(--tint);border-color:rgba(0,20,45,.13);padding:30px;
+  max-width:680px;box-shadow:0 16px 38px rgba(0,20,45,.07)}
+.form .fh{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8494A3;
+  margin:0 0 22px;padding:0 0 16px;border-bottom:1px solid var(--rule-soft)}
+.form .note-sm{font-size:12.5px;line-height:1.55;color:#7A8B9B;margin:14px 0 0}
+/* site.css gives inputs #FBFCFD, which is near-white on a white card. On the
+   tint card they need the extra step to read as fields. */
+.form--partner .field input,.form--partner .field select{background:var(--white)}
+
+/* the one field that only exists on this partner's form */
+.partner-field{background:#FFFBEA;border:1px solid rgba(255,209,16,.55);border-radius:10px;
+  padding:14px;margin:0 0 16px}
+.partner-field .tag{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#8A5A00;margin:0 0 9px}
+
+/* ---- other Alliance offers strip ----------------------------------------- */
+.others .lbl{margin:0 0 var(--s5)}
+.mini-grid{display:flex;flex-wrap:wrap;gap:18px}
+.mini{flex:0 1 calc((100% - 54px)/4);background:var(--white);border:1px solid rgba(0,20,45,.10);
+  border-radius:14px;padding:20px;text-decoration:none;display:flex;flex-direction:column;
+  transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+.mini:hover,.mini:focus-visible{border-color:rgba(255,111,71,.90);transform:translateY(-3px);
+  box-shadow:0 12px 26px rgba(255,111,71,.14)}
+.mini:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+/* 40px slot, the same height as .card .slot on the landing grid, so the single
+   `logoHeight` each partner already carries works unchanged in both places.
+   Per-logo optical height via --lh. Never a shared pixel height. */
+.mini .mslot{height:40px;display:flex;align-items:center;margin:0 0 16px}
+.mini .mslot img{height:var(--lh);width:auto;display:block}
+.mini .mo{font-size:16px;font-weight:600;line-height:1.3;color:var(--ink);letter-spacing:-.01em;margin:0 0 14px}
+.mini .ml{font-size:13px;font-weight:600;color:var(--ink-soft);margin-top:auto}
+.mini:hover .ml,.mini:focus-visible .ml{color:var(--accent-text)}
+
+/* ---- responsive ---------------------------------------------------------- */
+@media (max-width:1080px){
+  .split{grid-template-columns:minmax(0,1fr) 262px;column-gap:48px}
+  .vidwrap{margin-top:-152px}
+}
+@media (max-width:1000px){
+  /* one column, and the rail lands between the two halves of the left column:
+     the offer, then the video and About, then the form. The video reads as a
+     break mid-scroll rather than a wall in front of the offer.              */
+  .split{display:flex;flex-direction:column;gap:var(--s6)}
+  .col-a{order:1} .rail{order:2} .col-b{order:3}
+  .vidwrap{margin:0;max-width:236px}
+  .rail{max-width:600px}
+  .mini{flex:0 1 calc((100% - 18px)/2)}
+  .about{margin-top:var(--s5)}
+}
+@media (max-width:760px){
+  .ident{min-height:0}
+  .ident .wrap{padding-top:114px;padding-bottom:44px}
+  .idrow{gap:18px}
+  .tile{width:80px;height:80px;border-radius:15px;padding:12px}
+  .mini{flex:0 1 100%}
+}
+@media (max-width:400px){
+  .idrow{flex-direction:column;align-items:flex-start;gap:16px}
+}
