@@ -502,3 +502,27 @@ h1,h2,h3,h4,p{margin:0}
   letter-spacing:.14em;text-transform:uppercase;color:#7B8C9C;text-align:center}
 .vid--stub{cursor:default}
 .vid--stub:hover{transform:none;box-shadow:0 16px 38px rgba(0,20,45,.16)}
+
+/* ---- clickable card surfaces --------------------------------------------
+   The offer card promised a click it did not deliver. `.card` already carries
+   cursor:pointer and position:relative, but the overlay that makes the whole
+   surface clickable was lost when css/pages.css was superseded by the design
+   kit's site.css, which never had one. DESIGN-SYSTEM section 8: "The whole card
+   is clickable and the cursor says so." This restores it, and makes the landing
+   grid behave like the partner pages, where .mini is a real anchor wrapping the
+   whole card.
+
+   Trade-off, taken deliberately: a stretched link makes the card's text awkward
+   to select. Giving the copy position:relative and a higher z-index would fix
+   that and put the text back above the overlay, which would stop clicks on the
+   offer line following the link and defeat the point. Full-card clickability is
+   what the design chose. Screen readers are unaffected: this is a pseudo-element,
+   so the accessible name and the single tab stop per card are unchanged.        */
+.card .tlink::after{content:"";position:absolute;inset:0;z-index:1}
+
+/* Webinar cards inherit cursor:pointer from .card but are NOT fully clickable,
+   and should not be: the whole-card promise is scoped to the offer card, and
+   every Register href is still "#", so an overlay would make each card one large
+   dead link. Stop the cursor lying instead. Revisit when the registration URLs
+   exist. */
+.card--edu{cursor:auto}
