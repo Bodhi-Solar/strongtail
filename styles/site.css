@@ -622,28 +622,31 @@ h1,h2,h3,h4,p{margin:0}
 }
 
 /* ===========================================================================
-   Thanks page — the arcade game aside
+   Thanks page — the arcade game band
 
    The only image on this site that is not a partner logo. It exists because
    the thanks page is the one post-conversion surface, permanently noindex,
    where a diversion costs nothing. See the amendment to hard rule 2 in
    docs-internal/CLAUDE.md: one screenshot, this page only, software we built.
 
+   It is its own band below the arrival band rather than a fourth item inside
+   it, so the change of register is carried by the section boundary. That is
+   why there is no longer a hairline rule: two devices doing one job.
+
    Nothing here is invented. The card's hairline, radius, lift and focus ring
-   are .mini's values, so the two behave identically; only the width and the
-   overflow clip are new.
+   are .mini's values, so the two behave identically; only the width cap and
+   the corner clip are new.
    =========================================================================== */
 
-/* A rule, not a heading, because the break here is a change of register rather
-   than a new section. Same hairline weight as the form's .fh underline. */
-.game-rule{
-  width:64px;height:0;margin:var(--s6) auto var(--s5);
-  border:0;border-top:1px solid var(--rule-soft);
-}
+/* Tint, not white. The card is white, and site.css already documents the same
+   reasoning for .form--partner: a white card on a white ground is not a
+   surface. Tint also separates the band from the white footer below it. */
+.sec--game{background:var(--tint);padding:var(--s7) 0}
 
-/* .close-sub already centres and caps the measure; this only softens the line
-   so the joke sits below the instructions rather than beside them in weight. */
-.game-lede{font-size:16px;margin-bottom:var(--s4)}
+.game-lede{
+  font-size:16px;max-width:46ch;margin:0 auto var(--s5);
+  text-align:center;
+}
 
 .game-card{
   display:block;max-width:520px;margin:0 auto;
@@ -658,17 +661,38 @@ h1,h2,h3,h4,p{margin:0}
 }
 .game-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 
-/* No image-rendering:pixelated. The file is 1085px wide and never displays
-   larger than 520, so it is always downscaled, and nearest-neighbour
-   downscaling drops whole rows of a pixel grid. The default filter is kinder. */
+/* The source is captured at the game's own internal resolution, 1024x640, so
+   every game pixel is one image pixel. Capturing at a larger viewport scales
+   the canvas by a non-integer factor, which doubles some pixel rows and not
+   others and reads as a vertical stretch in the type and the sun.
+
+   No image-rendering:pixelated either: the file only ever displays smaller
+   than native, and nearest-neighbour downscaling drops whole rows of a pixel
+   grid. The default filter is kinder. */
 .game-card img{display:block;width:100%;height:auto}
 
 .game-cta{
   display:block;padding:14px 18px;font-size:14px;font-weight:600;
-  color:var(--ink);letter-spacing:-.01em;
+  color:var(--ink);letter-spacing:-.01em;text-align:center;
   border-top:1px solid rgba(0,20,45,.08);
 }
 /* .arw is scoped to .tlink, so it carries no gap or slide of its own here. */
 .game-cta .arw{display:inline-block;margin-left:7px;transition:transform .18s ease}
 .game-card:hover .game-cta,.game-card:focus-visible .game-cta{color:var(--accent-text)}
 .game-card:hover .game-cta .arw,.game-card:focus-visible .game-cta .arw{transform:translateX(5px)}
+
+/* The sentence and its link now share one line, so this paragraph needs a
+   wider measure than .close-sub's 40em: it wants 826px and 40em caps it at 700,
+   which broke the link across two lines mid-phrase. 50em holds it on one line
+   down to about 940px of viewport, and it wraps naturally below that. Still
+   well inside the 1084px the band has to give. */
+.close-act{max-width:50em}
+
+/* A .tlink set inline mid-sentence rather than on its own line. Its own rule
+   pins 14px, which reads as a typo next to .lede's 17.5px, so the size and
+   weight come from the sentence and only the colour and underline mark it as
+   a link. It must stay wrappable: the label is long enough to overflow 320px
+   on one line. */
+.tlink--inline{font-size:inherit;font-weight:500;color:var(--accent-text);
+  border-bottom-color:rgba(190,67,25,.36)}
+.tlink--inline:hover{border-bottom-color:var(--accent-text)}
