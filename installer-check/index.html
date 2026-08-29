@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Installer check | Strong Tail Solar Alliance</title>
+<meta name="description" content="Alliance partners can check whether an installer is an approved OneEthos installer.">
+
+<!-- PERMANENT noindex, like /thanks/ and unlike index.html. This page is handed
+     to Alliance partners by URL and is linked from nowhere on the site, so a
+     crawler has nothing to follow here; the tag is what covers a URL that leaks
+     some other way. It is NOT the pre-launch tag. Do NOT delete this on launch
+     day. There is deliberately no robots.txt: a Disallow line would publish the
+     path at a fixed public location AND stop a crawler reading this tag, which
+     is what actually keeps the page out of results.
+
+     There is also deliberately no rel=canonical. Asserting a canonical URL to
+     index while asking not to be indexed is a mixed signal for no benefit. -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+
+<meta name="theme-color" content="#FFFCF5">
+
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="page page--check">
+
+  <!-- Asset paths are relative and in-site links are root-relative, the same
+       split the partner pages and /thanks/ use. This page sits one level down. -->
+  <header class="site-header" id="hdr"><div class="bar">
+    <a class="wm" href="/"><span class="wm-a">STRONG TAIL</span><span class="wm-b">SOLAR ALLIANCE</span></a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/#offers">Partner offers</a><a href="/#education">Education</a><a href="/#faq">FAQ</a>
+      <a class="btn btn--sm" href="/#join"><span class="cta-long">Become an Alliance installer</span><span class="cta-short">Join the Alliance</span></a>
+    </nav>
+  </div></header>
+
+  <main id="main">
+
+  <!-- One band on tint. No gradient: there are exactly three gradient moments
+       on this site and none of them is a utility page. Every control below is
+       an existing component, .form with .field children and the standard pill,
+       so this reads as the same site as the join form without a line of new
+       CSS describing what an input looks like. -->
+  <section class="sec sec--check g-tint" aria-labelledby="ic-h">
+    <div class="wrap">
+
+      <div class="intro">
+        <p class="eyebrow">Alliance partners</p>
+        <h1 class="h2" id="ic-h">Check an installer&rsquo;s status</h1>
+        <p class="lede">Type a company name or a website to see whether that installer is approved
+        to offer Climate First Bank loans through OneEthos, or where their application stands.
+        One installer at a time.</p>
+      </div>
+
+      <!-- The gate is a convenience, not the security boundary. The Worker
+           checks the passcode on every single request, so a reader who deletes
+           the hidden attribute in devtools gets a search box that answers 401. -->
+      <form class="form ic-form ic-gate" id="ic-gate" novalidate>
+        <div class="field">
+          <label for="ic-pass">Partner passcode</label>
+          <input type="password" id="ic-pass" name="passcode" autocomplete="off"
+                 autocapitalize="off" spellcheck="false" required>
+        </div>
+        <button class="btn btn--lg btn--wide" type="submit">Unlock</button>
+        <p class="form-note" id="ic-gate-note" role="status"></p>
+      </form>
+
+      <form class="form ic-form ic-search" id="ic-search" hidden novalidate>
+        <div class="field">
+          <label for="ic-q">Installer name or website</label>
+          <input type="text" id="ic-q" name="q" autocomplete="off"
+                 autocapitalize="off" spellcheck="false" required>
+        </div>
+        <button class="btn btn--lg btn--wide" type="submit">Check status</button>
+        <p class="form-note" id="ic-note" role="status"></p>
+      </form>
+
+      <div class="ic-results" id="ic-results" aria-live="polite"></div>
+
+      <!-- Every other page on this site works without JavaScript. This one
+           cannot: GitHub Pages is static, so there is no form action to post a
+           passcode and a query to. Say so rather than leaving a dead form. -->
+      <noscript>
+        <p class="small ic-msg">This check needs JavaScript, because the lookup runs
+        outside this page. Email <a class="tlink tlink--inline" href="mailto:hello@bodhi.solar">hello@bodhi.solar</a>
+        with the installer&rsquo;s name and we will check for you.</p>
+      </noscript>
+
+      <p class="small ic-foot">Results are for Alliance partner use only, and are not to be
+      shared with the installer or any third party. A result is a point in time and can change.
+      Questions go to <a class="tlink tlink--inline" href="mailto:hello@bodhi.solar">hello@bodhi.solar</a>.</p>
+
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="foot">
+    <div class="wrap"><div class="row">
+      <p class="op"><b>The Strong Tail Solar Alliance is operated by OneEthos, a technology
+      subsidiary of Climate First Corp.</b><br>
+      Alliance partner terms are set by each partner and may change. Nothing on this page is an
+      offer of credit.</p>
+      <nav class="links" aria-label="Footer">
+        <a href="/#offers">Partner offers</a><a href="/#education">Education</a>
+        <a href="/#faq">FAQ</a><a href="/#join">Join</a>
+        <a href="https://www.oneethos.com/privacy-policy" target="_blank" rel="noopener">Privacy</a>
+      </nav>
+    </div></div>
+  </footer>
+
+</div>
+
+<script src="../js/main.js"></script>
+<script src="../js/installer-check.js"></script>
+</body>
+</html>

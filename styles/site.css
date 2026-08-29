@@ -764,3 +764,66 @@ h1,h2,h3,h4,p{margin:0}
 .tlink--inline{font-size:inherit;font-weight:500;color:var(--accent-text);
   border-bottom-color:rgba(190,67,25,.36)}
 .tlink--inline:hover{border-bottom-color:var(--accent-text)}
+
+/* ===========================================================================
+   Installer check  (/installer-check/)
+
+   Almost nothing, on purpose. The page is built from components that already
+   exist: both forms are .form with .field children and .btn.btn--lg.btn--wide
+   submits, which is literally the join form's card, label, input, focus ring
+   and pill. That is the whole reason the page reads as this site, and it is
+   why there is no input, label or button rule below. If a rule here starts
+   describing what a text field looks like, the page has drifted off the kit
+   and the fix is to use .field, not to match it by eye.
+
+   What IS new is the result card, which has no equivalent anywhere: an offer
+   .card is clickable, has a hover lift and a full-card link overlay, none of
+   which belongs on a line of read-only fact. So .ic-card borrows .card's
+   surface values and none of its behaviour.
+   =========================================================================== */
+
+/* The band sits under a sticky 82px header, so it wants the shorter top the
+   thanks page uses rather than a full --s8. min-height keeps the footer off
+   the middle of the screen while the results list is still empty. */
+.sec--check{padding-top:var(--s7)}
+.page--check{min-height:100vh}
+.page--check main{flex:1 0 auto}
+
+/* A search box that ran to the full 1180px would read as a page-wide banner
+   rather than a control. This is the join form's own column width. */
+.ic-form{max-width:520px}
+.ic-form[hidden]{display:none}
+
+/* .form-note is --accent-text because it was built for errors. "Checking" is
+   not an error and should not arrive in the error colour. */
+.form-note--quiet{color:var(--ink-soft)}
+
+.ic-results{margin:var(--s4) 0 0;max-width:520px}
+.ic-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+
+/* .card's surface, written out rather than reused: .card carries
+   cursor:pointer, a hover lift and the ::after click overlay, and a result is
+   not a link. */
+.ic-card{background:var(--white);border:1px solid rgba(0,20,45,.10);border-radius:16px;
+  padding:16px 18px;border-left-width:3px;border-left-style:solid}
+.ic-name{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.ic-status{margin:3px 0 0}
+
+/* Tone is carried by the left rule, and only by the left rule, except for a
+   decline. Brand Salmon is 2.7:1 and is never text, which is why the "no" case
+   states in --accent-text and the rule stays Salmon. --ink-soft and
+   --accent-text are contrast-derived; see tokens.css before touching either. */
+.ic-card--yes{border-left-color:var(--yellow)}
+.ic-card--yes .ic-status{color:var(--ink)}
+.ic-card--warn{border-left-color:var(--salmon)}
+.ic-card--warn .ic-status{color:var(--ink)}
+.ic-card--no{border-left-color:var(--salmon)}
+.ic-card--no .ic-status{color:var(--accent-text);font-weight:600}
+.ic-card--info{border-left-color:var(--rule)}
+.ic-card--info .ic-status{color:var(--ink-soft)}
+
+/* "No record found", the truncation warning and the noscript line. */
+.ic-msg{margin:0;max-width:52ch}
+.ic-list+.ic-msg{margin-top:14px}
+
+.ic-foot{margin:var(--s5) 0 0;max-width:60ch}
