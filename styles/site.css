@@ -607,6 +607,19 @@ h1,h2,h3,h4,p{margin:0}
    them; two would tie and lose on source order, since HubSpot's <style> is
    injected into the body after our stylesheet in the head. */
 .form [data-hsfc-id=Renderer] .hsfc-FieldLabel{font-weight:600;letter-spacing:.04em}
+
+/* The partner form is the same embed on a tint card instead of a white one, so
+   the one HubSpot variable that has to differ is the field background:
+   --hsf-field-input__background-color is #FBFCFD, which is near-white and all
+   but invisible on --tint. site.css already solves this for the native inputs at
+   .form--partner .field input, but that selector cannot reach HubSpot's markup,
+   which uses its own class names.
+
+   This MUST sit after the .form{--hsf-*} block above, not in the .form--partner
+   rule further up the file. Both selectors are a single class, so specificity
+   ties and source order decides; declared up there it would simply lose. Same
+   equal-specificity trap that put the header CTA off-screen on phones. */
+.form--partner{--hsf-field-input__background-color: var(--white)}
 .form [data-hsfc-id=Renderer] .hsfc-TextInput:focus,
 .form [data-hsfc-id=Renderer] .hsfc-PhoneInput input:focus,
 .form [data-hsfc-id=Renderer] .hsfc-CheckboxInput:focus,

@@ -98,37 +98,45 @@
   }
 
 
-  /* The five partner pages still carry the native stand-in while their HubSpot
-     form IDs are outstanding. It has no action, so without this a submit would
-     reload the page with every field in the query string. Delete this block with
-     the last stand-in. */
-  var native = document.getElementById('join-form');
+  /* ------------------------------------------------------------ THANKS PAGE
+     The thank you page is reached from six different forms: the landing form and
+     one per partner. HubSpot redirects each of them to /thanks/, and the partner
+     ones carry ?p=<slug> so the page can name who is going to call.
 
-  if (native) {
-    native.addEventListener('submit', function (event) {
-      event.preventDefault();
+     Three things worth knowing about this.
 
-      // novalidate is set in the markup so the message below is reachable;
-      // ask the browser for its own validation explicitly.
-      if (!native.checkValidity()) {
-        native.reportValidity();
-        return;
+     The parameter is the only signal that survives. document.referrer does not:
+     the submission goes through HubSpot, so it arrives stripped or pointing at
+     their domain.
+
+     The slug is looked up in a roster-generated allow-list and the NAME comes
+     from that list, never from the URL. Printing ?p= would let anyone put words
+     in the mouth of a site carrying a bank's name, and textContent alone would
+     not stop that: the string would be inert, but it would still read as ours.
+
+     The page ships with "the Alliance" already in the HTML. This only ever
+     narrows it to a partner, so no JS, a stripped parameter, an unknown slug and
+     a failed fetch all land on wording that is correct rather than broken.     */
+  var who = document.getElementById('thanks-who');
+
+  if (who) {
+    try {
+      var slug = new URLSearchParams(window.location.search).get('p');
+      var source = document.getElementById('partner-names');
+
+      if (slug && source) {
+        var names = JSON.parse(source.textContent);
+
+        // hasOwnProperty, not a truthiness check: a slug of "constructor" or
+        // "toString" would otherwise resolve up the prototype chain.
+        if (Object.prototype.hasOwnProperty.call(names, slug)) {
+          who.textContent = names[slug];
+        }
       }
-
-      /* Appended, not written into #form-note: on a partner page that element
-         carries a real line about where the details go, and overwriting it would
-         throw away information the reader needs. */
-      var status = native.querySelector('.js-standin-status');
-
-      if (!status) {
-        status = document.createElement('p');
-        status.className = 'note-sm js-standin-status';
-        status.setAttribute('role', 'status');
-        native.appendChild(status);
-      }
-
-      status.textContent = 'This form is not connected yet. It will submit to HubSpot before launch.';
-    });
+    } catch (e) {
+      /* Leave the Alliance wording in place. Nothing here is worth breaking the
+         page over, and the default is already a correct sentence. */
+    }
   }
 
 }());

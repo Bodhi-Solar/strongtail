@@ -57,8 +57,12 @@
     <div class="grain" aria-hidden="true"></div>
     <div class="wrap">
       <h1 class="h2" id="thanks-h">Thanks. We&rsquo;ll be in touch shortly.</h1>
-      <p class="lede close-sub">Someone from the Alliance will contact you to set up the programs
-      you chose.</p>
+      <!-- "the Alliance" is the shipped default and the correct wording for the
+           landing form, which has no ?p=. js/main.js narrows it to a partner name
+           when the parameter matches the generated allow-list below. Never edit
+           between those markers by hand: bun tools/sync-partners.mjs writes them. -->
+      <p class="lede close-sub">A representative from <span id="thanks-who">the Alliance</span>
+      will contact you to get you set up.</p>
       <!-- The one thing that is not the same for everybody. Someone already
            approved only waits; someone who answered No or Not sure has the
            OneEthos application to complete, and a page that only promised a call
@@ -108,6 +112,9 @@
 
 </div>
 
+<!-- partners:thanks:start -->
+<script type="application/json" id="partner-names">{"ja-solar":"JA Solar","scanifly":"Scanifly","damaris-solutions":"Damaris Solutions","bodhi":"Bodhi","climate-first-bank":"Climate First Bank"}</script>
+<!-- partners:thanks:end -->
 <script src="../js/main.js"></script>
 </body>
 </html>
