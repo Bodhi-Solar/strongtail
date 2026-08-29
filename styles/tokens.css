@@ -6,7 +6,23 @@
 :root{
   --blue:#00142D; --yellow:#FFD110; --yellow-h:#FFDA45; --salmon:#FF6F47;
   --blue-1:#C0D1E7; --salmon-1:#FFC7B8; --yellow-1:#FFF0B2;
-  --ink:#00142D; --ink-soft:#4B637C; --accent-text:#C9481F;
+  /* --ink-soft and --accent-text are CONTRAST-DERIVED. Do not lighten them.
+     Both were measured against every ground they sit on and set to clear WCAG
+     AA for normal text, 4.5:1. Lightening either by a shade puts body copy,
+     eyebrows, card links and form labels back below the line.
+       --ink-soft     6.73 on white, 6.15 on tint, 5.31 on #E7E3E9
+       --accent-text  5.24 on white, 4.79 on tint
+     Brand Salmon #FF6F47 is 2.7:1 and is never used as text.
+
+     KNOWN EXCEPTION, measured 28 Aug 2026 and accepted by Scott. Those figures
+     are for white, tint and the LIGHTEST part of the gradient. The gradient
+     actually runs to #B3C7DF at the blue end and #F5C6BB through the salmon,
+     and on those --ink-soft lands 3.89 to 4.38, below AA. It affects text on
+     gradient bands only: the education eyebrow, lede, small and micro, the
+     hero micro line, and .back and .idtext .cat on partner pages. Everything on
+     white and tint passes comfortably. Darkening this token to #3B5167 would
+     clear every ground if that is ever revisited.                        */
+  --ink:#00142D; --ink-soft:#455E77; --accent-text:#BE4319;
   --on-dark:#FFFFFF; --on-dark-soft:#A9BCCE;
   --white:#FFFFFF; --tint:#F2F5F7; --cream:#FFFCF5;
   --rule:rgba(0,20,45,.13); --rule-soft:rgba(0,20,45,.09);
