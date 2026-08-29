@@ -529,3 +529,94 @@ h1,h2,h3,h4,p{margin:0}
    dead link. Stop the cursor lying instead. Revisit when the registration URLs
    exist. */
 .card--edu{cursor:auto}
+
+/* ---- HubSpot v4 forms ----------------------------------------------------
+   The embed is HubSpot's "developer" variant: it fetches server-rendered HTML
+   and injects it with innerHTML, so this is ordinary CSS reaching ordinary
+   markup. There is NO iframe, and no `css:''` option to pass, because there is
+   no hbspt.forms.create() call.
+
+   HubSpot's own stylesheet stays, but every rule in it reads
+       var(--hsf-X, var(--hsf-default-X))
+   so `--hsf-*` WITHOUT `default` is the intended override tier and always wins,
+   whatever the specificity. Setting `--hsf-default-*` instead does NOT work:
+   HubSpot pins those on the renderer element itself with a two-attribute
+   selector that outranks anything we set on an ancestor. That was the first
+   attempt and it silently did nothing.
+
+   Scoped under .form so it cannot reach anything else. Classes are hsfc-*, not
+   the older .hs-form / .hs-input. See BUILD-SPEC.md.                        */
+
+.form{
+  --hsf-global__font-family: var(--font);
+  --hsf-global__color: var(--ink);
+  --hsf-global__error-color: var(--accent-text);
+
+  /* inputs -> .field input */
+  --hsf-field-input__background-color: #FBFCFD;
+  --hsf-field-input__border-color: rgba(0,20,45,.16);
+  --hsf-field-input__border-style: solid;
+  --hsf-field-input__border-width: 1px;
+  --hsf-field-input__border-radius: 9px;
+  --hsf-field-input__color: var(--ink);
+  --hsf-field-input__font-family: var(--font);
+  --hsf-field-input__padding: 11px 12px;
+  /* 16px minimum, or iOS Safari zooms the page on focus */
+  --hsf-field-input__font-size: 16px;
+
+  /* labels -> .field label */
+  --hsf-field-label__color: var(--ink-soft);
+  --hsf-field-label__font-family: var(--font);
+  --hsf-field-label__font-size: 12px;
+  --hsf-field-label-requiredindicator__color: var(--accent-text);
+
+  /* tick boxes */
+  --hsf-field-checkbox__border-color: rgba(0,20,45,.16);
+  --hsf-field-radio__border-color: rgba(0,20,45,.16);
+
+  /* submit -> .btn.btn--lg.btn--wide. Padding carries the height, set to land
+     on the same 54px the pill has everywhere else. */
+  --hsf-button__background-color: var(--yellow);
+  --hsf-button--hover__background-color: var(--yellow-h);
+  --hsf-button--focus__background-color: var(--yellow-h);
+  --hsf-button__color: var(--blue);
+  --hsf-button--hover__color: var(--blue);
+  --hsf-button--focus__color: var(--blue);
+  --hsf-button__border-radius: 999px;
+  --hsf-button__border-width: 0;
+  --hsf-button__font-family: var(--font);
+  --hsf-button__font-size: 15.5px;
+  --hsf-button__font-weight: 700;
+  --hsf-button__padding: 17px 30px;
+  --hsf-button__width: 100%;
+
+  /* errors use --accent-text, never brand Salmon, which fails as text */
+  --hsf-erroralert__color: var(--accent-text);
+  --hsf-erroralert__font-family: var(--font);
+
+  /* our .form card already draws the surface, so the renderer adds nothing */
+  --hsf-background__background-color: transparent;
+  --hsf-background__border-width: 0;
+  --hsf-background__padding: 0;
+
+  --hsf-row__vertical-spacing: 14px;
+}
+
+/* Only what has no variable. HubSpot's own rules are
+   `[data-hsfc-id=Renderer] .hsfc-X`, so these need three classes to outrank
+   them; two would tie and lose on source order, since HubSpot's <style> is
+   injected into the body after our stylesheet in the head. */
+.form [data-hsfc-id=Renderer] .hsfc-FieldLabel{font-weight:600;letter-spacing:.04em}
+.form [data-hsfc-id=Renderer] .hsfc-TextInput:focus,
+.form [data-hsfc-id=Renderer] .hsfc-PhoneInput input:focus,
+.form [data-hsfc-id=Renderer] .hsfc-CheckboxInput:focus,
+.form [data-hsfc-id=Renderer] .hsfc-RadioInput:focus{outline:2px solid var(--ink);outline-offset:1px}
+/* the programs list, two columns like .checks */
+.form [data-hsfc-id=Renderer] .hsfc-CheckboxFieldGroup__Options{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+/* the approval answers, in a row like .radios */
+.form [data-hsfc-id=Renderer] .hsfc-RadioFieldGroup__Options{
+  display:flex;flex-wrap:wrap;gap:8px 18px}
+@media (max-width:600px){
+  .form [data-hsfc-id=Renderer] .hsfc-CheckboxFieldGroup__Options{grid-template-columns:1fr}
+}

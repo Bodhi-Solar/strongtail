@@ -291,91 +291,29 @@
         </div>
 
         <div>
-          <!-- HubSpot renders here once wired. js/main.js unhides this and hides
-               the native form below as soon as `hbspt` is on the page, so the
-               native form is the fallback rather than a duplicate.
+          <!-- HubSpot v4 developer embed. Renders server-side HTML into the div
+               below via innerHTML, NOT an iframe, which is why styles/site.css can
+               style it. The one iframe HubSpot inserts is a hidden POST target.
 
-               <script charset="utf-8" src="//js.hsforms.net/forms/embed/v2.js"></script>
-               <script>
-                 hbspt.forms.create({
-                   portalId: "PORTAL_ID",
-                   formId:   "FORM_ID",
-                   target:   "#hubspot-form"
-                 });
-               </script>
+               If the render endpoint fails, HubSpot's loader silently swaps the
+               class to hs-form-frame and loads the IFRAMED embed instead: the form
+               still works but every style we set disappears. js/main.js watches for
+               that and shouts. See BUILD-SPEC.md.
 
-               NON-NEGOTIABLE: the "Which Alliance programs interest you?"
-               checkbox values must be written to the contact record. They drive
-               partner attribution reporting, a contractual obligation to every
-               Alliance partner.
-
-               Submit redirects three ways off the radio answer. The branches
-               are specified in BUILD-SPEC.md. Test all three before launch.                    -->
-          <div id="hubspot-form" hidden></div>
-
-          <form class="form" id="join-form" novalidate>
-            <div class="f-row">
-              <div class="field"><label for="first-name">First name</label>
-                <input id="first-name" name="firstname" type="text" autocomplete="given-name" required></div>
-              <div class="field"><label for="last-name">Last name</label>
-                <input id="last-name" name="lastname" type="text" autocomplete="family-name" required></div>
-            </div>
-            <div class="field"><label for="company">Company</label>
-              <input id="company" name="company" type="text" autocomplete="organization" required></div>
-            <div class="f-row">
-              <div class="field"><label for="email">Email</label>
-                <input id="email" name="email" type="email" autocomplete="email" required></div>
-              <div class="field"><label for="phone">Phone (optional)</label>
-                <input id="phone" name="phone" type="tel" autocomplete="tel"></div>
-            </div>
-            <!-- Native <select> so iOS shows the wheel picker and Android its own
-                 list. A custom dropdown is a worse experience and an
-                 accessibility liability. -->
-            <div class="field"><label for="state">State</label>
-              <select id="state" name="state" autocomplete="address-level1" required>
-                <option value="">Select a state</option>
-                <option>Alabama</option><option>Alaska</option><option>Arizona</option>
-                <option>Arkansas</option><option>California</option><option>Colorado</option>
-                <option>Connecticut</option><option>Delaware</option><option>District of Columbia</option>
-                <option>Florida</option><option>Georgia</option><option>Hawaii</option>
-                <option>Idaho</option><option>Illinois</option><option>Indiana</option>
-                <option>Iowa</option><option>Kansas</option><option>Kentucky</option>
-                <option>Louisiana</option><option>Maine</option><option>Maryland</option>
-                <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option>
-                <option>Mississippi</option><option>Missouri</option><option>Montana</option>
-                <option>Nebraska</option><option>Nevada</option><option>New Hampshire</option>
-                <option>New Jersey</option><option>New Mexico</option><option>New York</option>
-                <option>North Carolina</option><option>North Dakota</option><option>Ohio</option>
-                <option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option>
-                <option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option>
-                <option>Tennessee</option><option>Texas</option><option>Utah</option>
-                <option>Vermont</option><option>Virginia</option><option>Washington</option>
-                <option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
-              </select></div>
-            <fieldset class="fieldset">
-              <legend>Are you already approved to offer Climate First Bank solar loans?</legend>
-              <div class="radios">
-                <label><input type="radio" name="cfb_approved" value="Yes" required> Yes</label>
-                <label><input type="radio" name="cfb_approved" value="No"> No</label>
-                <label><input type="radio" name="cfb_approved" value="Not sure"> Not sure</label>
-              </div>
-            </fieldset>
-            <fieldset class="fieldset">
-              <legend>Which Alliance programs interest you? (optional)</legend>
-              <!-- partners:checks:start -->
-            <div class="checks">
-              <label><input type="checkbox" name="programs" value="ja-solar"> JA Solar</label>
-              <label><input type="checkbox" name="programs" value="scanifly"> Scanifly</label>
-              <label><input type="checkbox" name="programs" value="damaris-solutions"> Damaris Solutions</label>
-              <label><input type="checkbox" name="programs" value="bodhi"> Bodhi</label>
-              <label><input type="checkbox" name="programs" value="climate-first-bank"> Climate First Bank</label>
-              <label><input type="checkbox" name="programs" value="other"> Other Alliance partners</label>
-            </div>
-              <!-- partners:checks:end -->
-            </fieldset>
-            <button class="btn btn--lg btn--wide" type="submit">Join the Alliance</button>
-            <p class="micro form-note" id="form-note" role="status"></p>
-          </form>
+               Portal 4854223, region na2. The loader carries a MutationObserver, so
+               one copy per page handles the div wherever it sits. -->
+          <script src="https://js-na2.hsforms.net/forms/embed/developer/4854223.js" defer></script>
+          <div class="form" id="hubspot-form">
+            <div class="hs-form-html"
+                 data-region="na2"
+                 data-portal-id="4854223"
+                 data-form-id="2f45a234-20a1-4bab-a791-832a94637dc7"></div>
+            <noscript>
+              <p class="note-sm">This form needs JavaScript. If it does not appear, email
+              <a class="tlink" href="mailto:hello@bodhi.solar">hello@bodhi.solar</a> and we will
+              set you up.</p>
+            </noscript>
+          </div>
         </div>
       </div>
     </div>
