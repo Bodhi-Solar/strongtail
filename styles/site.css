@@ -827,3 +827,8 @@ h1,h2,h3,h4,p{margin:0}
 .ic-list+.ic-msg{margin-top:14px}
 
 .ic-foot{margin:var(--s5) 0 0;max-width:60ch}
+/* The confidentiality line is one sentence in one place. It sits below the
+   forms but is on screen at the gate too, so it is read before the first search
+   and not only after the first answer. A second copy inside the gate card said
+   the same thing 100px away and read as a stutter. */
+.ic-foot b{color:var(--ink);font-weight:600}
