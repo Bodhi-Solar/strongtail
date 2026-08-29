@@ -30,5 +30,8 @@
   --cx:365px; --cy:-42px; --r0:235px; --skew:0.8;
   --grain:0.20; --font:'Montserrat',Arial,sans-serif;
   --gutter:48px; --maxw:1180px;
+  /* How far the thanks page's game card breaks up over the gradient band.
+     Overlap is this minus the intro line and its margin. */
+  --game-pull:200px;
   --s3:16px; --s4:24px; --s5:40px; --s6:64px; --s7:96px; --s8:120px;
 }

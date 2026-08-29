@@ -234,7 +234,7 @@ h1,h2,h3,h4,p{margin:0}
   .join-grid{grid-template-columns:1fr;gap:36px}
 }
 @media (max-width:900px){
-  :root{--gutter:26px;--s7:64px;--s8:80px;--cx:180px;--cy:-70px;--r0:150px}
+  :root{--gutter:26px;--s7:64px;--s8:80px;--cx:180px;--cy:-70px;--r0:150px;--game-pull:170px}
   .r1{--r:150px} .r2{--r:210px} .r3{--r:276px} .r4{--r:348px}
   .site-header .nav>a:not(.btn){display:none}
   .cta-long{display:none} .cta-short{display:inline}
@@ -647,18 +647,53 @@ h1,h2,h3,h4,p{margin:0}
    Scoped to this page: the landing page's closing band uses the same three
    classes and must not move. Padding stays on the token scale so it still
    shrinks at the mobile breakpoint, where --s7 drops to 64. */
-.close--thanks{min-height:0;padding:var(--s7) 0}
+.close--thanks{
+  min-height:0;align-items:flex-start;
+  padding-top:var(--s7);
+  /* Room for the card to break up into. See --game-pull below: it is that
+     distance plus the gap, so the intro line always clears the hero copy by
+     40px whatever either band's content does. */
+  padding-bottom:calc(var(--game-pull) + 40px);
+}
 
-/* Top padding one step below bottom, so the band's content sits high in it
-   rather than centred. */
 /* Tint, not white. The card is white, and site.css already documents the same
    reasoning for .form--partner: a white card on a white ground is not a
-   surface. Tint also separates the band from the white footer below it. */
-.sec--game{background:var(--tint);padding:var(--s6) 0 var(--s7)}
+   surface. Tint also separates the band from the white footer below it.
+
+   The band's content breaks up out of it and over the gradient above, the same
+   move .vidwrap makes on a partner page. Two things that needs. overflow must
+   go visible, because .sec clips by default and would cut the card off at the
+   boundary. And the band above has to reserve the room, which .close--thanks
+   does off the same variable, or the card lands on the hero's own copy.
+
+   --game-pull is the whole mechanism, so it is the only number to change. The
+   background does NOT move with it: the tint still starts at the section's own
+   top edge, which is exactly what makes the boundary cut across the card
+   instead of just sliding down. Overlap works out as --game-pull minus the
+   intro line and its 40px margin. */
+.sec--game{
+  background:var(--tint);
+  padding:0 0 var(--s7);
+  overflow:visible;isolation:auto;
+  /* flow-root, and it is load bearing. With padding-top 0 the wrap's negative
+     margin collapses THROUGH this box and drags the section, and therefore the
+     tint background, up with it: the boundary just slides and nothing overlaps.
+     A BFC stops the margins adjoining, so the background stays put and only the
+     content escapes. flow-root rather than overflow, which would clip. */
+  display:flow-root;
+}
+.sec--game .wrap{margin-top:calc(-1 * var(--game-pull))}
 
 .game-lede{
   font-size:16px;max-width:54ch;margin:0 auto var(--s5);
   text-align:center;
+  /* --ink, not --ink-soft. Breaking the band up moved this line off the tint
+     and onto the gradient, where --ink-soft measures 3.55:1 against the painted
+     background and fails AA: it sits lower in the band than the hero copy does,
+     so it lands on the most saturated part rather than the 3.89-4.38 range
+     tokens.css documents as the accepted exception. --ink measures 9.74:1 in
+     the same place. Measured, not estimated. */
+  color:var(--ink);
 }
 
 .game-card{
