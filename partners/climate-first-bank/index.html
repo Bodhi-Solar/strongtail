@@ -110,7 +110,13 @@
           <!-- The qualifier is the partner's own value statement, the same one
                the landing card carries. publicDescription is Offer Form field
                10, the exact text the Alliance may publish, verbatim. -->
+          <!-- publicDescription is the fuller, approved statement of the offer, so
+               where it exists it replaces the qualifier rather than following it:
+               the two overlap heavily and the card already carries the qualifier.
+               A partner without one still shows their qualifier here. -->
+          
           <p class="offer-body">Give homeowners the benefits of solar ownership and low monthly payments.</p>
+          
           
 
           
@@ -118,6 +124,12 @@
 
         <!-- right: the partner in their own words, then who they are -->
         <aside class="rail" aria-labelledby="about-partner">
+          
+
+          <!-- No file yet, but the speaker is named: the labelled placeholder
+               card from the approved mockup. It is a div, not a link, so it adds
+               no dead click target and no tab stop. A partner with no speaker
+               named gets no video block at all. -->
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About Climate First Bank</p>

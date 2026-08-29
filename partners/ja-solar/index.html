@@ -110,7 +110,15 @@
           <!-- The qualifier is the partner's own value statement, the same one
                the landing card carries. publicDescription is Offer Form field
                10, the exact text the Alliance may publish, verbatim. -->
-          <p class="offer-body">Tier 1, high-performance modules with competitive pricing and a dependable supply chain.</p>
+          <!-- publicDescription is the fuller, approved statement of the offer, so
+               where it exists it replaces the qualifier rather than following it:
+               the two overlap heavily and the card already carries the qualifier.
+               A partner without one still shows their qualifier here. -->
+          
+          
+          <p class="offer-body">Get access to Tier 1, high-performance modules at preferred Alliance pricing, helping you lower equipment costs without compromising on quality.</p>
+          
+          <p class="offer-body">For qualifying Climate First Bank-financed projects, JA Solar will provide up to 10% off special pricing agreement on eligible D41 standard modules through participating distributors. We'll help get the agreement set up with the distributor branch you buy from so you can start using your Alliance pricing.</p>
           
 
           
@@ -135,6 +143,23 @@
 
         <!-- right: the partner in their own words, then who they are -->
         <aside class="rail" aria-labelledby="about-partner">
+          
+
+          <!-- No file yet, but the speaker is named: the labelled placeholder
+               card from the approved mockup. It is a div, not a link, so it adds
+               no dead click target and no tab stop. A partner with no speaker
+               named gets no video block at all. -->
+          
+          <div class="vidwrap">
+            <div class="vid vid--stub">
+              <span class="stub">Partner video, 9:16</span>
+              <span class="play" aria-hidden="true"></span>
+              <span class="cap">
+                <span class="who">Charlie Saginaw</span>
+                <span class="rol">Why JA Solar joined the Alliance</span>
+              </span>
+            </div>
+          </div>
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About JA Solar</p>

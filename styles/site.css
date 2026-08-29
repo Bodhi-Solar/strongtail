@@ -489,3 +489,16 @@ h1,h2,h3,h4,p{margin:0}
 @media (max-width:400px){
   .idrow{flex-direction:column;align-items:flex-start;gap:16px}
 }
+
+/* ---- partner video placeholder ------------------------------------------
+   From the approved mockup. Shown when a partner has named their speaker but
+   not yet supplied the file, so the rail keeps its shape while the asset is
+   outstanding. Labelled "Partner video, 9:16" so it reads as a placeholder
+   rather than a video that will not play, and rendered as a div rather than a
+   link so it adds no dead click target and no tab stop. A partner with no
+   speaker named still gets no video block at all.
+   Not photography: the card is the gradient and geometry already in use. */
+.vid .stub{display:block;position:absolute;left:14px;right:14px;top:14px;font-size:9.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#7B8C9C;text-align:center}
+.vid--stub{cursor:default}
+.vid--stub:hover{transform:none;box-shadow:0 16px 38px rgba(0,20,45,.16)}
