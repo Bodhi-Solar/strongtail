@@ -657,12 +657,12 @@ h1,h2,h3,h4,p{margin:0}
 .sec--game{background:var(--tint);padding:var(--s6) 0 var(--s7)}
 
 .game-lede{
-  font-size:16px;max-width:46ch;margin:0 auto var(--s5);
+  font-size:16px;max-width:54ch;margin:0 auto var(--s5);
   text-align:center;
 }
 
 .game-card{
-  display:block;max-width:520px;margin:0 auto;
+  display:block;max-width:880px;margin:0 auto;
   background:var(--white);border:1px solid rgba(0,20,45,.10);
   border-radius:14px;overflow:hidden;              /* clip the image to the radius */
   text-decoration:none;
@@ -674,10 +674,17 @@ h1,h2,h3,h4,p{margin:0}
 }
 .game-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 
-/* The source is captured at the game's own internal resolution, 1024x640, so
-   every game pixel is one image pixel. Capturing at a larger viewport scales
-   the canvas by a non-integer factor, which doubles some pixel rows and not
-   others and reads as a vertical stretch in the type and the sun.
+/* The source is captured at the game's own internal resolution, 1024x640, then
+   doubled to 2048 with nearest-neighbour, which turns each game pixel into a
+   clean 2x2 block and is a lossless operation. Do NOT capture at a larger
+   viewport to get the extra pixels: the game scales its canvas by
+   Math.min(sw/GW, sh/GH), so any non-integer factor doubles some pixel rows and
+   not others and reads as a vertical stretch in the type and the sun.
+
+   The 2048 source is what lets the card be this wide. A 2x display needs twice
+   the CSS width in real pixels, so 2048 buys full crispness up to a 1024px
+   card. Past that the pixel art is being upscaled again and the unevenness
+   comes back. 880 leaves headroom.
 
    No image-rendering:pixelated either: the file only ever displays smaller
    than native, and nearest-neighbour downscaling drops whole rows of a pixel
@@ -685,7 +692,7 @@ h1,h2,h3,h4,p{margin:0}
 .game-card img{display:block;width:100%;height:auto}
 
 .game-cta{
-  display:block;padding:14px 18px;font-size:14px;font-weight:600;
+  display:block;padding:17px 20px;font-size:15.5px;font-weight:600;
   color:var(--ink);letter-spacing:-.01em;text-align:center;
   border-top:1px solid rgba(0,20,45,.08);
 }
