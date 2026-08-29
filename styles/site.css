@@ -638,10 +638,23 @@ h1,h2,h3,h4,p{margin:0}
    the corner clip are new.
    =========================================================================== */
 
+/* The arrival band carries a heading and two lines, about 212px of content, and
+   .close's 520px min-height was padding that out with 308px of slack. That is
+   right for the landing page, where the band closes a long argument, and wrong
+   here, where it pushed the game most of a screen down. Height comes from the
+   content now.
+
+   Scoped to this page: the landing page's closing band uses the same three
+   classes and must not move. Padding stays on the token scale so it still
+   shrinks at the mobile breakpoint, where --s7 drops to 64. */
+.close--thanks{min-height:0;padding:var(--s7) 0}
+
+/* Top padding one step below bottom, so the band's content sits high in it
+   rather than centred. */
 /* Tint, not white. The card is white, and site.css already documents the same
    reasoning for .form--partner: a white card on a white ground is not a
    surface. Tint also separates the band from the white footer below it. */
-.sec--game{background:var(--tint);padding:var(--s7) 0}
+.sec--game{background:var(--tint);padding:var(--s6) 0 var(--s7)}
 
 .game-lede{
   font-size:16px;max-width:46ch;margin:0 auto var(--s5);
