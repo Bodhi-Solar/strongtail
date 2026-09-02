@@ -60,29 +60,27 @@
       <!-- "the Alliance" is the shipped default and the correct wording for the
            landing form, which has no ?p=. js/main.js narrows it to a partner name
            when the parameter matches the generated allow-list below. Never edit
-           between those markers by hand: bun tools/sync-partners.mjs writes them. -->
+           between those markers by hand: bun tools/sync-partners.mjs writes them.
+
+           The second sentence is what the button is for. It names the booking as
+           an option rather than an instruction, because a reader who has just
+           submitted a form has already done the required thing. "Also" is
+           load-bearing: the call is still coming either way. -->
       <p class="lede close-sub">A representative from <span id="thanks-who">the Alliance</span>
-      will contact you to get you set up.</p>
-      <!-- The one thing that is not the same for everybody. Someone already
-           approved only waits; someone who answered No or Not sure has the
-           OneEthos application to complete, and a page that only promised a call
-           would leave them waiting on their own next step. Carried in copy rather
-           than by routing, per BUILD-SPEC step 5. -->
-      <p class="lede close-sub close-act">Not yet an approved OneEthos installer? That is the first step.
-      <a class="tlink tlink--inline" href="https://www.oneethos.com/become-an-approved-installer"
-         target="_blank" rel="noopener">Start the OneEthos
-         application<span class="arw">&rarr;</span></a></p>
+      will contact you to get you set up. You can also go ahead and find a time
+      that&rsquo;s most convenient for you.</p>
 
       <!-- Its own destination, not a way back to a form the reader has just
            submitted. That is the same exception the webinar "Register" buttons
            take and the print two-pager's closing button already documents; see
            the 2 Sep 2026 amendment to the CTA rule in docs-internal/CLAUDE.md.
 
-           Below the OneEthos line, never above it. Booking a call is right for
-           everybody who lands here and the application is right for a subset, so
-           the universal action takes the terminal position and the conditional
-           prerequisite keeps the earlier one, where its opening question still
-           filters its own reader. The game band stays below both.
+           Directly under the sentence that offers it, and above the OneEthos
+           line. The copy now says "find a time", so the button is that sentence's
+           button and has to sit with it; a paragraph between them would leave the
+           offer looking for its control. Amended 2 Sep 2026: it shipped below the
+           OneEthos line for one afternoon, before the copy made the invitation
+           explicit. The game band stays below both, as it always has.
 
            The href ships pointing at the Alliance's own calendar, so this button
            works with no JavaScript, with the parameter stripped, on an unknown
@@ -95,6 +93,20 @@
       <!-- partners:book:start -->
       <p class="close-book"><a class="btn btn--lg" id="thanks-book" href="https://meetings-na2.hubspot.com/scott322/brad-allen-meeting" target="_blank" rel="noopener">Book a call with the Alliance</a></p>
       <!-- partners:book:end -->
+
+      <!-- The one thing that is not the same for everybody. Someone already
+           approved only waits; someone who answered No or Not sure has the
+           OneEthos application to complete, and a page that only promised a call
+           would leave them waiting on their own next step. Carried in copy rather
+           than by routing, per BUILD-SPEC step 5.
+
+           Last in the band now, under the button rather than above it. It keeps a
+           64px gap and its own accent-red link, so it reads as the aside it is
+           and not as a footnote to the CTA. -->
+      <p class="lede close-sub close-act">Not yet an approved OneEthos installer? That is the first step.
+      <a class="tlink tlink--inline" href="https://www.oneethos.com/become-an-approved-installer"
+         target="_blank" rel="noopener">Start the OneEthos
+         application<span class="arw">&rarr;</span></a></p>
     </div>
   </section>
 

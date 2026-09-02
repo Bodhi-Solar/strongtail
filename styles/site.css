@@ -835,14 +835,15 @@ h1,h2,h3,h4,p{margin:0}
 
 /* The arrival band now has the landing closing band's full shape, heading, lede,
    button, using the same three classes it already carried. The button needs no
-   rule of its own beyond the gap.
+   rule of its own beyond the gaps, and the gaps are asymmetric on purpose.
 
-   --s6 rather than the --s5 every other element in this band uses, and that is
-   the point: the sentence directly above it is a conditional aside carrying its
-   own inline link, and a 40px gap would read the button as that sentence's
-   button. 64px makes it the band's action. Margins collapse against .close-sub's
-   40px bottom, so this is 64 in total, not 104. */
-.close-book{margin:var(--s6) 0 0}
+   Nothing on top, so .close-sub's own 40px bottom margin stands: the sentence
+   above ends "find a time that's most convenient for you", so the button is that
+   sentence's button and should sit close to it. --s6 below, because what follows
+   is a conditional aside about the OneEthos application and 40px there would read
+   it as a caption on the CTA. Tight above, loose below, which is the relationship
+   between a control and the thing it belongs to. */
+.close-book{margin:0 0 var(--s6)}
 
 /* The label narrows to "Book a call with <partner>", and the longest name in the
    roster makes that 34 characters, which will not fit one line inside the 26px
