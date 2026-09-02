@@ -21,7 +21,7 @@ a{color:inherit}
 .g-white{background:var(--white)}
 .g-tint{background:var(--tint)}
 .g-dark{background:var(--blue);color:var(--on-dark)}
-.sky{background:linear-gradient(162deg,#ADC4E0 0%,var(--blue-1) 24%,#DEDDE8 50%,var(--salmon-1) 80%,var(--yellow-1) 100%)}
+.sky{background:linear-gradient(var(--sky-angle),var(--blue-0) 0%,var(--blue-1) 24%,var(--mist-1) 50%,var(--salmon-1) 80%,var(--yellow-1) 100%)}
 .wash{background:radial-gradient(ellipse 58% 66% at 84% 6%,rgba(255,255,255,.76) 0%,rgba(255,255,255,0) 62%)}
 .grain{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:var(--grain);mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -832,3 +832,70 @@ h1,h2,h3,h4,p{margin:0}
    and not only after the first answer. A second copy inside the gate card said
    the same thing 100px away and read as a stutter. */
 .ic-foot b{color:var(--ink);font-weight:600}
+
+/* =============================== brand kit ===============================
+   /kit/ only. Appended here rather than given its own stylesheet, following
+   the thanks-page band above and the installer-check block below it, and
+   because /installer-check/ manages without one too. kit/crops/crops.css is
+   the analogue of print/overview.css and is never served.
+
+   This block owns layout for the download list, the two wordmark demo tiles,
+   the swatch grid and the two-column rules. It re-declares no colour, no
+   radius and no shadow that is not already a token or already on .card.  */
+
+.sec--files{padding:var(--s7) 0}
+.kit-stamp{margin:0 0 var(--s5)}
+.kit-group{margin:var(--s6) 0 var(--s4)}
+.kit-group:first-of-type{margin-top:var(--s5)}
+.kit-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+
+/* Borrows .card's surface, and none of its behaviour. Written out rather than
+   composed with .card for the reason .ic-card gives above: a download row is
+   not a link, so it must not lift on hover or carry the stretched ::after that
+   makes a whole card clickable. Three links live in here; exactly one of them
+   being the row would be a lie. */
+.kit-row{background:var(--white);border:1px solid rgba(0,20,45,.10);border-radius:16px;
+  padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:var(--s4)}
+.kit-name{margin:0 0 3px;font-size:15.5px;font-weight:600;letter-spacing:-.008em}
+.kit-row .small{margin:0}
+.kit-get{display:flex;align-items:center;gap:18px;flex:0 0 auto}
+.kit-get .tlink{white-space:nowrap}
+
+/* Two tiles showing the mark on the two grounds it is allowed on. No rings
+   behind either: DESIGN-SYSTEM.md:96 keeps the circle geometry on a gradient
+   ground and never behind a logo. */
+.kit-demo{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);margin:var(--s5) 0 var(--s6)}
+.kit-tile{border-radius:16px;padding:44px 36px;display:flex;align-items:center;justify-content:center}
+.kit-tile img{display:block;width:296px;max-width:100%;height:auto}
+.kit-tile--light{background:var(--white);border:1px solid rgba(0,20,45,.10)}
+.kit-tile--dark{background:var(--blue)}
+
+.kit-rules{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4) var(--s6);margin-top:var(--s5)}
+.kit-do,.kit-dont{list-style:none;margin:0;padding:0;display:grid;gap:14px;align-content:start}
+.kit-do li,.kit-dont li{font-size:15px;line-height:1.6;color:var(--ink-soft);
+  padding-left:20px;position:relative}
+.g-dark .kit-do li,.g-dark .kit-dont li{color:var(--on-dark-soft)}
+.kit-do li b,.kit-dont li b{color:var(--ink)}
+.g-dark .kit-do li b,.g-dark .kit-dont li b{color:var(--on-dark)}
+/* A rule reads as a rule without an icon: hard rule 2 rules out an icon set,
+   and a hairline is already the page's own vocabulary. */
+.kit-do li::before,.kit-dont li::before{content:"";position:absolute;left:0;top:.72em;
+  width:10px;height:1px;background:var(--rule)}
+.g-dark .kit-do li::before,.g-dark .kit-dont li::before{background:rgba(255,255,255,.28)}
+.kit-dont li::before{background:rgba(190,67,25,.36)}
+
+.kit-swatch{list-style:none;margin:var(--s5) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4)}
+.kit-swatch li{font-size:13.5px;font-weight:600;letter-spacing:.01em;color:var(--on-dark)}
+.kit-swatch .sw{display:block;height:64px;border-radius:12px;margin-bottom:12px}
+.kit-swatch .sw--ramp{background:linear-gradient(var(--sky-angle),var(--blue-0) 0%,var(--blue-1) 24%,
+  var(--mist-1) 50%,var(--salmon-1) 80%,var(--yellow-1) 100%)}
+.kit-swatch b{display:block;font-weight:600}
+.kit-swatch .small{display:block;margin-top:4px;color:var(--on-dark-soft)}
+.mono{font-variant-numeric:tabular-nums}
+
+@media (max-width:900px){
+  .kit-row{flex-direction:column;align-items:flex-start;gap:14px}
+  .kit-demo,.kit-rules{grid-template-columns:1fr}
+  .kit-swatch{grid-template-columns:repeat(2,1fr)}
+}

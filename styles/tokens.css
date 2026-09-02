@@ -5,7 +5,7 @@
    --------------------------------------------------------------------------- */
 :root{
   --blue:#00142D; --yellow:#FFD110; --yellow-h:#FFDA45; --salmon:#FF6F47;
-  --blue-1:#C0D1E7; --salmon-1:#FFC7B8; --yellow-1:#FFF0B2;
+  --blue-0:#ADC4E0; --blue-1:#C0D1E7; --mist-1:#DEDDE8; --salmon-1:#FFC7B8; --yellow-1:#FFF0B2;
   /* --ink-soft and --accent-text are CONTRAST-DERIVED. Do not lighten them.
      Both were measured against every ground they sit on and set to clear WCAG
      AA for normal text, 4.5:1. Lightening either by a shade puts body copy,
@@ -28,6 +28,7 @@
   --rule:rgba(0,20,45,.13); --rule-soft:rgba(0,20,45,.09);
   --l1:rgba(0,20,45,.17); --l2:rgba(0,20,45,.13); --l3:rgba(0,20,45,.095); --l4:rgba(0,20,45,.068);
   --cx:365px; --cy:-42px; --r0:235px; --skew:0.8;
+  --sky-angle:162deg;
   --grain:0.20; --font:'Montserrat',Arial,sans-serif;
   --gutter:48px; --maxw:1180px;
   /* How far the thanks page's game card breaks up over the gradient band.
