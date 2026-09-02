@@ -72,6 +72,29 @@
       <a class="tlink tlink--inline" href="https://www.oneethos.com/become-an-approved-installer"
          target="_blank" rel="noopener">Start the OneEthos
          application<span class="arw">&rarr;</span></a></p>
+
+      <!-- Its own destination, not a way back to a form the reader has just
+           submitted. That is the same exception the webinar "Register" buttons
+           take and the print two-pager's closing button already documents; see
+           the 2 Sep 2026 amendment to the CTA rule in docs-internal/CLAUDE.md.
+
+           Below the OneEthos line, never above it. Booking a call is right for
+           everybody who lands here and the application is right for a subset, so
+           the universal action takes the terminal position and the conditional
+           prerequisite keeps the earlier one, where its opening question still
+           filters its own reader. The game band stays below both.
+
+           The href ships pointing at the Alliance's own calendar, so this button
+           works with no JavaScript, with the parameter stripped, on an unknown
+           slug, and for a partner who has not sent a link. js/main.js only ever
+           narrows it, exactly as it narrows the name above, and narrows the label
+           with it so the button never names a calendar it is not opening.
+
+           Never edit between these markers: bun tools/sync-partners.mjs writes
+           them from data/meetings.json. -->
+      <!-- partners:book:start -->
+      <p class="close-book"><a class="btn btn--lg" id="thanks-book" href="https://meetings-na2.hubspot.com/scott322/brad-allen-meeting" target="_blank" rel="noopener">Book a call with the Alliance</a></p>
+      <!-- partners:book:end -->
     </div>
   </section>
 
@@ -114,6 +137,7 @@
 
 <!-- partners:thanks:start -->
 <script type="application/json" id="partner-names">{"ja-solar":"JA Solar","scanifly":"Scanifly","damaris-solutions":"Damaris Solutions","bodhi":"Bodhi","climate-first-bank":"Climate First Bank"}</script>
+<script type="application/json" id="partner-booking">{"bodhi":"https://meetings-na2.hubspot.com/scott322/bodhi-pro-demo-calendar","climate-first-bank":"https://meetings-na2.hubspot.com/scott322/brad-allen-meeting"}</script>
 <!-- partners:thanks:end -->
 <script src="../js/main.js"></script>
 </body>

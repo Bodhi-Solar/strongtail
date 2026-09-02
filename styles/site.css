@@ -833,6 +833,26 @@ h1,h2,h3,h4,p{margin:0}
    the same thing 100px away and read as a stutter. */
 .ic-foot b{color:var(--ink);font-weight:600}
 
+/* The arrival band now has the landing closing band's full shape, heading, lede,
+   button, using the same three classes it already carried. The button needs no
+   rule of its own beyond the gap.
+
+   --s6 rather than the --s5 every other element in this band uses, and that is
+   the point: the sentence directly above it is a conditional aside carrying its
+   own inline link, and a 40px gap would read the button as that sentence's
+   button. 64px makes it the band's action. Margins collapse against .close-sub's
+   40px bottom, so this is 64 in total, not 104. */
+.close-book{margin:var(--s6) 0 0}
+
+/* The label narrows to "Book a call with <partner>", and the longest name in the
+   roster makes that 34 characters, which will not fit one line inside the 26px
+   gutters at 320px. .btn is inline-flex so the text wraps on its own; these
+   declarations are only what keeps a wrapped label inside the pill instead of
+   spilling out of a fixed 54px box. A one-line label is pixel-identical to every
+   other button on the site: 19px of line plus 28px of padding is 47, and
+   .btn--lg's min-height of 54 still wins. */
+.close--thanks .btn--lg{padding-top:14px;padding-bottom:14px;max-width:100%;text-align:center}
+
 /* =============================== brand kit ===============================
    /kit/ only. Appended here rather than given its own stylesheet, following
    the thanks-page band above and the installer-check block below it, and

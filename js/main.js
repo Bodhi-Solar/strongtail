@@ -116,8 +116,13 @@
 
      The page ships with "the Alliance" already in the HTML. This only ever
      narrows it to a partner, so no JS, a stripped parameter, an unknown slug and
-     a failed fetch all land on wording that is correct rather than broken.     */
+     a failed fetch all land on wording that is correct rather than broken.
+
+     Since 2 Sep 2026 the same lookup narrows the Book a call button's href and
+     label, from a second generated table. Same rule: the URL comes from the
+     table, never from the URL.                                               */
   var who = document.getElementById('thanks-who');
+  var book = document.getElementById('thanks-book');
 
   if (who) {
     try {
@@ -131,11 +136,50 @@
         // "toString" would otherwise resolve up the prototype chain.
         if (Object.prototype.hasOwnProperty.call(names, slug)) {
           who.textContent = names[slug];
+
+          /* The button ships pointed at the Alliance's own calendar, which is
+             right for the landing form, for an unknown slug, and for a partner
+             who has not sent a link. This narrows it to the partner's own
+             calendar, and only when there is one: #partner-booking holds only
+             partners with a link, so absence from it IS the no-link state.
+
+             The href and the label narrow together or not at all, so the button
+             never names a calendar it is not opening.
+
+             The slug is a KEY here and nowhere else. It is never concatenated
+             into markup and never assigned to href. The two values that reach
+             the DOM, the name and the URL, both come out of blocks
+             tools/sync-partners.mjs wrote from data/partners.json and
+             data/meetings.json, so a crafted ?p= can only ever miss.
+
+             The https test is for the one case the generator cannot see, a
+             hand-edited generated block. Three lines is cheap next to a
+             javascript: URL in an href. indexOf rather than startsWith, to match
+             the rest of this file.
+
+             Deliberately AFTER the name is set: a malformed booking table throws
+             into the catch below having already left the sentence right, which is
+             the same principle as the shipped default.                         */
+          var booking = document.getElementById('partner-booking');
+
+          if (book && booking) {
+            var bookings = JSON.parse(booking.textContent);
+
+            if (Object.prototype.hasOwnProperty.call(bookings, slug)) {
+              var url = String(bookings[slug]);
+
+              if (url.indexOf('https://') === 0) {
+                book.href = url;
+                book.textContent = 'Book a call with ' + names[slug];
+              }
+            }
+          }
         }
       }
     } catch (e) {
       /* Leave the Alliance wording in place. Nothing here is worth breaking the
-         page over, and the default is already a correct sentence. */
+         page over, and the default is already a correct sentence and a working
+         button. */
     }
   }
 
