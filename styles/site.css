@@ -838,12 +838,23 @@ h1,h2,h3,h4,p{margin:0}
    rule of its own beyond the gaps, and the gaps are asymmetric on purpose.
 
    Nothing on top, so .close-sub's own 40px bottom margin stands: the sentence
-   above ends "find a time that's most convenient for you", so the button is that
-   sentence's button and should sit close to it. --s6 below, because what follows
-   is a conditional aside about the OneEthos application and 40px there would read
-   it as a caption on the CTA. Tight above, loose below, which is the relationship
-   between a control and the thing it belongs to. */
-.close-book{margin:0 0 var(--s6)}
+   above ends "Or, skip the wait and book a time that works for you", so the
+   button is that sentence's button and belongs with it. Heading, sentence and
+   button are one group.
+
+   Below it, the reason is the shadow rather than the arithmetic. .btn carries
+   `box-shadow:0 10px 26px`, which paints about 36px past the pill's bottom edge,
+   so a 64px margin leaves under 30px of clear ground and the OneEthos line reads
+   as crowded even though nothing is close to touching it. 88px measured is about
+   52px seen, which is what makes the aside below read as separate rather than as
+   a caption on the CTA. Judge this one rendered, not in the stylesheet.
+
+   Composed from two tokens rather than written as --s7, and not because 88 was
+   wanted over 96. --s7 drops to 64 at the 900px breakpoint, where --s6 and --s4
+   do not, so --s7 would have quietly restored the exact crowding on every phone.
+   The shadow is 36px at every width, so the clearance it has to cover cannot be
+   one of the tokens that compresses. */
+.close-book{margin:0 0 calc(var(--s6) + var(--s4))}
 
 /* The label narrows to "Book a call with <partner>", and the longest name in the
    roster makes that 34 characters, which will not fit one line inside the 26px
