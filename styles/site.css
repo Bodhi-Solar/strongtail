@@ -180,9 +180,14 @@ h1,h2,h3,h4,p{margin:0}
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .field{margin:0 0 14px}
 .field label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--ink-soft);margin:0 0 6px}
-.field input,.field select{width:100%;font-family:var(--font);font-size:16px;color:var(--ink);
+.field input,.field select,.field textarea{width:100%;font-family:var(--font);font-size:16px;color:var(--ink);
   background:#FBFCFD;border:1px solid rgba(0,20,45,.16);border-radius:9px;padding:11px 12px}
-.field input:focus,.field select:focus{outline:2px solid var(--ink);outline-offset:1px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+/* A textarea has a height and a resize handle; an input has neither. These are
+   textarea facts, not a restatement of the surface above, which it now inherits
+   along with every other control in the kit. Added with the installer check's
+   log form, whose own CSS block is forbidden from describing a field. */
+.field textarea{min-height:88px;line-height:1.5;resize:vertical;display:block}
 .radios{display:flex;gap:18px;flex-wrap:wrap;font-size:14.5px;color:var(--ink)}
 .radios label{display:flex;align-items:center;gap:7px}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:14px;color:var(--ink-soft)}
@@ -864,6 +869,45 @@ h1,h2,h3,h4,p{margin:0}
    other button on the site: 19px of line plus 28px of padding is 47, and
    .btn--lg's min-height of 54 still wins. */
 .close--thanks .btn--lg{padding-top:14px;padding-bottom:14px;max-width:100%;text-align:center}
+
+/* ---- the Alliance half, added 3 Sep 2026 --------------------------------
+   The card gains two lines and the page gains a log form and a rail. Every
+   control in that form is .field and .btn, so there is still not one rule here
+   describing what a text field looks like. The textarea the form needs went
+   into the form kit above, where it belongs, rather than being matched by eye
+   down here.                                                                */
+
+/* The log form sits under the result card and wants the gap .ic-results has
+   above it. A gap, not a surface: .form and .ic-form own everything else. */
+.ic-log{margin:var(--s4) 0 0}
+
+/* The second fact line on the card. .small is --ink-soft; the Alliance standing
+   is the answer the partner came for, so it is the darker of the two. One
+   colour, from a token. The card's tone is still carried by the left rule and
+   only by the left rule, exactly as the block above says. */
+.ic-alliance{margin:6px 0 0;color:var(--ink)}
+
+/* A list that is not bulleted, the same reset .ic-list already makes. Every
+   size, weight and colour comes from .small on the li, so this declares nothing
+   but layout. */
+.ic-acts{list-style:none;margin:6px 0 0;padding:0}
+.ic-acts-none{margin:6px 0 0}
+
+/* Until ALLIANCE_TABLE_ID is set, /lookup answers alliance:false and no log
+   form can appear, so the two steps that describe logging would be instructions
+   for a control that is not there. js/installer-check.js adds this class to
+   them and appends one muted word. It removes itself the moment the Worker says
+   the table exists, with no change to this page. */
+.ic-step--soon{opacity:.55}
+.ic-soon{font-weight:600;letter-spacing:.02em;color:var(--accent-text)}
+
+/* --s5's 40px was set for a 1fr column; in a 300px rail it reads as a break
+   between two blocks rather than as a heading and its list. */
+.sec--check .rail .h3--sm{margin:0 0 14px}
+.sec--check .steps-list{margin-top:var(--s4)}
+/* .steps-list's last item carries 22px of its own bottom padding, so this only
+   tops it up to the clearance a closing aside wants. */
+.ic-rail-note{margin:8px 0 0;max-width:38ch}
 
 /* =============================== brand kit ===============================
    /kit/ only. Appended here rather than given its own stylesheet, following

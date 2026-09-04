@@ -57,6 +57,16 @@
        CSS describing what an input looks like. -->
   <section class="sec sec--check g-tint" aria-labelledby="ic-h">
     <div class="wrap">
+      <!-- Two columns from 1000px up, using .split unchanged, exactly as the
+           five partner pages do. The implementation doc says "from 900px", but
+           at 901px the left column measures 805 - 262 - 48 = 495px and
+           .ic-form's 520px no longer fits: building 900 would mean either
+           shrinking the join form's own column width, which is the reason this
+           page reads as the site, or giving this page a .split that behaves
+           differently from every other page's. No new breakpoint. -->
+      <div class="split">
+
+      <div class="col-a">
 
       <div class="intro">
         <p class="eyebrow">Alliance partners</p>
@@ -91,6 +101,91 @@
 
       <div class="ic-results" id="ic-results" aria-live="polite"></div>
 
+      <!-- Shown by js/installer-check.js only when a search returned exactly
+           ONE result that carries an Alliance record id. With five results
+           there is no single row to log against, and the doc says "shown under
+           a result", singular.
+
+           Every control here is the existing kit: .field with a label, and the
+           standard pill. The two selects are the first on this site and inherit
+           .field select, which site.css has always carried. Nothing in the CSS
+           block at the end of site.css describes what any of them look like. -->
+      <form class="form ic-form ic-log" id="ic-log" hidden novalidate>
+        <p class="fh">Log a call or an activation</p>
+
+        <div class="field">
+          <label for="ic-kind">What are you logging</label>
+          <select id="ic-kind" name="kind">
+            <option value="intro_call">Intro call</option>
+            <option value="activation">Activation</option>
+          </select>
+        </div>
+
+        <div class="f-row">
+          <div class="field">
+            <!-- One select, not two. A partner logs their own offer, so "who is
+                 logging" and "whose offer" are the same answer, and the log line
+                 format has one partner column. The label changes with the kind;
+                 see js/installer-check.js. Other is removed for an activation,
+                 because Activated is a six-option multi-select and the Worker
+                 sends typecast:false. -->
+            <label for="ic-partner" id="ic-partner-label">Your partner</label>
+            <select id="ic-partner" name="partner"></select>
+          </div>
+          <div class="field">
+            <label for="ic-date">Date</label>
+            <input type="date" id="ic-date" name="date">
+          </div>
+        </div>
+
+        <div class="field" id="ic-details-f" hidden>
+          <label for="ic-details">Details</label>
+          <textarea id="ic-details" name="details" rows="3" maxlength="500"
+                    placeholder="JA Solar: Greentech branch and SPA account number"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="ic-by">Your email</label>
+          <input type="email" id="ic-by" name="submitted_by" autocomplete="email"
+                 autocapitalize="off" spellcheck="false">
+        </div>
+
+        <button class="btn btn--lg btn--wide" type="submit">Log it</button>
+        <p class="form-note" id="ic-log-note" role="status"></p>
+      </form>
+
+      </div><!-- /col-a -->
+
+      <!-- The rail stays block layout, per the comment on .rail in site.css:
+           as a flex column it would collapse .vidwrap on the partner pages.
+           Nothing here needs flex either. -->
+      <aside class="rail" aria-labelledby="ic-steps-h">
+        <p class="h3 h3--sm" id="ic-steps-h">What to do here</p>
+        <ol class="steps-list">
+          <li><span class="sn" aria-hidden="true">1</span><div>
+            <p class="st">Check.</p>
+            <p class="small">Type the installer&rsquo;s name or website. You get their OneEthos
+            standing and their Alliance standing on one card.</p></div></li>
+          <li id="ic-step-3"><span class="sn" aria-hidden="true">2</span><div>
+            <p class="st">Read the result.</p>
+            <p class="small">Approved by OneEthos and call logged means they are an Alliance
+            installer and can use every partner&rsquo;s terms. Anything else tells you what is
+            still missing.</p></div></li>
+          <li id="ic-step-log"><span class="sn" aria-hidden="true">3</span><div>
+            <p class="st">Log your call.</p>
+            <p class="small">Talked to them? Log it below the result with your partner name and
+            the date. One logged call from any partner is enough.</p></div></li>
+          <li id="ic-step-become"><span class="sn" aria-hidden="true">4</span><div>
+            <p class="st">They become an Alliance installer.</p>
+            <p class="small">The moment OneEthos approval and a logged call are both true, the
+            status flips. When they take your offer, come back and log the activation so the
+            other partners can see it.</p></div></li>
+        </ol>
+        <p class="small ic-rail-note">Changes show here within 15 minutes. Anything you log is
+        visible to every Alliance partner.</p>
+      </aside>
+
+      <div class="col-b">
       <!-- Every other page on this site works without JavaScript. This one
            cannot: GitHub Pages is static, so there is no form action to post a
            passcode and a query to. Say so rather than leaving a dead form. -->
@@ -104,7 +199,9 @@
       partner use only, and is not to be shared with the installer or with any third party.
       A result is a point in time and can change. Questions go to
       <a class="tlink tlink--inline" href="mailto:scott@bodhi.solar">scott@bodhi.solar</a>.</p>
+      </div><!-- /col-b -->
 
+      </div><!-- /split -->
     </div>
   </section>
 
