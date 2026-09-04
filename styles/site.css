@@ -812,7 +812,6 @@ h1,h2,h3,h4,p{margin:0}
 .ic-card{background:var(--white);border:1px solid rgba(0,20,45,.10);border-radius:16px;
   padding:16px 18px;border-left-width:3px;border-left-style:solid}
 .ic-name{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
-.ic-status{margin:3px 0 0}
 
 /* Tone is carried by the left rule, and only by the left rule, except for a
    decline. Brand Salmon is 2.7:1 and is never text, which is why the "no" case
@@ -881,17 +880,48 @@ h1,h2,h3,h4,p{margin:0}
    above it. A gap, not a surface: .form and .ic-form own everything else. */
 .ic-log{margin:var(--s4) 0 0}
 
-/* The second fact line on the card. .small is --ink-soft; the Alliance standing
-   is the answer the partner came for, so it is the darker of the two. One
-   colour, from a token. The card's tone is still carried by the left rule and
-   only by the left rule, exactly as the block above says. */
-.ic-alliance{margin:6px 0 0;color:var(--ink)}
+/* The card became a list of named facts on 3 Sept 2026, because two statuses on
+   one card cannot be told apart by their position. Labels are .eyebrow and
+   values are .small, both already on this site, so everything here is layout and
+   nothing here describes type.
 
-/* A list that is not bulleted, the same reset .ic-list already makes. Every
-   size, weight and colour comes from .small on the li, so this declares nothing
-   but layout. */
-.ic-acts{list-style:none;margin:6px 0 0;padding:0}
-.ic-acts-none{margin:6px 0 0}
+   The label column is fixed rather than auto for a reason that only shows up
+   with more than one result: each card's dl is its own grid, so with auto a card
+   carrying no Enrolled row gets a narrower label column than the card above it,
+   and five stacked cards get five different value-column edges. Ragged left
+   edges are precisely what destroys a skim. 76px covers the longest label,
+   ONEETHOS, at .eyebrow's 10.5px and .20em tracking. If a longer label is ever
+   added, measure it and move this number. */
+.ic-facts{display:grid;grid-template-columns:76px minmax(0,1fr);
+  column-gap:14px;row-gap:5px;margin:8px 0 0}
+/* Optical, not arithmetic. A 10.5px cap-height label against a 14.5px value
+   sits visibly high on the shared grid row. Judge this rendered. */
+.ic-facts dt{padding-top:2px}
+/* The UA gives dd a 40px inline start margin, and minmax(0,1fr) above needs the
+   min-width to actually clamp a long unbroken value. */
+.ic-facts dd{margin:0;min-width:0}
+
+/* .small is --ink-soft; the Alliance standing is the answer the partner came
+   for, so it is the darker of the two. The card's tone is still carried by the
+   left rule and only by the left rule. */
+.ic-alliance{color:var(--ink)}
+
+/* A hostname has no spaces, so a long one is a single unbreakable token and
+   would push out of the value column at 320px. The only rule here aimed at one
+   field's content, and it is aimed at its shape, not its appearance. */
+.ic-dom{overflow-wrap:anywhere}
+
+/* Inside its own dd now, so the grid owns the spacing. */
+.ic-acts{list-style:none;margin:0;padding:0}
+
+@media (max-width:400px){
+  /* Below this the value column is under 130px and a status wraps to four
+     lines. Stacked, the label reads as what .eyebrow is for. Not a new
+     breakpoint: site.css already breaks at 400. */
+  .ic-facts{grid-template-columns:minmax(0,1fr);row-gap:0}
+  .ic-facts dt{padding-top:7px}
+  .ic-facts dt:first-child{padding-top:0}
+}
 
 /* Until ALLIANCE_TABLE_ID is set, /lookup answers alliance:false and no log
    form can appear, so the two steps that describe logging would be instructions

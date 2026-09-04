@@ -21,6 +21,10 @@
      3. The log form posts back a record id the Worker gave us, and nothing
         else. No id is ever constructed here, and the Worker refuses any value
         that is not a bare Airtable record id. Added 3 Sep 2026.
+     4. Interest is an array from Airtable and is joined into one string HERE,
+        not in the Worker. It is still textContent, it is still never a class
+        name, and it is deliberately not filtered against PARTNERS. See
+        interestLine(). Added 3 Sep 2026.
    ========================================================================= */
 (function () {
   'use strict';
@@ -167,6 +171,58 @@
 
   var TONES = { yes: 1, warn: 1, no: 1, info: 1 };
 
+  /* One label and value pair on a result card. Every value goes in with
+     textContent. The class name is always a literal from this file and never a
+     value from the response, which is the same discipline TONES enforces on the
+     one response value that does reach a class name. `extra` is an element
+     appended after the text, which is how the enrolled list gets inside its own
+     <dd>. */
+  function fact(dl, label, value, cls, extra) {
+    var dt = document.createElement('dt');
+    dt.className = 'eyebrow';
+    dt.textContent = label;
+    var dd = document.createElement('dd');
+    dd.className = cls ? 'small ' + cls : 'small';
+    if (value) dd.textContent = value;
+    if (extra) dd.appendChild(extra);
+    dl.appendChild(dt);
+    dl.appendChild(dd);
+  }
+
+  /* Three states, not two. An installer whose Alliance row exists but whose
+     status formula has not resolved is not the same thing as one with no row,
+     and saying "No Alliance record yet" for both is false for the first: it
+     would send a partner to log a call against a row that already exists. */
+  function allianceLine(row) {
+    var st = String((row && row.alliance_status) || '');
+    if (st) return st;
+    return (row && row.alliance_id)
+      ? 'Alliance record on file, status not set'
+      : 'No Alliance record yet';
+  }
+
+  /* Interest is an array of Airtable multi-select labels: arbitrary text from a
+     source that is not trusted to be markup. Joined into one string and written
+     with textContent like every other value, never reaching a class name, an
+     href or any attribute.
+
+     NOT filtered against PARTNERS, deliberately. A seventh option is expected,
+     and a filter would silently hide the first installer who asked for that
+     partner, which is the opposite of the point. Shape is enforced instead, and
+     both caps are against a malformed row rather than an attacker: one 4KB
+     label must not push five cards off the screen. */
+  var MAX_INTEREST = 10;
+
+  function interestLine(list) {
+    if (!Array.isArray(list)) return '';
+    var out = [];
+    for (var i = 0; i < list.length && out.length < MAX_INTEREST; i++) {
+      var v = String(list[i] == null ? '' : list[i]).replace(/\s+/g, ' ').trim().slice(0, 60);
+      if (v) out.push(v);
+    }
+    return out.join(', ');
+  }
+
   function render(data) {
     var rows = (data && data.results) || [];
     results.textContent = '';
@@ -193,22 +249,35 @@
       var name = document.createElement('p');
       name.className = 'ic-name';
       name.textContent = String(row.name || '');
-
-      var status = document.createElement('p');
-      status.className = 'small ic-status';
-      status.textContent = String(row.status || '');
-
       item.appendChild(name);
-      item.appendChild(status);
 
-      /* The Alliance half. Appended only when the Worker says the table
-         exists, so with ALLIANCE_TABLE_ID unset this is byte for byte the card
-         this page has always drawn. */
+      /* A labelled list, not a run of paragraphs. Two same-sized fragments in a
+         list, with only append order saying which system each came from, is the
+         ambiguity this card exists to remove: position is not a label. It also
+         makes absence unambiguous, where a missing Website line and a missing
+         Interest line would otherwise look identical. */
+      var facts = document.createElement('dl');
+      facts.className = 'ic-facts';
+      item.appendChild(facts);
+
+      /* Omitted, not blanked. A dash under a WEBSITE label reads as "we looked
+         and there is none", which is more than we know. */
+      var domain = String(row.domain || '');
+      if (domain) fact(facts, 'Website', domain, 'ic-dom');
+
+      /* The label is what lets this value stop naming its own system, which is
+         why the copy could drop the words "Alliance installer". Those words used
+         to appear here AND on the line below, meaning two different things. */
+      fact(facts, 'OneEthos', String(row.status || ''), 'ic-status');
+
+      /* Appended only when the Worker says the table exists, so with
+         ALLIANCE_TABLE_ID unset the card is the name, the website and the
+         OneEthos line, and nothing below runs. */
       if (allianceOn) {
-        var standing = document.createElement('p');
-        standing.className = 'small ic-alliance';
-        standing.textContent = String(row.alliance_status || 'No Alliance record yet.');
-        item.appendChild(standing);
+        fact(facts, 'Alliance', allianceLine(row), 'ic-alliance');
+
+        var interest = interestLine(row.interest);
+        if (interest) fact(facts, 'Interest', interest, '');
 
         var acts = (row && row.activations) || [];
         if (acts.length) {
@@ -217,15 +286,13 @@
           for (var j = 0; j < acts.length; j++) {
             var li = document.createElement('li');
             li.className = 'small';
-            li.textContent = String(acts[j].partner || '') + ', ' + fmtDate(String(acts[j].date || ''));
+            li.textContent = String(acts[j].partner || '') + ', ' +
+                             fmtDate(String(acts[j].date || ''));
             ul.appendChild(li);
           }
-          item.appendChild(ul);
+          fact(facts, 'Enrolled', '', '', ul);
         } else if (row.alliance_id) {
-          var noneP = document.createElement('p');
-          noneP.className = 'small ic-acts-none';
-          noneP.textContent = 'No activations logged yet';
-          item.appendChild(noneP);
+          fact(facts, 'Enrolled', 'None logged yet', '');
         }
       }
 
@@ -241,7 +308,7 @@
       if (rows.length === 1 && /^rec[A-Za-z0-9]{14}$/.test(String(rows[0].alliance_id || ''))) {
         showLog(rows[0].alliance_id);
       } else if (rows.length > 1) {
-        results.appendChild(message('Narrow to one installer to log a call or an activation.'));
+        results.appendChild(message('Narrow to one installer to log a call or an enrollment.'));
       }
     }
 
@@ -306,6 +373,10 @@
       partnerField.appendChild(o);
     }
     if (opts.indexOf(keep) !== -1) partnerField.value = keep;
+    /* The wire value stays `activation` and the Airtable field stays Activated;
+       only the word a partner reads changes. That mapping is in
+       INSTALLER-CHECK.md, because three vocabularies for one event is exactly
+       the sort of thing that wastes an afternoon later. */
     partnerLabel.textContent = kind === 'activation'
       ? 'Whose offer did they take?'
       : 'Your partner';
