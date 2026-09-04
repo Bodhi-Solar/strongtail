@@ -122,6 +122,14 @@
           
 
           
+          <!-- Guarded on showKnow, not whatToKnow, because a partner can be
+               between the two states: their copy is not here yet, but the
+               heading is held open so the section does not vanish and reappear.
+               Inside the guard on purpose, so it does not ship to the pages
+               that have no such section. render()'s if: blocks do not nest, so
+               the empty <ul> is left to render rather than guarded separately.
+               Harmless: .know ul is margin:0, so with no <li> it takes up
+               nothing. -->
           <div class="know">
             <p class="h3 h3--sm">What to know</p>
             <ul>
