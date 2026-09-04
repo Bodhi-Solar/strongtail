@@ -310,7 +310,7 @@ h1,h2,h3,h4,p{margin:0}
 /* Per-partner optical correction, tuned by eye against the row rather than
    calculated. --lh arrives inline from logoHeight and is the CARD's number, so
    inline wins over any rule here; --strip-fix multiplies it on the slot
-   instead. Five marks side by side is a different problem from one mark alone
+   instead. Six marks side by side is a different problem from one mark alone
    in a card slot: JA Solar's chunky wordmark dominated the row at its card
    height, and Damaris's 9.5:1 wordmark disappeared at its.
    DESIGN-SYSTEM section 9: optical weight, never a shared pixel height. */
@@ -319,6 +319,13 @@ h1,h2,h3,h4,p{margin:0}
 .logo-slot--scanifly         { --strip-fix: .96 }    /* 24 -> 23 */
 .logo-slot--ja-solar         { --strip-fix: .75 }    /* 24 -> 18 */
 .logo-slot--damaris-solutions{ --strip-fix: .80 }    /* 30 -> 24, stacked lockup */
+/* Krannich's mark is a yellow swoosh ABOVE the wordmark, so only 64% of its box
+   is the readable half: logoHeight 36 puts the wordmark at 23px, level with
+   Bodhi, but the full 36px mark then towers over a row whose next tallest is 29.
+   .80 brings the wordmark to 18.6px, beside JA Solar's 18, which was reduced for
+   the same reason: a chunky wordmark dominating the row. Judged against the row
+   at 1.00, .88, .80 and .72. */
+.logo-slot--krannich         { --strip-fix: .80 }    /* 36 -> 29, swoosh above the wordmark */
 /* No step-down at the breakpoints on purpose. Shrinking the marks to hold one
    line is the thing DESIGN-SYSTEM section 9 rules out: "the strip wraps to two
    rows on tablet and three on mobile", and minimum legible height is about
@@ -455,7 +462,13 @@ h1,h2,h3,h4,p{margin:0}
 
 /* ---- other Alliance offers strip ----------------------------------------- */
 .others .lbl{margin:0 0 var(--s5)}
-.mini-grid{display:flex;flex-wrap:wrap;gap:18px}
+/* justify-content because six partners means five "others" on every partner
+   page, which wraps to 4 + 1 and leaves the orphan hanging at the left edge.
+   The landing grid already centres its short final row and DESIGN-SYSTEM
+   section on the grid treats a left-hanging row as the thing that layout was
+   built to avoid; this strip was written when five partners made exactly one
+   full row and the case never came up. Added 4 Sept 2026 with Krannich. */
+.mini-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}
 .mini{flex:0 1 calc((100% - 54px)/4);background:var(--white);border:1px solid rgba(0,20,45,.10);
   border-radius:14px;padding:20px;text-decoration:none;display:flex;flex-direction:column;
   transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}

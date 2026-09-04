@@ -99,7 +99,7 @@
 
 
   /* ------------------------------------------------------------ THANKS PAGE
-     The thank you page is reached from six different forms: the landing form and
+     The thank you page is reached from seven different forms: the landing form and
      one per partner. HubSpot redirects each of them to /thanks/, and the partner
      ones carry ?p=<slug> so the page can name who is going to call.
 
