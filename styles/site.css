@@ -947,27 +947,37 @@ h1,h2,h3,h4,p{margin:0}
    on success and anything inside that card would be wiped by the refresh that
    proved the write landed.
 
-   Surface borrowed from .card, not invented: same white, same 1px
-   rgba(0,20,45,.10) hairline, same 16px radius. The shadow is heavier than a
-   card's because this one floats over content and needs to read as above it.
+   Top right, clear of the header. .site-header is sticky at 82px, 68px once
+   stuck, and z-index 120, so 96px puts this under it with a gap in both states
+   rather than fighting it for the same pixels.
+
+   Ink on white, inverted from every other surface on the site. That inversion
+   is the prominence: it reads as the system answering rather than as more page,
+   and it costs no new colour, since --ink is the body text and --white is the
+   card. The art direction's one saturated accent is still the yellow submit,
+   which this deliberately does not compete with. No icon, per the same rule
+   that keeps illustration off the site.
 
    Never display:none and never visibility:hidden. It is a role="status" live
    region and both would drop it out of the accessibility tree, so the
    announcement would be lost. Only opacity and transform move, and
-   pointer-events stay off so an invisible bar cannot swallow a click. The
-   global prefers-reduced-motion rule already flattens the transition. */
+   pointer-events stay off so it cannot swallow a click. It slides in from the
+   right, which is what the eye catches; the global prefers-reduced-motion rule
+   flattens that to a plain appearance. */
 .ic-toast{
-  position:fixed;left:50%;bottom:24px;z-index:60;
-  transform:translate(-50%,8px);opacity:0;pointer-events:none;
-  transition:opacity .18s ease,transform .18s ease;
-  max-width:min(520px,calc(100vw - 32px));
-  background:var(--white);border:1px solid rgba(0,20,45,.10);border-radius:16px;
-  box-shadow:0 14px 40px rgba(0,20,45,.18);
-  padding:13px 18px;font-size:14.5px;line-height:1.5;color:var(--ink);
-  text-align:center;
+  position:fixed;top:96px;right:24px;z-index:130;
+  transform:translateX(14px);opacity:0;pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease;
+  /* 48, not 32: the box is offset 24 from the right, so the viewport subtraction
+     has to cover both sides or the left margin comes out at 8px on a phone. */
+  max-width:min(380px,calc(100vw - 48px));
+  background:var(--ink);border-radius:14px;
+  box-shadow:0 18px 48px rgba(0,20,45,.30);
+  padding:14px 18px;font-size:14.5px;font-weight:500;line-height:1.5;
+  color:var(--white);text-align:left;
 }
-.ic-toast.is-on{opacity:1;transform:translate(-50%,0)}
-/* An empty toast must not paint a bare rounded box in the corner while it waits
+.ic-toast.is-on{opacity:1;transform:translateX(0)}
+/* An empty toast must not paint a bare dark box in the corner while it waits
    for its first message. :empty is exactly this state and nothing else. */
 .ic-toast:empty{opacity:0}
 

@@ -369,13 +369,21 @@
     toast.textContent = message;
     toast.classList.add('is-on');
     if (toastTimer) clearTimeout(toastTimer);
-    /* Long enough to read two sentences without hurrying. Cleared as well as
-       hidden, so the live region does not re-announce a stale line later and
-       :empty keeps an empty box off the screen. */
+    /* Three seconds, which is what these are worth: the confirmations are short
+       and the state they confirm is visible on the card behind anyway.
+
+       The two partial-duplicate lines run past seventy characters and wrap to
+       three or four on a phone, and three seconds is not enough to read that
+       without hurrying, so those get a little longer. Length is the honest
+       signal here, not the kind of message. */
+    var hold = message.length > 60 ? 4500 : 3000;
+    /* Cleared as well as hidden, so the live region cannot re-announce a stale
+       line later and :empty keeps an empty box off the screen. The inner wait
+       matches the CSS transition, so the text goes only once it has faded. */
     toastTimer = setTimeout(function () {
       toast.classList.remove('is-on');
       setTimeout(function () { if (!toast.classList.contains('is-on')) toast.textContent = ''; }, 300);
-    }, 6000);
+    }, hold);
   }
 
   /* One sentence when both halves did the same thing, because "Intro call

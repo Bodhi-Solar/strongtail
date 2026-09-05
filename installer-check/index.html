@@ -255,7 +255,10 @@
      only opacity and transform change. Using hidden, or visibility, would pull
      it out of that tree and the announcement would be missed. pointer-events
      are off so an invisible bar can never swallow a click. Motion is covered by
-     the global prefers-reduced-motion rule in site.css. -->
+     the global prefers-reduced-motion rule in site.css.
+
+     Sits top right, below the sticky header, and inverts to ink on white so it
+     reads as the system answering rather than as more page. -->
 <div class="ic-toast" id="ic-toast" role="status"></div>
 
 <script src="../js/main.js"></script>
