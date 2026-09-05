@@ -113,23 +113,44 @@
       <form class="form ic-form ic-log" id="ic-log" hidden novalidate>
         <p class="fh">Log a call or an enrollment</p>
 
-        <div class="field">
-          <label for="ic-kind">What are you logging</label>
-          <select id="ic-kind" name="kind">
-            <option value="intro_call">Intro call</option>
-            <option value="activation">Enrollment</option>
-          </select>
-        </div>
+        <!-- Checkboxes, not a select, because a call that ends in an
+             enrollment is the common case and used to cost two submissions.
+             Both can be ticked and the Worker writes them in one PATCH.
+
+             A fieldset with a legend, because a <label> captions one control
+             and this captions a group; screen readers announce the legend with
+             each box. Both start unchecked so nothing is logged by a stray
+             submit.
+
+             .fieldset and .radios are the existing kit, from the native join
+             form that HubSpot replaced. .radios is named for radios but is just
+             a row of inline labelled controls, and reusing it beats a second
+             class that would differ from it only in name. Its legend already
+             matches .field label exactly, so this caption sits level with the
+             others and site.css needs nothing new. -->
+        <fieldset class="fieldset">
+          <legend>What are you logging</legend>
+          <div class="radios">
+            <label><input type="checkbox" id="ic-kind-call" value="intro_call"> Intro call</label>
+            <label><input type="checkbox" id="ic-kind-act" value="activation"> Enrollment</label>
+          </div>
+        </fieldset>
 
         <div class="f-row">
           <div class="field">
             <!-- One select, not two. A partner logs their own offer, so "who is
                  logging" and "whose offer" are the same answer, and the log line
-                 format has one partner column. The label changes with the kind;
-                 see js/installer-check.js. Other is removed for an activation,
+                 format has one partner column.
+
+                 "Your company", fixed. It used to swap to "Whose offer did they
+                 take?" for an enrollment, which cannot work now that both boxes
+                 can be ticked at once, and "Your partner" read as "which partner
+                 is this about" rather than "who do you work for".
+
+                 Other is dropped from the list as soon as Enrollment is ticked,
                  because Activated is a six-option multi-select and the Worker
                  sends typecast:false. -->
-            <label for="ic-partner" id="ic-partner-label">Your partner</label>
+            <label for="ic-partner">Your company</label>
             <select id="ic-partner" name="partner"></select>
           </div>
           <div class="field">

@@ -45,9 +45,9 @@
   var results = document.getElementById('ic-results');
 
   var logForm = document.getElementById('ic-log');
-  var kindField = document.getElementById('ic-kind');
+  var callBox = document.getElementById('ic-kind-call');
+  var actBox = document.getElementById('ic-kind-act');
   var partnerField = document.getElementById('ic-partner');
-  var partnerLabel = document.getElementById('ic-partner-label');
   var dateField = document.getElementById('ic-date');
   var detailsWrap = document.getElementById('ic-details-f');
   var detailsField = document.getElementById('ic-details');
@@ -361,9 +361,12 @@
   var logId = '';
 
   function fillPartners() {
-    var kind = kindField.value;
+    /* Other only survives while the enrollment half is off: Activated is a
+       six-option multi-select written with typecast:false, so Other would 422.
+       Ticking Enrollment removes it, and clears it if it was already picked. */
+    var wantAct = actBox.checked;
     var opts = PARTNERS.slice();
-    if (kind === 'intro_call') opts.push('Other');
+    if (!wantAct) opts.push('Other');
     var keep = partnerField.value;
     partnerField.textContent = '';
     for (var i = 0; i < opts.length; i++) {
@@ -376,11 +379,11 @@
     /* The wire value stays `activation` and the Airtable field stays Activated;
        only the word a partner reads changes. That mapping is in
        INSTALLER-CHECK.md, because three vocabularies for one event is exactly
-       the sort of thing that wastes an afternoon later. */
-    partnerLabel.textContent = kind === 'activation'
-      ? 'Whose offer did they take?'
-      : 'Your partner';
-    detailsWrap.hidden = kind !== 'activation';
+       the sort of thing that wastes an afternoon later.
+
+       The label no longer changes. It is "Your company" in both states, since
+       both boxes can be ticked and there is no single kind to key off. */
+    detailsWrap.hidden = !wantAct;
   }
 
   function showLog(id) {
@@ -415,8 +418,9 @@
     }
   }
 
-  if (kindField) {
-    kindField.addEventListener('change', fillPartners);
+  if (callBox && actBox) {
+    callBox.addEventListener('change', fillPartners);
+    actBox.addEventListener('change', fillPartners);
     dateField.value = todayET();
     fillPartners();
   }
@@ -426,6 +430,11 @@
       event.preventDefault();
       if (!logId) return;
 
+      var kinds = [];
+      if (callBox.checked) kinds.push('intro_call');
+      if (actBox.checked) kinds.push('activation');
+      if (!kinds.length) { say(logNote, 'Tick what you are logging.'); return; }
+
       var by = byField.value.trim();
       if (!by) { say(logNote, 'Enter your email so the log says who logged it.'); return; }
 
@@ -433,7 +442,7 @@
       ask('/log', {
         passcode: passcode,
         alliance_id: logId,
-        kind: kindField.value,
+        kinds: kinds,
         partner: partnerField.value,
         date: dateField.value,
         details: detailsField.value.trim(),
@@ -453,7 +462,17 @@
           say(logNote, res.data.error || 'Could not log that. Try again shortly.');
           return;
         }
-        say(logNote, '');
+        /* Say what happened to each half. A submission can carry both, and one
+           of them can be a duplicate while the other is written, so a bare
+           "Logged" would be wrong as often as it was right. Silent on the half
+           that was not requested. */
+        var d = res.data || {};
+        var said = [];
+        if (d.intro_call === 'written') said.push('Intro call logged.');
+        if (d.intro_call === 'unchanged') said.push('The intro call was already recorded.');
+        if (d.activation === 'written') said.push('Enrollment logged.');
+        if (d.activation === 'duplicate') said.push('That enrollment was already logged in the last 30 days.');
+        say(logNote, said.join(' '));
         detailsField.value = '';
         /* Re-read rather than patch, so the card shows what Airtable actually
            holds. The Worker invalidated its Alliance cache on the write. */

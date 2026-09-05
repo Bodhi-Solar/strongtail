@@ -190,6 +190,13 @@ h1,h2,h3,h4,p{margin:0}
 .field textarea{min-height:88px;line-height:1.5;resize:vertical;display:block}
 .radios{display:flex;gap:18px;flex-wrap:wrap;font-size:14.5px;color:var(--ink)}
 .radios label{display:flex;align-items:center;gap:7px}
+/* The browser default is a saturated blue, which is a second accent on a page
+   whose art direction allows exactly one, and it is the yellow submit. Tinting
+   the control itself is the whole fix: no bespoke box, no pseudo-element, no
+   hiding the real input, so the native focus ring and keyboard behaviour are
+   untouched. Unsupported in very old browsers, which get the blue and are
+   otherwise fine. */
+.radios input{accent-color:var(--ink)}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:14px;color:var(--ink-soft)}
 .checks label{display:flex;align-items:center;gap:7px}
 .fieldset{margin:0 0 18px;padding:0;border:0}
