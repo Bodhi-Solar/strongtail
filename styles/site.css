@@ -943,6 +943,34 @@ h1,h2,h3,h4,p{margin:0}
   .ic-facts dt:first-child{padding-top:0}
 }
 
+/* The log confirmation. Fixed, because the result card underneath it re-renders
+   on success and anything inside that card would be wiped by the refresh that
+   proved the write landed.
+
+   Surface borrowed from .card, not invented: same white, same 1px
+   rgba(0,20,45,.10) hairline, same 16px radius. The shadow is heavier than a
+   card's because this one floats over content and needs to read as above it.
+
+   Never display:none and never visibility:hidden. It is a role="status" live
+   region and both would drop it out of the accessibility tree, so the
+   announcement would be lost. Only opacity and transform move, and
+   pointer-events stay off so an invisible bar cannot swallow a click. The
+   global prefers-reduced-motion rule already flattens the transition. */
+.ic-toast{
+  position:fixed;left:50%;bottom:24px;z-index:60;
+  transform:translate(-50%,8px);opacity:0;pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;
+  max-width:min(520px,calc(100vw - 32px));
+  background:var(--white);border:1px solid rgba(0,20,45,.10);border-radius:16px;
+  box-shadow:0 14px 40px rgba(0,20,45,.18);
+  padding:13px 18px;font-size:14.5px;line-height:1.5;color:var(--ink);
+  text-align:center;
+}
+.ic-toast.is-on{opacity:1;transform:translate(-50%,0)}
+/* An empty toast must not paint a bare rounded box in the corner while it waits
+   for its first message. :empty is exactly this state and nothing else. */
+.ic-toast:empty{opacity:0}
+
 /* Until ALLIANCE_TABLE_ID is set, /lookup answers alliance:false and no log
    form can appear, so the two steps that describe logging would be instructions
    for a control that is not there. js/installer-check.js adds this class to

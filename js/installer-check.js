@@ -50,6 +50,8 @@
   var partnerField = document.getElementById('ic-partner');
   var dateField = document.getElementById('ic-date');
   var detailsWrap = document.getElementById('ic-details-f');
+  var toast = document.getElementById('ic-toast');
+  var toastTimer = null;
   var detailsField = document.getElementById('ic-details');
   var byField = document.getElementById('ic-by');
   var logNote = document.getElementById('ic-log-note');
@@ -356,6 +358,45 @@
     }
   }
 
+  /* --------------------------------------------------------------- toast */
+
+  /* Outcomes float; problems stay put. A confirmation is read once and wants to
+     be out of the way, and it has to outlive the result card re-rendering
+     underneath it. A validation message is something to act on, so it belongs
+     beside the control that caused it and must not time out. */
+  function toastSay(message) {
+    if (!toast || !message) return;
+    toast.textContent = message;
+    toast.classList.add('is-on');
+    if (toastTimer) clearTimeout(toastTimer);
+    /* Long enough to read two sentences without hurrying. Cleared as well as
+       hidden, so the live region does not re-announce a stale line later and
+       :empty keeps an empty box off the screen. */
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('is-on');
+      setTimeout(function () { if (!toast.classList.contains('is-on')) toast.textContent = ''; }, 300);
+    }, 6000);
+  }
+
+  /* One sentence when both halves did the same thing, because "Intro call
+     logged. Enrollment logged." is two sentences saying one thing. Separate
+     sentences only when the outcomes genuinely differ. */
+  function logOutcome(d) {
+    var call = d.intro_call, act = d.activation;
+
+    if (call === 'written' && act === 'written') return 'Intro call and enrollment successfully logged';
+    if (call === 'written' && act === null) return 'Intro call successfully logged';
+    if (act === 'written' && call === null) return 'Enrollment successfully logged';
+
+    if (call === 'unchanged' && act === 'written') return 'Enrollment logged. The intro call was already recorded.';
+    if (call === 'written' && act === 'duplicate') return 'Intro call logged. That enrollment was already logged in the last 30 days.';
+    if (call === 'unchanged' && act === 'duplicate') return 'Nothing to add. Both were already logged.';
+
+    if (call === 'unchanged') return 'The intro call was already recorded.';
+    if (act === 'duplicate') return 'That enrollment was already logged in the last 30 days.';
+    return 'Logged';
+  }
+
   /* ------------------------------------------------------------- log form */
 
   var logId = '';
@@ -455,24 +496,22 @@
         /* Nothing else. No re-render, no reset: the doc is explicit that a
            duplicate shows this and only this. */
         if (res.data && res.data.duplicate === true) {
-          say(logNote, 'Already logged in the last 30 days');
+          /* Still no re-render: nothing was written, so there is nothing new for
+             the card to show. The wording moves to the toast because it is an
+             outcome, not something to fix. */
+          say(logNote, '');
+          toastSay('That enrollment was already logged in the last 30 days.');
           return;
         }
         if (!res.ok) {
           say(logNote, res.data.error || 'Could not log that. Try again shortly.');
           return;
         }
-        /* Say what happened to each half. A submission can carry both, and one
-           of them can be a duplicate while the other is written, so a bare
-           "Logged" would be wrong as often as it was right. Silent on the half
-           that was not requested. */
-        var d = res.data || {};
-        var said = [];
-        if (d.intro_call === 'written') said.push('Intro call logged.');
-        if (d.intro_call === 'unchanged') said.push('The intro call was already recorded.');
-        if (d.activation === 'written') said.push('Enrollment logged.');
-        if (d.activation === 'duplicate') said.push('That enrollment was already logged in the last 30 days.');
-        say(logNote, said.join(' '));
+        /* The toast, not the form note. render() below runs hideLog() then
+           showLog(), and showLog clears the note, so a confirmation put there
+           is erased by the refresh that just proved the write worked. */
+        say(logNote, '');
+        toastSay(logOutcome(res.data || {}));
         detailsField.value = '';
         /* Re-read rather than patch, so the card shows what Airtable actually
            holds. The Worker invalidated its Alliance cache on the write. */

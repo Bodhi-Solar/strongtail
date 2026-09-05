@@ -244,6 +244,20 @@
 
 </div>
 
+<!-- The confirmation cannot live inside the form. On success the page re-reads
+     /lookup and re-renders the result card, and that path runs hideLog() then
+     showLog(), which clears the form note: the message appeared and was wiped a
+     moment later by the very refresh that proved it worked. Out here, nothing
+     the re-render does can touch it.
+
+     role="status" is a polite live region, so setting textContent announces it.
+     It therefore stays in the DOM and in the accessibility tree at all times;
+     only opacity and transform change. Using hidden, or visibility, would pull
+     it out of that tree and the announcement would be missed. pointer-events
+     are off so an invisible bar can never swallow a click. Motion is covered by
+     the global prefers-reduced-motion rule in site.css. -->
+<div class="ic-toast" id="ic-toast" role="status"></div>
+
 <script src="../js/main.js"></script>
 <script src="../js/installer-check.js"></script>
 </body>
