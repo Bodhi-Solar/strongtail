@@ -84,8 +84,8 @@
       <a class="back" href="/#offers">&larr; All partner offers</a>
       <div class="idrow">
         <span class="tile">
+          <img src="../../assets/logos/bodhi-square.png" alt="Bodhi" width="96" height="96">
           
-          <span class="ph">Bodhi</span>
         </span>
         <div class="idtext">
           <h1 class="h1 h1--name" id="partner-name">Bodhi</h1>
@@ -115,10 +115,37 @@
                the two overlap heavily and the card already carries the qualifier.
                A partner without one still shows their qualifier here. -->
           
-          <p class="offer-body">Automation and AI tools to manage communications, prevent escalations, and win repeat business.</p>
           
+          <p class="offer-body">Bodhi is included at no cost for Alliance installers who make Climate First Bank part of their financing workflow, and you can use it on every project you install, not just the ones financed with Climate First Bank. Join the installers across the US who use Bodhi to make customer communications easier for their team with automated customer journeys, an AI support agent designed just for solar, and one omni-channel inbox for text, email and in-app messages. Installers using Bodhi report that their staff handle 67% more projects with no loss in service quality, 20% fewer escalations, and 30% more referrals.</p>
           
 
+          
+          <!-- Guarded on showKnow, not whatToKnow, because a partner can be
+               between the two states: their copy is not here yet, but the
+               heading is held open so the section does not vanish and reappear.
+               Inside the guard on purpose, so it does not ship to the pages
+               that have no such section. render()'s if: blocks do not nest, so
+               the empty <ul> is left to render rather than guarded separately.
+               Harmless: .know ul is margin:0, so with no <li> it takes up
+               nothing. -->
+          <div class="know">
+            <p class="h3 h3--sm">What to know</p>
+            <ul>
+              
+              <li>Use Bodhi on all of your projects, whatever the financing.</li>
+              
+              <li>Qualify by presenting Climate First Bank as a standard financing option and creating Climate First Bank referrals on at least 60% of your non-cash projects.</li>
+              
+              <li>Or qualify by financing at least 20% of your non-cash projects through Climate First Bank.</li>
+              
+              <li>Or qualify by reaching 36 approved Climate First Bank loans.</li>
+              
+              <li>No monthly fee and no implementation fee.</li>
+              
+              <li>Terms subject to change.</li>
+              
+            </ul>
+          </div>
           
         </div>
 
@@ -133,7 +160,9 @@
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About Bodhi</p>
-            <p></p>
+            <p>Bodhi builds customer experience software for residential solar installers and is rated #1 for solar customer management software. It is part of Climate First Bank.</p>
+            
+            <a class="tlink" href="https://www.bodhi.solar/" target="_blank" rel="noopener">Visit website <span class="arw">&rarr;</span></a>
             
           </div>
         </aside>
