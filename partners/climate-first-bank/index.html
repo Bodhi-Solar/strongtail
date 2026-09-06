@@ -84,8 +84,8 @@
       <a class="back" href="/#offers">&larr; All partner offers</a>
       <div class="idrow">
         <span class="tile">
+          <img src="../../assets/logos/climate-first-bank-square.png" alt="Climate First Bank" width="96" height="96">
           
-          <span class="ph">Climate First Bank</span>
         </span>
         <div class="idtext">
           <h1 class="h1 h1--name" id="partner-name">Climate First Bank</h1>
@@ -115,10 +115,39 @@
                the two overlap heavily and the card already carries the qualifier.
                A partner without one still shows their qualifier here. -->
           
-          <p class="offer-body">Give homeowners the benefits of solar ownership and low monthly payments.</p>
           
+          <p class="offer-body">Climate First Bank's solar loans are the financing the Alliance is built around. Homeowners get ownership and a low monthly payment with no dealer fee built into the price, and every project you finance with Climate First Bank qualifies for the Alliance equipment pricing from participating partners. Enroll here to become a Climate First Bank approved installer and start quoting the loan alongside your other options.</p>
           
 
+          
+          <!-- Guarded on showKnow, not whatToKnow, because a partner can be
+               between the two states: their copy is not here yet, but the
+               heading is held open so the section does not vanish and reappear.
+               Inside the guard on purpose, so it does not ship to the pages
+               that have no such section. render()'s if: blocks do not nest, so
+               the empty <ul> is left to render rather than guarded separately.
+               Harmless: .know ul is margin:0, so with no <li> it takes up
+               nothing. -->
+          <div class="know">
+            <p class="h3 h3--sm">What to know</p>
+            <ul>
+              
+              <li>No dealer fee and no prepayment penalty on every loan.</li>
+              
+              <li>Residential solar loans in 10.5, 20.5 and 30.5-year terms.</li>
+              
+              <li>Battery-only loans on a 10.5-year term.</li>
+              
+              <li>Commercial solar loans on a 30.5-year term.</li>
+              
+              <li>Each Climate First Bank-financed project gets a loan ID that qualifies it for per-project Alliance partner pricing.</li>
+              
+              <li>Homeowners must work with a Climate First Bank approved installer, which enrollment here sets up.</li>
+              
+              <li>Terms subject to change.</li>
+              
+            </ul>
+          </div>
           
         </div>
 
@@ -133,7 +162,9 @@
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About Climate First Bank</p>
-            <p></p>
+            <p>Climate First Bank is an FDIC-insured, mission-driven community bank based in St. Petersburg, Florida, founded to finance the transition to a clean economy. OneEthos, its technology subsidiary, runs the installer program and operates the Strong Tail Solar Alliance.</p>
+            
+            <a class="tlink" href="https://www.oneethos.com/" target="_blank" rel="noopener">Visit website <span class="arw">&rarr;</span></a>
             
           </div>
         </aside>
