@@ -84,8 +84,8 @@
       <a class="back" href="/#offers">&larr; All partner offers</a>
       <div class="idrow">
         <span class="tile">
+          <img src="../../assets/logos/damaris-solutions-square.png" alt="Damaris Solutions" width="96" height="96">
           
-          <span class="ph">Damaris Solutions</span>
         </span>
         <div class="idtext">
           <h1 class="h1 h1--name" id="partner-name">Damaris Solutions</h1>
@@ -115,10 +115,39 @@
                the two overlap heavily and the card already carries the qualifier.
                A partner without one still shows their qualifier here. -->
           
-          <p class="offer-body">Build a more predictable growth engine with solar marketing expertise, strategy, and execution.</p>
           
+          <p class="offer-body">Damaris Solutions is a marketing agency built for solar, and Alliance installers get 20% off their work. You get a team rather than a freelancer: an account lead, a paid media buyer, a social and content specialist, a videographer, web and SEO builders, and someone running reporting. They will take on the whole marketing function or just the piece you are missing, and there are three ways to start depending on how much you want to hand over.</p>
           
 
+          
+          <!-- Guarded on showKnow, not whatToKnow, because a partner can be
+               between the two states: their copy is not here yet, but the
+               heading is held open so the section does not vanish and reappear.
+               Inside the guard on purpose, so it does not ship to the pages
+               that have no such section. render()'s if: blocks do not nest, so
+               the empty <ul> is left to render rather than guarded separately.
+               Harmless: .know ul is margin:0, so with no <li> it takes up
+               nothing. -->
+          <div class="know">
+            <p class="h3 h3--sm">What to know</p>
+            <ul>
+              
+              <li>Open to approved OneEthos installers.</li>
+              
+              <li><strong>Full-service marketing, 20% off.</strong> For installers ready to scale lead generation across every channel. SEO, paid media buying, weekly content, website development and strategic planning.</li>
+              
+              <li><strong>Energy Storage Foundation, $1,500 instead of $4,990.</strong> For installers adding storage and needing a campaign behind it. A one-time launch package: keyword strategy, one month of blog content, a landing page, paid ads strategy, organic social setup and ownership messaging.</li>
+              
+              <li><strong>Marketing Starter, $995 a month.</strong> For installers building a steady organic presence for the first time. Four social posts, one SEO blog plus a Google Business Profile post, one short-form video and a monthly reporting snapshot.</li>
+              
+              <li>The discount applies per installer company, across all of your accounts.</li>
+              
+              <li>Videography travel is billed separately.</li>
+              
+              <li>Pricing changes only when list pricing changes, with 30 days' notice.</li>
+              
+            </ul>
+          </div>
           
         </div>
 
@@ -133,7 +162,9 @@
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About Damaris Solutions</p>
-            <p></p>
+            <p>Damaris Solutions is a marketing agency that works only with solar companies, covering paid media, social and content, video, web and SEO. They handle the marketing work most installers do not have the staff for, from a single storage campaign to a full outsourced marketing function.</p>
+            
+            <a class="tlink" href="https://damarissolutions.com/" target="_blank" rel="noopener">Visit website <span class="arw">&rarr;</span></a>
             
           </div>
         </aside>

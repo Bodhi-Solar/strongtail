@@ -444,6 +444,11 @@ h1,h2,h3,h4,p{margin:0}
 .know .h3,.know .h3--sm{margin:0 0 14px}
 .know ul{margin:0;padding-left:18px}
 .know li{font-size:15px;line-height:1.6;color:var(--ink-soft);margin:0 0 9px}
+/* A bullet may open with a short label, for a partner whose conditions are
+   priced tiers rather than one-line facts. Full ink, not --ink-soft: bolding
+   inside the soft grey barely registers, and the label is there to be scanned
+   ahead of the sentence under it. */
+.know li strong{color:var(--ink);font-weight:600}
 
 /* ---- the rail's About block ---------------------------------------------- */
 .about .h3,.about .h3--sm{margin:0 0 14px}
