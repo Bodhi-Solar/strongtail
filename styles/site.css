@@ -440,6 +440,11 @@ h1,h2,h3,h4,p{margin:0}
 
 /* ---- offer copy ---------------------------------------------------------- */
 .offer-body{font-size:17px;line-height:1.66;color:var(--ink-soft);max-width:62ch;margin:0 0 18px}
+/* A block inside publicDescription whose every line opens with "- ". Same size,
+   colour and measure as .offer-body, so the list reads as the same voice as the
+   paragraphs it sits between rather than as a second kind of copy. */
+.offer-list{max-width:62ch;margin:0 0 18px;padding-left:18px}
+.offer-list li{font-size:17px;line-height:1.66;color:var(--ink-soft);margin:0 0 8px}
 .know{max-width:62ch;margin:var(--s5) 0 0}
 .know .h3,.know .h3--sm{margin:0 0 14px}
 .know ul{margin:0;padding-left:18px}
