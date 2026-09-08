@@ -89,6 +89,12 @@
         </span>
         <div class="idtext">
           <h1 class="h1 h1--name" id="partner-name">JA Solar</h1>
+          <!-- An optional line under the name, for a partner whose public name and
+               operating company differ. Climate First Bank is the only one today:
+               Dema's title was "Climate First Bank Powered by OneEthos" and this is
+               where that second half lives, deliberately not in the H1. A partner
+               without one renders nothing here and the chip closes up. -->
+          
           <span class="cat">Equipment</span>
         </div>
       </div>
@@ -149,6 +155,12 @@
               <li>Terms are subject to change.</li>
               
             </ul>
+            <!-- A partner's own compliance line, in small type under the list. Built
+                 by tools/partner-pages.mjs and empty for a partner without one, for
+                 the same reason the empty ul is left to render: this sits inside the
+                 showKnow guard and render()'s if: blocks do not nest. An empty string
+                 emits nothing at all, which is better here than an empty paragraph. -->
+            
           </div>
           
         </div>
@@ -263,7 +275,7 @@
         
         <a class="mini" href="/partners/climate-first-bank/">
           <span class="mslot"><img src="../../assets/logos/climate-first-bank.png" alt="Climate First Bank" style="--lh:36px"></span>
-          <p class="mo">Up to 30.5-year loans. No dealer fee.</p>
+          <p class="mo">Solar loans up to 30.5 years. No dealer fees.</p>
           <p class="ml">See financing terms &rarr;</p>
         </a>
         

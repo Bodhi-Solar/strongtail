@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Climate First Bank | Strong Tail Solar Alliance</title>
-<meta name="description" content="Up to 30.5-year loans. No dealer fee.. A Strong Tail Solar Alliance partner offer for independent installers.">
+<meta name="description" content="Solar loans up to 30.5 years. No dealer fees. A Strong Tail Solar Alliance partner offer for independent installers.">
 
 <!-- PRE-LAUNCH ONLY. DELETE THIS TAG ON WEDNESDAY 16 SEPTEMBER 2026, at the
      same time as the one in index.html. The form is wired to HubSpot as of
@@ -18,7 +18,7 @@
 <meta property="og:url" content="https://strongtail.bodhi.solar/partners/climate-first-bank/">
 <meta property="og:site_name" content="Strong Tail Solar Alliance">
 <meta property="og:title" content="Climate First Bank | Strong Tail Solar Alliance">
-<meta property="og:description" content="Up to 30.5-year loans. No dealer fee.">
+<meta property="og:description" content="Solar loans up to 30.5 years. No dealer fees.">
 <!-- Partners will share these URLs themselves, so the card matters. Falls back
      to the site card until per-partner OG images exist. Absolute URLs are
      required: scrapers do not resolve relative paths. -->
@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://strongtail.bodhi.solar/assets/og-image.jpg">
 <meta name="twitter:title" content="Climate First Bank | Strong Tail Solar Alliance">
-<meta name="twitter:description" content="Up to 30.5-year loans. No dealer fee.">
+<meta name="twitter:description" content="Solar loans up to 30.5 years. No dealer fees.">
 <meta name="theme-color" content="#FFFCF5">
 
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -89,10 +89,16 @@
         </span>
         <div class="idtext">
           <h1 class="h1 h1--name" id="partner-name">Climate First Bank</h1>
+          <!-- An optional line under the name, for a partner whose public name and
+               operating company differ. Climate First Bank is the only one today:
+               Dema's title was "Climate First Bank Powered by OneEthos" and this is
+               where that second half lives, deliberately not in the H1. A partner
+               without one renders nothing here and the chip closes up. -->
+          <p class="byline">Powered by OneEthos</p>
           <span class="cat">Financing</span>
         </div>
       </div>
-      <p class="hero-offer">Up to 30.5-year loans. No dealer fee.</p>
+      <p class="hero-offer">Solar loans up to 30.5 years. No dealer fees.</p>
       <a class="btn btn--lg" href="#enroll">Enroll with Climate First Bank</a>
     </div>
   </section>
@@ -120,7 +126,9 @@
                render()'s if: blocks cannot branch inside a repeat body. Keep the
                indentation: it is what puts the emitted tag on this column. -->
           
-          <p class="offer-body">Climate First Bank's solar loans are the financing the Alliance is built around. Homeowners get ownership and a low monthly payment with no dealer fee built into the price, and every project you finance with Climate First Bank qualifies for the Alliance equipment pricing from participating partners. Enroll here to become a Climate First Bank approved installer and start quoting the loan alongside your other options.</p>
+          <p class="offer-body">Climate First Bank provides transparent solar financing that gives homeowners a competitive path to solar ownership, with no dealer fees built into the loan. Through the Strong Tail Solar Alliance, approved installers also unlock the Alliance offers from participating partners: special per-project equipment pricing on eligible projects financed by Climate First Bank, and preferred terms on software and services that apply across your business, not just to financed jobs.</p>
+          
+          <p class="offer-body">Enroll to become a Climate First Bank approved installer and add Climate First Bank financing to the options you offer your customers.</p>
           
 
           
@@ -136,21 +144,29 @@
             <p class="h3 h3--sm">What to know</p>
             <ul>
               
-              <li>No dealer fee and no prepayment penalty on every loan.</li>
+              <li>No dealer fees: keep your project pricing transparent, with no financing-related dealer fees built in.</li>
               
-              <li>Residential solar loans in 10.5, 20.5 and 30.5-year terms.</li>
+              <li>No prepayment penalties: customers can pay additional principal or pay off their loan early.</li>
+              
+              <li>Residential solar loans in 10.5-, 20.5- and 30.5-year terms.</li>
               
               <li>Battery-only loans on a 10.5-year term.</li>
               
-              <li>Commercial solar loans on a 30.5-year term.</li>
+              <li>Commercial solar loans on a 30.5-year term for eligible projects.</li>
               
-              <li>Each Climate First Bank-financed project gets a loan ID that qualifies it for per-project Alliance partner pricing.</li>
+              <li>Every Climate First Bank-financed project receives a Climate First Bank loan ID, which unlocks applicable per-project equipment pricing from participating Alliance partners.</li>
               
-              <li>Homeowners must work with a Climate First Bank approved installer, which enrollment here sets up.</li>
+              <li>Approved installer status also qualifies you for participating partners' software and services offers, which are not tied to individual projects.</li>
               
-              <li>Terms subject to change.</li>
+              <li>Climate First Bank solar financing is available for approved installers.</li>
               
             </ul>
+            <!-- A partner's own compliance line, in small type under the list. Built
+                 by tools/partner-pages.mjs and empty for a partner without one, for
+                 the same reason the empty ul is left to render: this sits inside the
+                 showKnow guard and render()'s if: blocks do not nest. An empty string
+                 emits nothing at all, which is better here than an empty paragraph. -->
+            <p class="fine">Loan products, rates, terms, eligibility requirements and Alliance benefits are subject to change. All loans are subject to credit approval and applicable program requirements.</p>
           </div>
           
         </div>
@@ -166,9 +182,9 @@
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About Climate First Bank</p>
-            <p>Climate First Bank is an FDIC-insured, mission-driven community bank based in St. Petersburg, Florida, founded to finance the transition to a clean economy. OneEthos, its technology subsidiary, runs the installer program and operates the Strong Tail Solar Alliance.</p>
+            <p>Climate First Bank is an FDIC-insured, mission-driven community bank headquartered in St. Petersburg, Florida, founded to use finance to support a more sustainable and resilient economy. OneEthos, a Climate First Bank Corp subsidiary, provides the technology and program support behind the Bank's renewable energy lending and operates the Strong Tail Solar Alliance.</p>
             
-            <a class="tlink" href="https://www.oneethos.com/" target="_blank" rel="noopener">Visit website <span class="arw">&rarr;</span></a>
+            <a class="tlink" href="https://www.oneethos.com/for-installers" target="_blank" rel="noopener">Visit website <span class="arw">&rarr;</span></a>
             
           </div>
         </aside>

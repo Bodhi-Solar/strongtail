@@ -399,6 +399,13 @@ h1,h2,h3,h4,p{margin:0}
 .tile .ph{font-size:13px;font-weight:700;letter-spacing:.04em;line-height:1.2;text-align:center;
   color:var(--ink-soft);text-transform:uppercase}
 .idtext h1{margin:0 0 12px}
+/* An optional line under the name, for a partner whose public name and operating
+   company differ. It pulls up tight to the name, because it qualifies the name
+   rather than standing on its own, and the :has() cuts the h1's own margin so the
+   pair reads as one block and the chip keeps its original distance. A partner with
+   no byline is untouched. */
+.idtext h1:has(+ .byline){margin-bottom:5px}
+.idtext .byline{font-size:14px;font-weight:500;line-height:1.3;color:var(--ink-soft);margin:0 0 13px}
 
 /* scoped to the identity band, so it cannot touch .card .cat on the landing grid */
 .idtext .cat{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
@@ -454,6 +461,12 @@ h1,h2,h3,h4,p{margin:0}
    inside the soft grey barely registers, and the label is there to be scanned
    ahead of the sentence under it. */
 .know li strong{color:var(--ink);font-weight:600}
+/* A partner's own compliance line under the list. Same size and colour as the
+   form's .note-sm, which is the site's established fine print, but that selector
+   is scoped to .form and widening it would reach the join form on every page.
+   .small at 14.5px is only half a pixel under .know li and would not read as fine
+   print here. Sits inside .know, so it inherits the 62ch measure. */
+.know .fine{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:16px 0 0}
 
 /* ---- the rail's About block ---------------------------------------------- */
 .about .h3,.about .h3--sm{margin:0 0 14px}
