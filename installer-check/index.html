@@ -204,6 +204,33 @@
         </ol>
         <p class="small ic-rail-note">Changes show here within 15 minutes. Anything you log is
         visible to every Alliance partner.</p>
+
+        <!-- The one-pager, in the rail rather than in col-a. The rail spans both
+             grid rows, so this is beside the intro and visible on load, where
+             col-b sits under the results and the log form. It is also an aside
+             of supporting material, and a download is not a step in "Check an
+             installer's status": putting it in col-a would interrupt gate,
+             search, results, log.
+
+             .kit-row and .kit-get are /kit/'s own download row. They carry no
+             /kit/-only ancestor, and the generated-block rule on that page is
+             scoped to that page, so this is reuse and not a copy. No file size
+             in the copy: /kit/ generates its sizes precisely so they cannot go
+             stale, and a number typed here is the one that would. -->
+        <div class="ic-sheet">
+        <p class="h3 h3--sm" id="ic-sheet-h">Hand this to an installer</p>
+        <ul class="kit-list" aria-labelledby="ic-sheet-h">
+          <li class="kit-row">
+            <div>
+              <p class="kit-name">The Alliance one-pager</p>
+              <p class="small">The six founding partners and what each brings, on one page.</p>
+            </div>
+            <div class="kit-get">
+              <a class="tlink" href="../assets/strong-tail-alliance-overview.pdf" download>PDF<span class="arw" aria-hidden="true">&rarr;</span></a>
+            </div>
+          </li>
+        </ul>
+        </div>
       </aside>
 
       <div class="col-b">

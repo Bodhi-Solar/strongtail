@@ -1029,11 +1029,30 @@ h1,h2,h3,h4,p{margin:0}
 .sec--check .rail .h3--sm{margin:0 0 14px}
 .sec--check .steps-list{margin-top:var(--s4)}
 /* .steps-list's last item carries 22px of its own bottom padding, so this only
-   tops it up to the clearance a closing aside wants. */
+   tops it up to the clearance the block below it wants. It stopped being the
+   rail's closing element on 10 Sept 2026, when the one-pager went in under it. */
 .ic-rail-note{margin:8px 0 0;max-width:38ch}
 
+/* The one-pager download in the rail, added 10 Sept 2026.
+
+   The hairline and the space are load bearing. Without them the heading butts
+   straight onto .ic-rail-note, which then reads as this block's own standfirst
+   rather than as the steps' closing line. The rail has two subjects now, the
+   lookup and the sheet, and the rule is what says so.
+
+   .kit-row is a space-between flex row sized for /kit/'s full-width column and
+   the rail is 300px, so it stacks. That is the same treatment .kit-row already
+   takes at the 900px breakpoint below, not a second idea about what a download
+   row is. The heading takes .sec--check .rail .h3--sm's margin, like the steps
+   heading above it. */
+.ic-sheet{margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--rule-soft)}
+.sec--check .rail .kit-list{margin-top:6px}
+.sec--check .rail .kit-row{flex-direction:column;align-items:flex-start;gap:12px}
+
 /* =============================== brand kit ===============================
-   /kit/ only. Appended here rather than given its own stylesheet, following
+   /kit/, and .kit-list, .kit-row, .kit-name and .kit-get are also the download
+   row on /installer-check/ as of 10 Sept 2026. They carry no /kit/-only
+   ancestor selector, which is what made that reuse free; keep it that way. Appended here rather than given its own stylesheet, following
    the thanks-page band above and the installer-check block below it, and
    because /installer-check/ manages without one too. kit/crops/crops.css is
    the analogue of print/overview.css and is never served.
