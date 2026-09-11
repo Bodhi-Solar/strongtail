@@ -45,22 +45,33 @@
 
   <main id="main">
 
-  <!-- One band, the same construction as the landing page's closing band: the
-       gradient at 0.72, centred. Arrival, not an argument.
+  <!-- The same opening band every other page carries: 636px, the gradient at
+       full strength, four rings, grain, and margin-top:-82px so the transparent
+       header sits over it. Left ranged, one column, four elements in the order
+       the landing hero uses: headline, lede, button, micro line.
 
-       close--thanks is what keeps this page's shorter band off the landing
-       page, which uses the same three classes for its closing band. -->
-  <section class="sec sec--close close close--thanks" aria-labelledby="thanks-h">
+       It was the landing page's CLOSING band until 10 Sept 2026, which is where
+       the centring, the 0.72 gradient, the white ground and a height that came
+       from its content all came from. Arrival is not a reprise, so it takes the
+       hero's shape now and the page reads as part of the site rather than as a
+       one-off. .arrive is grouped with .hero in site.css so the two proportions
+       cannot drift apart. -->
+  <section class="sec arrive" aria-labelledby="thanks-h">
     <div class="layer sky" aria-hidden="true"></div><div class="layer wash" aria-hidden="true"></div>
     <div class="orb r1" aria-hidden="true"></div><div class="orb r2" aria-hidden="true"></div>
     <div class="orb r3" aria-hidden="true"></div><div class="orb r4" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
-    <div class="wrap">
-      <h1 class="h2" id="thanks-h">Thanks. Let&rsquo;s get you set up.</h1>
+    <div class="wrap"><div class="copy">
+      <!-- .h1--name, the partner-page scale, not the landing page's larger .h1.
+           Six of the eight pages are set at this size and the headline is a
+           short phrase that does not need the biggest setting on the site. -->
+      <h1 class="h1 h1--name" id="thanks-h">Thanks. Let&rsquo;s get you set up.</h1>
+
       <!-- "the Alliance" is the shipped default and the correct wording for the
            landing form, which has no ?p=. js/main.js narrows it to a partner name
-           when the parameter matches the generated allow-list below. Never edit
-           between those markers by hand: bun tools/sync-partners.mjs writes them.
+           when the parameter matches the generated allow-list at the foot of this
+           file. Never edit between those markers by hand: bun
+           tools/sync-partners.mjs writes them.
 
            The second sentence is what the button is for. "Or, skip the wait"
            offers rather than instructs: the reader has just submitted a form and
@@ -71,37 +82,31 @@
            does not get this sentence at all. JA Solar reps reach out directly,
            so js/main.js replaces the whole paragraph for ?p=ja-solar and sends
            the button to Climate First Bank instead. It is the only slug that
-           does that, it is written as a special case in that file rather than as
-           a mechanism here, and it retires itself the moment JA Solar send a
-           calendar of their own. Everything below still holds for everyone
-           else. -->
-      <p class="lede close-sub" id="thanks-lede">We&rsquo;ll be in touch shortly to help you get started with
+           does that, and it retires itself the moment JA Solar send a calendar
+           of their own. -->
+      <p class="lede" id="thanks-lede">We&rsquo;ll be in touch shortly to help you get started with
       <span id="thanks-who">the Alliance</span>. Or, skip the wait and book a time
       that works for you.</p>
 
       <!-- Its own destination, not a way back to a form the reader has just
            submitted. That is the same exception the webinar "Register" buttons
-           take, and the one the print two-pager's closing button documented
-           before that sheet was removed on 9 Sept 2026; see the 2 Sep 2026
-           amendment to the CTA rule in docs-internal/CLAUDE.md.
+           take; see the 2 Sep 2026 amendment to the CTA rule in
+           docs-internal/CLAUDE.md.
 
-           Directly under the sentence that offers it, and above the OneEthos
-           line. The copy now says "find a time", so the button is that sentence's
-           button and has to sit with it; a paragraph between them would leave the
-           offer looking for its control. Amended 2 Sep 2026: it shipped below the
-           OneEthos line for one afternoon, before the copy made the invitation
-           explicit. The game band stays below both, as it always has.
+           A bare anchor in the flow, the way the landing hero carries its button.
+           It wore a .close-book paragraph until 10 Sept 2026, whose only job was
+           an 88px bottom margin the hero rhythm now sets at 24px.
 
            The href ships pointing at the Alliance's own calendar, so this button
            works with no JavaScript, with the parameter stripped, on an unknown
            slug, and for a partner who has not sent a link. js/main.js only ever
-           narrows it, exactly as it narrows the name above, and narrows the label
-           with it so the button never names a calendar it is not opening.
+           narrows it, and narrows the label with it so the button never names a
+           calendar it is not opening.
 
            Never edit between these markers: bun tools/sync-partners.mjs writes
            them from data/meetings.json. -->
       <!-- partners:book:start -->
-      <p class="close-book"><a class="btn btn--lg" id="thanks-book" href="https://meetings-na2.hubspot.com/scott322/brad-allen-meeting" target="_blank" rel="noopener">Book a call with the Alliance</a></p>
+      <a class="btn btn--lg" id="thanks-book" href="https://meetings-na2.hubspot.com/scott322/brad-allen-meeting" target="_blank" rel="noopener">Book a call with the Alliance</a>
       <!-- partners:book:end -->
 
       <!-- The one thing that is not the same for everybody. Someone already
@@ -110,25 +115,30 @@
            would leave them waiting on their own next step. Carried in copy rather
            than by routing, per BUILD-SPEC step 5.
 
-           Last in the band now, under the button rather than above it. It keeps a
-           64px gap and its own accent-red link, so it reads as the aside it is
-           and not as a footnote to the CTA. -->
-      <p class="lede close-sub close-act">Not yet an approved OneEthos installer? That is the first step.
+           .micro, the hero's fourth element, since 10 Sept 2026. It read at
+           .lede's 17.5px while the band was a closing band with no micro slot.
+           The link keeps its own accent colour and inherits the new size from
+           the sentence, which is what .tlink--inline is for. -->
+      <p class="micro">Not yet an approved OneEthos installer? That is the first step.
       <a class="tlink tlink--inline" href="https://www.oneethos.com/become-an-approved-installer"
          target="_blank" rel="noopener">Start the OneEthos
          application<span class="arw">&rarr;</span></a></p>
-    </div>
+    </div></div>
   </section>
 
-  <!-- An aside, and now its own band rather than a fourth item inside the
-       arrival band. It stays BELOW that band deliberately: the OneEthos link is
+  <!-- An aside, and its own band rather than a fourth item inside the arrival
+       band. It stays BELOW that band deliberately: the OneEthos link is
        somebody's actual next step and must not be upstaged by a diversion.
        The screenshot is the one image on this site; see the amendment to hard
-       rule 2 in docs-internal/CLAUDE.md. -->
+       rule 2 in docs-internal/CLAUDE.md.
+
+       The card comes FIRST and its caption follows, since 10 Sept 2026. That
+       reverses the order this band shipped with and it is what --game-pull now
+       measures: with the card as the wrap's first child, the pull IS the
+       overlap, rather than the overlap being the pull minus a caption and its
+       margin. -->
   <section class="sec sec--game" aria-labelledby="game-lede">
     <div class="wrap">
-      <p class="lede game-lede" id="game-lede">In the meantime, take a break. We made a game
-      where the enemies are fossil fuels. Subtle, we know.</p>
       <a class="game-card" href="https://games.bodhi.solar/bodhi-solar-defender.html"
          target="_blank" rel="noopener">
         <img src="../assets/game-bodhi-solar-defender.png" width="2048" height="1260"
@@ -136,6 +146,8 @@
              alt="Title screen of Bodhi Solar Defender, a pixel-art arcade game: a pixel sun over green hills, and a panel reading Bodhi Solar Defender above the objectives collect energy bolts from the sun, destroy fossil fuel enemies, and build solar panels to fill the power meter.">
         <span class="game-cta">Play Bodhi Solar Defender<span class="arw">&rarr;</span></span>
       </a>
+      <p class="lede game-lede" id="game-lede">In the meantime, take a break. We made a game
+      where the enemies are fossil fuels. Subtle, we know.</p>
     </div>
   </section>
 

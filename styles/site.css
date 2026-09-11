@@ -90,12 +90,20 @@ h1,h2,h3,h4,p{margin:0}
 .wm-b{font-size:15px;font-weight:400;letter-spacing:.13em;color:var(--ink-soft)}
 
 /* =============================== hero ==================================== */
-.hero{min-height:636px;display:flex;align-items:center;padding:0;margin-top:-82px}
+/* .arrive is the /thanks/ arrival band, grouped with .hero rather than given its
+   own copies of these values. It was built as a clone of the landing CLOSING
+   band until 10 Sept 2026, which is why it was centred, sat on a 0.72 gradient
+   over a white ground, and took its height from its content. Every other page on
+   the site opens with this box instead, and Scott asked for the thank you page to
+   match. Grouped selectors, so nobody can retune the hero's proportions and leave
+   the thank you page behind. .arrive's own two rules are further down, with the
+   game band it has to reserve room for. */
+.hero,.arrive{min-height:636px;display:flex;align-items:center;padding:0;margin-top:-82px}
 .hero .wrap{width:100%;padding-top:200px;padding-bottom:52px}
-.hero .copy{max-width:700px}
-.hero .h1{margin:0 0 var(--s4)}
-.hero .lede{margin:0 0 36px}
-.hero .micro{margin:24px 0 0}
+.hero .copy,.arrive .copy{max-width:700px}
+.hero .h1,.arrive .h1{margin:0 0 var(--s4)}
+.hero .lede,.arrive .lede{margin:0 0 36px}
+.hero .micro,.arrive .micro{margin:24px 0 0}
 
 /* ============================ logo strip ================================= */
 .strip{padding:30px 0 34px}
@@ -246,11 +254,14 @@ h1,h2,h3,h4,p{margin:0}
   .join-grid{grid-template-columns:1fr;gap:36px}
 }
 @media (max-width:900px){
-  :root{--gutter:26px;--s7:64px;--s8:80px;--cx:180px;--cy:-70px;--r0:150px;--game-pull:170px}
+  :root{--gutter:26px;--s7:64px;--s8:80px;--cx:180px;--cy:-70px;--r0:150px;--game-pull:51px}
   .r1{--r:150px} .r2{--r:210px} .r3{--r:276px} .r4{--r:348px}
   .site-header .nav>a:not(.btn){display:none}
   .cta-long{display:none} .cta-short{display:inline}
   .hero{min-height:0} .hero .wrap{padding-top:170px;padding-bottom:128px}
+  /* .arrive keeps its own padding-bottom: that is the game card's room, and it
+     is already expressed in --game-pull, which this block retunes below. */
+  .arrive{min-height:0} .arrive .wrap{padding-top:140px}
   .horizon{bottom:22px}
   .checks{grid-template-columns:1fr}
 }
@@ -721,21 +732,21 @@ h1,h2,h3,h4,p{margin:0}
    the corner clip are new.
    =========================================================================== */
 
-/* The arrival band carries a heading and two lines, about 212px of content, and
-   .close's 520px min-height was padding that out with 308px of slack. That is
-   right for the landing page, where the band closes a long argument, and wrong
-   here, where it pushed the game most of a screen down. Height comes from the
-   content now.
+/* The arrival band's own two rules. Everything else about its box is shared with
+   .hero, up in the hero block.
 
-   Scoped to this page: the landing page's closing band uses the same three
-   classes and must not move. Padding stays on the token scale so it still
-   shrinks at the mobile breakpoint, where --s7 drops to 64. */
-.close--thanks{
-  min-height:0;align-items:flex-start;
-  padding-top:var(--s7);
-  /* Room for the card to break up into. See --game-pull below: it is that
-     distance plus the gap, so the intro line always clears the hero copy by
-     40px whatever either band's content does. */
+   128px on top is .ident's number, not .hero's 200px: the landing hero's extra
+   top padding is tuned around a three-line lede and a horizon rule, and this band
+   has neither. A partner identity band carries about the same mass of copy and
+   sits at 128.
+
+   The bottom is the game card's room, and it stays expressed in --game-pull
+   because it is the other half of .sec--game .wrap's negative margin. Change one
+   without the other and the card lands on the micro line. The +40px is the
+   clearance between them. */
+.arrive .wrap{
+  width:100%;
+  padding-top:128px;
   padding-bottom:calc(var(--game-pull) + 40px);
 }
 
@@ -746,14 +757,20 @@ h1,h2,h3,h4,p{margin:0}
    The band's content breaks up out of it and over the gradient above, the same
    move .vidwrap makes on a partner page. Two things that needs. overflow must
    go visible, because .sec clips by default and would cut the card off at the
-   boundary. And the band above has to reserve the room, which .close--thanks
-   does off the same variable, or the card lands on the hero's own copy.
+   boundary. And the band above has to reserve the room, which .arrive .wrap
+   does off the same variable, or the card lands on the band's own copy.
 
    --game-pull is the whole mechanism, so it is the only number to change. The
    background does NOT move with it: the tint still starts at the section's own
    top edge, which is exactly what makes the boundary cut across the card
-   instead of just sliding down. Overlap works out as --game-pull minus the
-   intro line and its 40px margin. */
+   instead of just sliding down.
+
+   Since 10 Sept 2026 the card is the wrap's first child, so --game-pull IS the
+   overlap and nothing has to be subtracted from it. It used to be the pull minus
+   the caption and its 40px margin, because the caption sat above the card; the
+   caption is below it now. The values were reset to the overlap the old
+   arrangement actually produced, measured rather than recomputed: 107px at
+   1280 and 51px at 390. */
 .sec--game{
   background:var(--tint);
   padding:0 0 var(--s7);
@@ -768,15 +785,19 @@ h1,h2,h3,h4,p{margin:0}
 .sec--game .wrap{margin-top:calc(-1 * var(--game-pull))}
 
 .game-lede{
-  font-size:16px;max-width:54ch;margin:0 auto var(--s5);
-  text-align:center;
-  /* --ink, not --ink-soft. Breaking the band up moved this line off the tint
-     and onto the gradient, where --ink-soft measures 3.55:1 against the painted
-     background and fails AA: it sits lower in the band than the hero copy does,
-     so it lands on the most saturated part rather than the 3.89-4.38 range
-     tokens.css documents as the accepted exception. --ink measures 9.74:1 in
-     the same place. Measured, not estimated. */
-  color:var(--ink);
+  font-size:16px;
+  /* 880px and left ranged, matching .game-card, so the caption starts on the
+     card's own left edge rather than floating centred beneath it. The band above
+     is left ranged now and a centred caption was the last centred text on the
+     page. Below the card since 10 Sept 2026, so the margin is on top.  */
+  max-width:880px;margin:var(--s5) auto 0;
+  /* --ink-soft, restored 10 Sept 2026, and the reason it was ever --ink matters
+     more than the value. Breaking the band up had put this line ON the gradient,
+     where --ink-soft measures 3.55:1 and fails AA, so it was darkened to --ink at
+     9.74:1. Moving it below the card puts it back on the tint, where --ink-soft
+     is 6.15:1 and is what every other secondary line on the site uses. If this
+     line is ever moved back above the card, it has to go back to --ink with it. */
+  color:var(--ink-soft);
 }
 
 .game-card{
@@ -818,13 +839,6 @@ h1,h2,h3,h4,p{margin:0}
 .game-cta .arw{display:inline-block;margin-left:7px;transition:transform .18s ease}
 .game-card:hover .game-cta,.game-card:focus-visible .game-cta{color:var(--accent-text)}
 .game-card:hover .game-cta .arw,.game-card:focus-visible .game-cta .arw{transform:translateX(5px)}
-
-/* The sentence and its link now share one line, so this paragraph needs a
-   wider measure than .close-sub's 40em: it wants 826px and 40em caps it at 700,
-   which broke the link across two lines mid-phrase. 50em holds it on one line
-   down to about 940px of viewport, and it wraps naturally below that. Still
-   well inside the 1084px the band has to give. */
-.close-act{max-width:50em}
 
 /* A .tlink set inline mid-sentence rather than on its own line. Its own rule
    pins 14px, which reads as a typo next to .lede's 17.5px, so the size and
@@ -902,29 +916,6 @@ h1,h2,h3,h4,p{margin:0}
    the same thing 100px away and read as a stutter. */
 .ic-foot b{color:var(--ink);font-weight:600}
 
-/* The arrival band now has the landing closing band's full shape, heading, lede,
-   button, using the same three classes it already carried. The button needs no
-   rule of its own beyond the gaps, and the gaps are asymmetric on purpose.
-
-   Nothing on top, so .close-sub's own 40px bottom margin stands: the sentence
-   above ends "Or, skip the wait and book a time that works for you", so the
-   button is that sentence's button and belongs with it. Heading, sentence and
-   button are one group.
-
-   Below it, the reason is the shadow rather than the arithmetic. .btn carries
-   `box-shadow:0 10px 26px`, which paints about 36px past the pill's bottom edge,
-   so a 64px margin leaves under 30px of clear ground and the OneEthos line reads
-   as crowded even though nothing is close to touching it. 88px measured is about
-   52px seen, which is what makes the aside below read as separate rather than as
-   a caption on the CTA. Judge this one rendered, not in the stylesheet.
-
-   Composed from two tokens rather than written as --s7, and not because 88 was
-   wanted over 96. --s7 drops to 64 at the 900px breakpoint, where --s6 and --s4
-   do not, so --s7 would have quietly restored the exact crowding on every phone.
-   The shadow is 36px at every width, so the clearance it has to cover cannot be
-   one of the tokens that compresses. */
-.close-book{margin:0 0 calc(var(--s6) + var(--s4))}
-
 /* The label narrows to "Book a call with <partner>", and the longest name in the
    roster makes that 34 characters, which will not fit one line inside the 26px
    gutters at 320px. .btn is inline-flex so the text wraps on its own; these
@@ -932,7 +923,7 @@ h1,h2,h3,h4,p{margin:0}
    spilling out of a fixed 54px box. A one-line label is pixel-identical to every
    other button on the site: 19px of line plus 28px of padding is 47, and
    .btn--lg's min-height of 54 still wins. */
-.close--thanks .btn--lg{padding-top:14px;padding-bottom:14px;max-width:100%;text-align:center}
+.arrive .btn--lg{padding-top:14px;padding-bottom:14px;max-width:100%;text-align:center}
 
 /* ---- the Alliance half, added 3 Sep 2026 --------------------------------
    The card gains two lines and the page gains a log form and a rail. Every
