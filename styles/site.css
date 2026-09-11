@@ -372,7 +372,29 @@ h1,h2,h3,h4,p{margin:0}
    Partner pages run a slightly smaller scale than the landing page, so the
    partner name does not out-shout the offer line directly beneath it.        */
 .h1--name{font-size:clamp(30px,3.2vw,42px)}
-.h2--tight{font-size:clamp(22px,2.2vw,29px)}
+/* Both section headings on a partner page, "The offer" and "Get set up with
+   [partner]", and they carry their own bottom margin because h1,h2,h3,h4,p
+   {margin:0} at the top of this file zeroes it.
+
+   Zero was wrong under "Get set up with [partner]": the next thing there is a
+   tinted card with a border and a shadow, so the heading sat flush against a
+   hard edge and read as the card's chrome rather than as its introduction. The
+   card's own 30px of padding cannot help, because that holds the form off the
+   border, not the border off the heading.
+
+   It is on the CLASS, not scoped to .col-b, which is the whole point. Spacing
+   only "Get set up with" left "The offer" at zero, and the mismatch was more
+   visible than the original problem: nothing about "The offer" had changed, but
+   next to a heading with air it read as newly cramped. Two headings at the same
+   level get the same space or the page looks broken in a way that is hard to
+   name. --s4 is the step .intro .h2 and .join-copy .h2 already take.
+
+   The 56px row-gap between .col-a and .col-b is deliberately NOT reduced to
+   absorb this. It is the only slack on the page, and spending it would leave
+   each heading equidistant between the block above and its own content, which
+   is what makes a heading stop reading as attached to what follows. The page
+   is 48px taller instead. That is the correct trade.                        */
+.h2--tight{font-size:clamp(22px,2.2vw,29px);margin:0 0 var(--s4)}
 .h3--sm{font-size:18px}
 
 /* ---- a band the video can break out of ---------------------------------- */
