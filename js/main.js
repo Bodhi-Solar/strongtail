@@ -122,31 +122,42 @@
      label, from a second generated table. Same rule: the URL comes from the
      table, never from the URL.
 
-     Since 10 Sept 2026 exactly one slug is handed to a different partner's
-     calendar, and gets a different sentence with it. See HANDOFF below.      */
+     Since 10 Sept 2026 some slugs are handed to a different partner's calendar,
+     and get a different sentence with it. See HANDOFF below.                 */
   var who = document.getElementById('thanks-who');
   var book = document.getElementById('thanks-book');
   var lede = document.getElementById('thanks-lede');
 
-  /* The one partner who does not take the booking. JA Solar reps reach out
-     directly, so offering a JA Solar calendar would be offering something that
-     does not exist, and falling back to a button reading "with the Alliance"
-     would bury the person who can actually help. Their reader is handed to
-     Climate First Bank for the financing side instead, and the sentence says so
-     rather than leaving the button to explain itself.
+  /* The partners who do not take the booking themselves. JA Solar reps reach out
+     directly, and a Scanifly rep contacts the installer the same way, so offering
+     a calendar of theirs would be offering something that does not exist, and
+     falling back to a button reading "with the Alliance" would bury the person
+     who can actually help. Their readers are handed to Climate First Bank for the
+     financing side instead, and the sentence says so rather than leaving the
+     button to explain itself.
 
-     A special case on purpose, not a mechanism. It is one partner's arrangement,
-     and a general handoff table in data/meetings.json would be four moving parts
-     standing in for one line. Both values are SLUGS, keys into the two generated
-     tables at the foot of the page, so the rule the rest of this block is built
-     on is untouched: no URL and no partner name is written here, and a crafted
-     ?p= can still only ever miss.
+     The two reasons are not identical even though the code path is. JA Solar keep
+     no booking calendar at all; Scanifly have simply sent none. That matters only
+     for how each one retires, below, and not for what the reader sees.
 
-     It retires itself. The handoff is only taken while JA Solar have no link of
-     their own, so the day a JA Solar calendar lands in data/meetings.json this
-     map stops applying and the page goes back to naming them. Without that,
-     adding their URL would silently do nothing. */
-  var HANDOFF = { 'ja-solar': 'climate-first-bank' };
+     A special case on purpose, not a mechanism, and still one at two partners.
+     Both entries point at the same calendar, so this is one arrangement that two
+     partners share rather than two arrangements. A general handoff table in
+     data/meetings.json would still be four moving parts, a shape, a validator, a
+     generator branch and a third JSON tag in the page, standing in for one line
+     that grew by one key: the mechanism's cost is fixed and the map's is one line
+     per partner. The mechanism becomes the right answer when the targets stop
+     being the same, or when the rule stops fitting on this line, not when the
+     count goes up. Every value is a SLUG, keys into the two generated tables at
+     the foot of the page, so the rule the rest of this block is built on is
+     untouched: no URL and no partner name is written here, and a crafted ?p= can
+     still only ever miss.
+
+     They retire themselves, and independently. The handoff is only taken while
+     that partner has no link of their own, so the day either calendar lands in
+     data/meetings.json its entry stops applying and the page goes back to naming
+     them. Without that, adding a URL would silently do nothing. */
+  var HANDOFF = { 'ja-solar': 'climate-first-bank', 'scanifly': 'climate-first-bank' };
 
   if (who) {
     try {

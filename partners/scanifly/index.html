@@ -84,8 +84,8 @@
       <a class="back" href="/#offers">&larr; All partner offers</a>
       <div class="idrow">
         <span class="tile">
+          <img src="../../assets/logos/scanifly-square.png" alt="Scanifly" width="96" height="96">
           
-          <span class="ph">Scanifly</span>
         </span>
         <div class="idtext">
           <h1 class="h1 h1--name" id="partner-name">Scanifly</h1>
@@ -121,14 +121,47 @@
                the two overlap heavily and the card already carries the qualifier.
                A partner without one still shows their qualifier here. -->
           
-          <p class="offer-body">Increase sales, cut survey time, and improve design accuracy with one platform.</p>
-          
           <!-- The <p> or <ul> wrapper is built by tools/partner-pages.mjs, because
                a block is a paragraph or a list depending on its own content and
                render()'s if: blocks cannot branch inside a repeat body. Keep the
                indentation: it is what puts the emitted tag on this column. -->
           
+          <p class="offer-body">Get discounted access to the only platform that cuts site survey time by 90%, reduces change orders, and improves project throughput.</p>
+          
+          <p class="offer-body">Scanifly is offering Alliance installers on the OneEthos platform 20% off their annual subscription, plus a free drone for faster, safer site assessments and inch-accurate on-site designs. Every new customer gets white-glove onboarding and training from the Scanifly team, so the platform is set up for exactly how you sell, survey, design, and install.</p>
+          
 
+          
+          <!-- Guarded on showKnow, not whatToKnow, because a partner can be
+               between the two states: their copy is not here yet, but the
+               heading is held open so the section does not vanish and reappear.
+               Inside the guard on purpose, so it does not ship to the pages
+               that have no such section. render()'s if: blocks do not nest, so
+               the empty <ul> is left to render rather than guarded separately.
+               Harmless: .know ul is margin:0, so with no <li> it takes up
+               nothing. -->
+          <div class="know">
+            <p class="h3 h3--sm">What to know</p>
+            <ul>
+              
+              <li>Open to approved OneEthos installers.</li>
+              
+              <li>20% off your annual subscription for new Scanifly customers.</li>
+              
+              <li>Your first drone is free. Drone model depends on your project volume.</li>
+              
+              <li>White-glove onboarding and consulting included: proposal build-out, mobile checklist build-out, and API setup.</li>
+              
+              <li>In-person training and onboarding available at cost, and free for installers doing 500+ installs per year.</li>
+              
+            </ul>
+            <!-- A partner's own compliance line, in small type under the list. Built
+                 by tools/partner-pages.mjs and empty for a partner without one, for
+                 the same reason the empty ul is left to render: this sits inside the
+                 showKnow guard and render()'s if: blocks do not nest. An empty string
+                 emits nothing at all, which is better here than an empty paragraph. -->
+            
+          </div>
           
         </div>
 
@@ -143,7 +176,9 @@
           
           <div class="about">
             <p class="h3 h3--sm" id="about-partner">About Scanifly</p>
-            <p></p>
+            <p>Scanifly is a leading solar sales, design, and field operations software company built on the premise that what is sold is what should be installed. Quality-obsessed contractors use Scanifly to reduce change orders, cut survey and design time, and increase project throughput. By combining AI-enabled proposals, drone-based 3D designs, mobile data capture, and a robust suite of integrations, Scanifly's aerial and ground intelligence platform enables contractors to sell, survey, engineer, and install more solar projects without sacrificing speed or accuracy.</p>
+            
+            <a class="tlink" href="https://scanifly.com/" target="_blank" rel="noopener">Visit website <span class="arw">&rarr;</span></a>
             
           </div>
         </aside>
