@@ -65,8 +65,17 @@
            The second sentence is what the button is for. "Or, skip the wait"
            offers rather than instructs: the reader has just submitted a form and
            has already done the required thing, and the call is coming either
-           way. -->
-      <p class="lede close-sub">We&rsquo;ll be in touch shortly to help you get started with
+           way.
+
+           The id is on the PARAGRAPH as well as the span because one partner
+           does not get this sentence at all. JA Solar reps reach out directly,
+           so js/main.js replaces the whole paragraph for ?p=ja-solar and sends
+           the button to Climate First Bank instead. It is the only slug that
+           does that, it is written as a special case in that file rather than as
+           a mechanism here, and it retires itself the moment JA Solar send a
+           calendar of their own. Everything below still holds for everyone
+           else. -->
+      <p class="lede close-sub" id="thanks-lede">We&rsquo;ll be in touch shortly to help you get started with
       <span id="thanks-who">the Alliance</span>. Or, skip the wait and book a time
       that works for you.</p>
 

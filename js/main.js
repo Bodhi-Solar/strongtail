@@ -120,9 +120,33 @@
 
      Since 2 Sep 2026 the same lookup narrows the Book a call button's href and
      label, from a second generated table. Same rule: the URL comes from the
-     table, never from the URL.                                               */
+     table, never from the URL.
+
+     Since 10 Sept 2026 exactly one slug is handed to a different partner's
+     calendar, and gets a different sentence with it. See HANDOFF below.      */
   var who = document.getElementById('thanks-who');
   var book = document.getElementById('thanks-book');
+  var lede = document.getElementById('thanks-lede');
+
+  /* The one partner who does not take the booking. JA Solar reps reach out
+     directly, so offering a JA Solar calendar would be offering something that
+     does not exist, and falling back to a button reading "with the Alliance"
+     would bury the person who can actually help. Their reader is handed to
+     Climate First Bank for the financing side instead, and the sentence says so
+     rather than leaving the button to explain itself.
+
+     A special case on purpose, not a mechanism. It is one partner's arrangement,
+     and a general handoff table in data/meetings.json would be four moving parts
+     standing in for one line. Both values are SLUGS, keys into the two generated
+     tables at the foot of the page, so the rule the rest of this block is built
+     on is untouched: no URL and no partner name is written here, and a crafted
+     ?p= can still only ever miss.
+
+     It retires itself. The handoff is only taken while JA Solar have no link of
+     their own, so the day a JA Solar calendar lands in data/meetings.json this
+     map stops applying and the page goes back to naming them. Without that,
+     adding their URL would silently do nothing. */
+  var HANDOFF = { 'ja-solar': 'climate-first-bank' };
 
   if (who) {
     try {
@@ -142,15 +166,17 @@
              who has not sent a link. This narrows it to the partner's own
              calendar, and only when there is one: #partner-booking holds only
              partners with a link, so absence from it IS the no-link state.
+             A slug in HANDOFF narrows to somebody else's calendar instead, and
+             absence from this same table is what makes that possible.
 
              The href and the label narrow together or not at all, so the button
              never names a calendar it is not opening.
 
              The slug is a KEY here and nowhere else. It is never concatenated
-             into markup and never assigned to href. The two values that reach
-             the DOM, the name and the URL, both come out of blocks
-             tools/sync-partners.mjs wrote from data/partners.json and
-             data/meetings.json, so a crafted ?p= can only ever miss.
+             into markup and never assigned to href. Everything that reaches the
+             DOM, the name, the URL and the handoff sentence's two names, comes
+             out of blocks tools/sync-partners.mjs wrote from data/partners.json
+             and data/meetings.json, so a crafted ?p= can only ever miss.
 
              The https test is for the one case the generator cannot see, a
              hand-edited generated block. Three lines is cheap next to a
@@ -165,12 +191,41 @@
           if (book && booking) {
             var bookings = JSON.parse(booking.textContent);
 
-            if (Object.prototype.hasOwnProperty.call(bookings, slug)) {
-              var url = String(bookings[slug]);
+            /* Whose calendar this reader is being offered. That is the partner
+               they enrolled with, except for a slug in HANDOFF above, and then
+               only while that partner has sent no link of their own: a real
+               link always wins over the special case. */
+            var target = slug;
+
+            if (
+              Object.prototype.hasOwnProperty.call(HANDOFF, slug) &&
+              !Object.prototype.hasOwnProperty.call(bookings, slug) &&
+              Object.prototype.hasOwnProperty.call(names, HANDOFF[slug])
+            ) {
+              target = HANDOFF[slug];
+            }
+
+            if (Object.prototype.hasOwnProperty.call(bookings, target)) {
+              var url = String(bookings[target]);
 
               if (url.indexOf('https://') === 0) {
                 book.href = url;
-                book.textContent = 'Book a call with ' + names[slug];
+                book.textContent = 'Book a call with ' + names[target];
+
+                /* Inside this branch and nowhere else. The sentence only gets to
+                   promise a Climate First Bank rep once the button above it is
+                   actually opening a Climate First Bank calendar, which is the
+                   same "together or not at all" rule the label and the href
+                   already follow. A failed lookup leaves the shipped sentence,
+                   which is correct rather than broken.
+
+                   Both names come out of the allow-list for the same reason the
+                   one in the span does. */
+                if (target !== slug && lede) {
+                  lede.textContent =
+                    'A ' + names[slug] + ' rep will reach out to you directly. Or start with a ' +
+                    names[target] + ' rep who can sort out the financing side and point you to the rest.';
+                }
               }
             }
           }
