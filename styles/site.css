@@ -475,20 +475,6 @@ h1,h2,h3,h4,p{margin:0}
 /* ---- the partner enrollment form ----------------------------------------
    A modifier, not an override. A white card on a white ground is not a
    surface, and the white inputs need something to be white against.        */
-
-/* "Get set up with [partner]" needs the gap a heading above flowing copy does
-   not. h1,h2,h3,h4,p{margin:0} at the top of this file zeroes it, which is
-   right everywhere the next thing is text: the line-height carries the leading
-   and the heading reads as attached to what follows. Here the next thing is a
-   tinted card with a border and a shadow, so zero put the cap height flush
-   against a hard edge and the heading read as part of the card's chrome rather
-   than as the thing introducing it. The card's own 30px of padding cannot help;
-   it holds the form off the border, not the border off the heading.
-   --s4 is the same heading-to-content step .intro .h2 and .join-copy .h2 take.
-   Scoped to .col-b so "The offer" above it, which IS followed by copy, keeps
-   the zero it wants.                                                        */
-.col-b .h2--tight{margin:0 0 var(--s4)}
-
 .form--partner{background:var(--tint);border-color:rgba(0,20,45,.13);padding:30px;
   max-width:680px;box-shadow:0 16px 38px rgba(0,20,45,.07)}
 .form .fh{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);
