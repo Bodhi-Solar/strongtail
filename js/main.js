@@ -392,7 +392,7 @@
       var frame = document.createElement('iframe');
       frame.src =
         'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
-        '?autoplay=1&rel=0&playsinline=1&modestbranding=1';
+        '?autoplay=1&rel=0&playsinline=1&modestbranding=1&cc_load_policy=0';
       frame.setAttribute('title', card.getAttribute('aria-label') || 'Partner video');
       frame.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; picture-in-picture; web-share');
       frame.setAttribute('allowfullscreen', '');
@@ -472,16 +472,48 @@
       var railLabel = welcomeRail.querySelector('.wvid__soundlabel');
       var railLoud = false;
 
+      /* cc_load_policy=0 on every embed here and in the lightbox. THE VIDEO ALREADY
+         HAS CAPTIONS BURNED INTO IT, so YouTube's auto-transcript lands a second
+         set on top of the first, in its own black box, and its guess at the name
+         is wrong: it hears "Scott Wynn" for "Scott Nguyen". Without this the rail
+         shows both at once. The real fix is to turn the auto-captions off on the
+         upload; this is the belt to that pair of braces, and it also covers the
+         reader who has captions switched on globally. */
       function railSrc(loud) {
         var base = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(railId) + '?';
         if (loud) {
           /* Restore the controls when the sound comes on: someone who has chosen
              to listen should be able to scrub and pause. No loop, because a
              deliberate watch should end rather than start again. */
-          return base + 'autoplay=1&mute=0&start=0&controls=1&modestbranding=1&rel=0&playsinline=1';
+          return base + 'autoplay=1&mute=0&start=0&controls=1&modestbranding=1&rel=0&playsinline=1&cc_load_policy=0';
         }
         return base + 'autoplay=1&mute=1&loop=1&playlist=' + encodeURIComponent(railId) +
-          '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3';
+          '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0';
+      }
+
+      /* cc_load_policy=0 is not enough on its own. Measured: captions still rendered
+         in five of nine samples with it set, because it only states a preference and
+         the caption module loads anyway. This turns the module off through the
+         player's postMessage interface, which is what enablejsapi=1 buys and is far
+         cheaper than loading YouTube's IFrame API script for one call.
+
+         Sent repeatedly rather than once. The player ignores commands until it is
+         ready, there is no ready event without the API script, and a caption track
+         can load late, so a short ladder of attempts is the reliable shape. Wrapped
+         because a cross-origin postMessage can throw, and captions on top of burned
+         in captions are ugly rather than fatal. */
+      function railMuteCaptions(f) {
+        var send = function () {
+          try {
+            f.contentWindow.postMessage(
+              '{"event":"command","func":"unloadModule","args":["captions"]}', '*');
+            f.contentWindow.postMessage(
+              '{"event":"command","func":"unloadModule","args":["cc"]}', '*');
+          } catch (e) {}
+        };
+        var waits = [300, 800, 1500, 2600, 4200, 6500, 9000];
+        for (var i = 0; i < waits.length; i++) window.setTimeout(send, waits[i]);
+        f.addEventListener('load', send);
       }
 
       function railMount(loud) {
@@ -489,13 +521,16 @@
         if (old) old.parentNode.removeChild(old);
 
         var f = document.createElement('iframe');
-        f.src = railSrc(loud);
+        /* enablejsapi is here only so railMuteCaptions can reach the player. origin
+           is what YouTube wants alongside it. */
+        f.src = railSrc(loud) + '&enablejsapi=1&origin=' + encodeURIComponent(window.location.origin);
         f.setAttribute('title', 'Welcome to the Strong Tail Solar Alliance');
         f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
         f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
         f.setAttribute('tabindex', '-1');
         welcomeRail.appendChild(f);
         welcomeRail.classList.add('is-live');
+        railMuteCaptions(f);
       }
 
       if (railBtn) {

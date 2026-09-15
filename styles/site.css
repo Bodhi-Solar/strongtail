@@ -1196,11 +1196,19 @@ html.vlb-open{overflow:hidden}
 .compact .intro .lede{max-width:none}
 .compact .cols{display:flex;gap:60px;align-items:flex-start}
 .compact .col-main{flex:1 1 auto;min-width:0}
-/* top:104px is 68px of stuck header plus 36px of air. THREE COUPLED NUMBERS:
+/* 340 rather than the brief's 280, Scott's call of 15 Sept 2026: at 280 the video
+   read as small beside five commitments. 340 is the width at which a 9:16 video
+   stands exactly as tall as .pact, so its bottom edge lands on the last Compact
+   rule, and it costs the Compact column only 60px. Taller means wider here, so
+   this is not a free dial: matching the label as well would take another 40px off
+   the claims, and much past this the sticky rail stops fitting a laptop viewport
+   (340 needs 708px of it, counting the offset below).
+
+   top:104px is 68px of stuck header plus 36px of air. THREE COUPLED NUMBERS:
    the 68px is .site-header.stuck above, reached via the `scrollY > 420`
    threshold in js/main.js. Change any one and this goes silently wrong, the
    same contract the header block already warns about. */
-.compact .col-rail{flex:0 0 280px;position:sticky;top:104px}
+.compact .col-rail{flex:0 0 340px;position:sticky;top:104px}
 /* The column is the measure now, not the 860 set above. */
 .compact .pact{max-width:none}
 
@@ -1248,15 +1256,19 @@ html.vlb-open{overflow:hidden}
   color:var(--ink-soft);margin-top:4px}
 
 /* ---- stacking ------------------------------------------------------------
-   900 rather than the 620 the brief named. At 768 a 280px rail plus the 60px
-   gap leaves the Compact claims about 376px, which is a wall of wrapped type,
-   and 900 is already the breakpoint where the gutter shrinks and the nav
-   collapses. DOM order puts the rail second, so it is pulled ABOVE the Compact
-   here: the video reads as a break mid-scroll rather than an afterthought
-   below five commitments. */
-@media (max-width:900px){
+   1080, raised from 900 when the rail went to 340 on 15 Sept 2026. The wider
+   rail takes its width out of the Compact: at a 960 viewport the claims were
+   down to 464px and every one of them wrapped to two lines, which is the wall
+   of type this layout exists to avoid. 1080 keeps the column at 585 or better
+   whenever the two sit side by side, and it is a breakpoint site.css already
+   uses rather than a new one.
+
+   DOM order puts the rail second, so it is pulled ABOVE the Compact here: the
+   video reads as a break mid-scroll rather than an afterthought below five
+   commitments. */
+@media (max-width:1080px){
   .compact .cols{display:flex;flex-direction:column}
   .compact .col-main{order:2}
-  .compact .col-rail{order:1;position:static;flex:none;width:100%;max-width:300px;
+  .compact .col-rail{order:1;position:static;flex:none;width:100%;max-width:340px;
     margin:0 auto var(--s6)}
 }
