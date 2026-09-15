@@ -451,129 +451,166 @@
       });
     }
 
-    /* ----------------------------------------------- the Compact band rail
-       A muted loop, which is the one place on this site anything plays by
-       itself. docs-internal/CLAUDE.md rule 2 was amended for it on 15 Sept
-       2026 and the two guardrails that bought the amendment are both here:
+    /* ------------------------------------------------ videos that play themselves
+       Every video on the site: the muted loop beside the Compact on the homepage
+       and, since 15 Sept 2026 on Scott's call, every partner card too. One
+       function drives both, because they are the same object in two places.
 
-       IT IS NOT LOADED ON PAGE LOAD. The observer holds the ~1MB player back
-       until the band is close, so a reader who never reaches section five
-       never pays for it and never touches youtube.com. The poster is what
-       they see until then.
+       docs-internal/CLAUDE.md rule 2 was widened for this. The two guardrails
+       that bought it are here:
 
-       AND IT CARRIES NO YOUTUBE CHROME. controls=0 plus pointer-events:none
-       in the stylesheet mean the iframe is decoration: the only control is
-       the unmute button, and the pill in the hero is how you watch it
-       properly. loop=1 does nothing on its own, playlist= is what actually
-       repeats a single video, so the two go together or neither works. */
-    if (welcomeRail && welcomeRail.getAttribute('data-yt')) {
-      var railId = welcomeRail.getAttribute('data-yt');
-      var railBtn = welcomeRail.querySelector('.wvid__sound');
-      var railLabel = welcomeRail.querySelector('.wvid__soundlabel');
-      var railLoud = false;
+       NOTHING LOADS ON PAGE LOAD. The observer holds the roughly one megabyte of
+       YouTube player back until the video is near the viewport, so a reader who
+       never scrolls that far never pays for it and never touches youtube.com.
+       The poster is what they see until then.
 
-      /* cc_load_policy=0 on every embed here and in the lightbox. THE VIDEO ALREADY
-         HAS CAPTIONS BURNED INTO IT, so YouTube's auto-transcript lands a second
-         set on top of the first, in its own black box, and its guess at the name
-         is wrong: it hears "Scott Wynn" for "Scott Nguyen". Without this the rail
-         shows both at once. The real fix is to turn the auto-captions off on the
-         upload; this is the belt to that pair of braces, and it also covers the
-         reader who has captions switched on globally. */
-      function railSrc(loud) {
-        var base = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(railId) + '?';
-        if (loud) {
-          /* Restore the controls when the sound comes on: someone who has chosen
-             to listen should be able to scrub and pause. No loop, because a
-             deliberate watch should end rather than start again. */
-          return base + 'autoplay=1&mute=0&start=0&controls=1&modestbranding=1&rel=0&playsinline=1&cc_load_policy=0';
+       AND NO YOUTUBE CHROME REACHES THE PAGE while it is muted. controls=0 plus
+       pointer-events:none in the stylesheet make the iframe decoration.
+
+       loop=1 does nothing on its own; playlist= is what actually repeats a single
+       video, so the two go together or neither works.
+
+       cc_load_policy=0 is not enough to stop YouTube's own captions. Measured:
+       they still rendered in five of nine samples with it set, because it states
+       a preference and the module loads anyway. THE VIDEOS ALREADY HAVE CAPTIONS
+       BURNED IN, so a second set lands on top of the first and mishears the name
+       as "Scott Wynn". unloadModule through the player's postMessage interface is
+       what actually turns them off, and enablejsapi=1 is what buys that. The real
+       fix is to disable the auto-captions on the uploads. */
+    function livePlayer(host) {
+      var id = host.getAttribute('data-yt');
+      if (!id) return;
+
+      var loud = false;
+
+      /* The homepage rail ships its button in the HTML, because it is a bare div
+         with no link of its own and the button is its only control. A partner
+         card is an anchor that already works without JavaScript, so its button is
+         created here instead: rendering an inert one would promise a control that
+         does nothing when this file fails to load. It hangs off .vidwrap rather
+         than the card, because a button inside an anchor is invalid markup. */
+      var btn = host.querySelector('.vsound');
+
+      /* Opened off disk nothing can play, so stop before the observer and the
+         iframe. No button is CREATED here either: a partner card is already an
+         anchor that reaches the video, and a control promising sound it cannot
+         deliver is worse than no control. One that is already in the markup, as
+         the homepage rail's is, still has to do something, so it becomes the way
+         out to YouTube. */
+      if (!ytEmbeddable) {
+        if (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.open(ytWatch(id), '_blank', 'noopener');
+          });
         }
-        return base + 'autoplay=1&mute=1&loop=1&playlist=' + encodeURIComponent(railId) +
-          '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0';
+        return;
       }
 
-      /* cc_load_policy=0 is not enough on its own. Measured: captions still rendered
-         in five of nine samples with it set, because it only states a preference and
-         the caption module loads anyway. This turns the module off through the
-         player's postMessage interface, which is what enablejsapi=1 buys and is far
-         cheaper than loading YouTube's IFrame API script for one call.
+      if (!btn) {
+        var mount = host.parentNode;
+        if (!mount) return;
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'vsound';
+        btn.innerHTML =
+          '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+          '<path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>' +
+          '<span class="vsound__label">Unmute</span>';
+        mount.appendChild(btn);
+      }
 
-         Sent repeatedly rather than once. The player ignores commands until it is
+      var label = btn.querySelector('.vsound__label');
+
+      function src() {
+        var base = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?';
+
+        if (loud) {
+          /* Controls come back with the sound. Someone who has chosen to listen
+             should be able to pause and scrub, and .is-loud in the stylesheet is
+             what lets the pointer actually reach them. No loop: a deliberate watch
+             should end rather than start again. */
+          return base + 'autoplay=1&mute=0&start=0&controls=1&modestbranding=1&rel=0' +
+            '&playsinline=1&cc_load_policy=0';
+        }
+
+        return base + 'autoplay=1&mute=1&loop=1&playlist=' + encodeURIComponent(id) +
+          '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0' +
+          '&iv_load_policy=3&cc_load_policy=0';
+      }
+
+      /* Sent repeatedly rather than once. The player ignores commands until it is
          ready, there is no ready event without the API script, and a caption track
-         can load late, so a short ladder of attempts is the reliable shape. Wrapped
-         because a cross-origin postMessage can throw, and captions on top of burned
-         in captions are ugly rather than fatal. */
-      function railMuteCaptions(f) {
+         can load late, so a short ladder of attempts is the reliable shape. */
+      function killCaptions(frame) {
         var send = function () {
           try {
-            f.contentWindow.postMessage(
+            frame.contentWindow.postMessage(
               '{"event":"command","func":"unloadModule","args":["captions"]}', '*');
-            f.contentWindow.postMessage(
+            frame.contentWindow.postMessage(
               '{"event":"command","func":"unloadModule","args":["cc"]}', '*');
           } catch (e) {}
         };
         var waits = [300, 800, 1500, 2600, 4200, 6500, 9000];
         for (var i = 0; i < waits.length; i++) window.setTimeout(send, waits[i]);
-        f.addEventListener('load', send);
+        frame.addEventListener('load', send);
       }
 
-      function railMount(loud) {
-        var old = welcomeRail.querySelector('iframe');
+      function mountFrame() {
+        var old = host.querySelector('iframe');
         if (old) old.parentNode.removeChild(old);
 
         var f = document.createElement('iframe');
-        /* enablejsapi is here only so railMuteCaptions can reach the player. origin
-           is what YouTube wants alongside it. */
-        f.src = railSrc(loud) + '&enablejsapi=1&origin=' + encodeURIComponent(window.location.origin);
-        f.setAttribute('title', 'Welcome to the Strong Tail Solar Alliance');
+        /* enablejsapi is here only so killCaptions can reach the player; origin is
+           what YouTube wants alongside it. */
+        f.src = src() + '&enablejsapi=1&origin=' + encodeURIComponent(window.location.origin);
+        f.setAttribute('title', host.getAttribute('aria-label') || 'Alliance video');
         f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
         f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
         f.setAttribute('tabindex', '-1');
-        welcomeRail.appendChild(f);
-        welcomeRail.classList.add('is-live');
-        railMuteCaptions(f);
+        host.appendChild(f);
+        host.classList.add('is-live');
+        host.classList.toggle('is-loud', loud);
+        killCaptions(f);
       }
 
-      if (railBtn) {
-        railBtn.addEventListener('click', function () {
-          /* Off disk there is no player to unmute, so the button becomes the way
-             out to YouTube and the poster stays where it is. */
-          if (!ytEmbeddable) {
-            window.open(ytWatch(railId), '_blank', 'noopener');
-            return;
-          }
+      btn.addEventListener('click', function (e) {
+        /* The partner card is an anchor and this button sits inside it visually,
+           so a click here must not also follow the link or open the lightbox. */
+        e.preventDefault();
+        e.stopPropagation();
 
-          /* Destroy and recreate rather than pull in YouTube's IFrame API for one
-             button. The API is another script and another dependency, and this is
-             two lines. */
-          railLoud = !railLoud;
-          railMount(railLoud);
-          if (railLabel) railLabel.textContent = railLoud ? 'Mute' : 'Unmute';
-          railBtn.setAttribute('aria-label', railLoud
-            ? 'Mute the welcome video'
-            : 'Play the welcome video with sound');
-        });
-      }
+        /* Destroy and recreate rather than pull in YouTube's IFrame API for one
+           button. The API is another script and another dependency. */
+        loud = !loud;
+        mountFrame();
+        if (label) label.textContent = loud ? 'Mute' : 'Unmute';
+        btn.setAttribute('aria-label', loud ? 'Mute the video' : 'Play the video with sound');
+      });
 
       /* Reduced motion gets the poster and the button and nothing moving. The
-         button still works, because pressing it is a choice rather than motion
-         the reader did not ask for. The lightbox is unaffected throughout, for
-         the same reason. */
+         button still works, because pressing it is a choice rather than motion the
+         reader did not ask for. The lightbox is unaffected, for the same reason. */
       var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      if (ytEmbeddable && !still && 'IntersectionObserver' in window) {
-        var railObs = new IntersectionObserver(function (entries) {
+      if (!still && 'IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function (entries) {
           for (var i = 0; i < entries.length; i++) {
             if (entries[i].isIntersecting) {
-              railObs.disconnect();
-              railMount(false);
+              obs.disconnect();
+              mountFrame();
               return;
             }
           }
         }, { rootMargin: '200px 0px' });
 
-        railObs.observe(welcomeRail);
+        obs.observe(host);
       }
     }
+
+    if (welcomeRail) livePlayer(welcomeRail);
+    for (var pv = 0; pv < vidCards.length; pv++) livePlayer(vidCards[pv]);
   }
 
 }());

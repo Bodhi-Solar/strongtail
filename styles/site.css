@@ -1227,14 +1227,45 @@ html.vlb-open{overflow:hidden}
    pointer-events:none is deliberate. The iframe is decoration; .wvid__sound is
    the only control, and the pill in the hero is how you watch it properly. */
 .wvid iframe{width:316%;height:100%;left:-108%;pointer-events:none;z-index:0}
-.wvid__sound{position:absolute;right:14px;bottom:14px;z-index:4;display:inline-flex;align-items:center;
+/* One control, two hosts: the homepage rail and every partner card. It is
+   positioned against .wvid or .vidwrap, both of which are position:relative. */
+.vsound{position:absolute;right:14px;bottom:14px;z-index:4;display:inline-flex;align-items:center;
   gap:7px;height:30px;padding:0 12px;border-radius:999px;font-family:var(--font);font-size:11.5px;
   font-weight:600;letter-spacing:.03em;color:#fff;background:rgba(0,20,45,.55);
   border:1px solid rgba(255,255,255,.26);
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);cursor:pointer}
-.wvid__sound svg{width:11px;height:11px;fill:#fff}
-.wvid__sound:hover{background:rgba(0,20,45,.72)}
-.wvid__sound:focus-visible{outline:2px solid var(--on-dark);outline-offset:2px}
+.vsound svg{width:11px;height:11px;fill:#fff}
+.vsound:hover{background:rgba(0,20,45,.72)}
+.vsound:focus-visible{outline:2px solid var(--on-dark);outline-offset:2px}
+
+/* ---- partner cards play too -----------------------------------------------
+   Added 15 Sept 2026, Scott's call: every video on the site autoplays muted
+   with an unmute button, so a partner card is no longer a still poster.
+
+   The card stays an ANCHOR underneath all of this. The iframe is injected
+   inside it, the poster and the play mark fade out, and js/main.js hangs the
+   unmute button off .vidwrap beside it, because a button inside an anchor is
+   invalid markup. No JavaScript and the card is exactly what it was: a poster,
+   a play mark and a link that reaches the video. */
+.vidwrap{position:relative}
+.vid img{transition:opacity .4s ease}
+.vid.is-live img,.vid.is-live .play{opacity:0}
+.vid .play{transition:opacity .4s ease;z-index:2}
+.vid .cap{z-index:2}
+/* Same oversize-and-crop as the homepage rail; see the note there for the 316%. */
+.vid iframe{position:absolute;top:0;width:316%;height:100%;left:-108%;border:0;display:block;
+  pointer-events:none;z-index:0}
+/* THE CONTROLS ONLY WORK ONCE THE SOUND IS ON, and that is the whole point of
+   this pair. Muted, the player is decoration and must not swallow the click
+   that opens the lightbox. Unmuted, controls=1 is on the embed and the reader
+   has to be able to reach it, so the iframe takes pointer events back. Without
+   this line the unmute button hands over a player nobody can pause. */
+.vid.is-loud iframe,.wvid.is-loud iframe{pointer-events:auto}
+/* Top right on a partner card, because the bottom belongs to .cap: the speaker's
+   name and line sit there and the button was landing on top of them. The homepage
+   rail carries no caption, so it keeps the bottom corner. The burned-in wordmark
+   in the footage is top LEFT, so this corner is the one free spot. */
+.vidwrap .vsound{top:14px;bottom:auto}
 
 /* ---- the hero pill ------------------------------------------------------- */
 .hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
