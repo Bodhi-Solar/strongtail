@@ -587,6 +587,47 @@ h1,h2,h3,h4,p{margin:0}
 .vid--stub{cursor:default}
 .vid--stub:hover{transform:none;box-shadow:0 16px 38px rgba(0,20,45,.16)}
 
+/* ---- the video lightbox --------------------------------------------------
+   Built by js/main.js on the first click of a partner video card, never by the
+   page. The card itself is a link to YouTube; this is the upgrade, so none of
+   these rules have anything to style until someone presses play.
+
+   The plate is sized off the VIEWPORT HEIGHT, not its width. The video is 9:16,
+   so height is what runs out first on every screen the site sees: deriving the
+   width from 86vh keeps the whole of a vertical video on screen and lets the
+   width fall where it must. The second half of the min() is the narrow-phone
+   case, where width binds first after the 24px gutter either side.
+
+   The backdrop is the same rgba(0,20,45) the card's own caption gradient uses,
+   so the overlay reads as the card enlarged rather than as new furniture. */
+.vlb{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(0,20,45,.86);animation:vlb-in .16s ease}
+/* The base reset carries no [hidden] rule and display:flex would beat one
+   anyway, so the closed state is set here or the overlay never goes away. */
+.vlb[hidden]{display:none}
+@keyframes vlb-in{from{opacity:0}to{opacity:1}}
+.vlb__frame{position:relative;width:min(calc(86vh * 9 / 16),calc(100vw - 48px));aspect-ratio:9/16;
+  border-radius:18px;overflow:hidden;background:#000;
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,20,45,.5)}
+.vlb__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+/* Pinned to the viewport rather than to the plate: the plate's width changes with
+   the height of the screen, and a close control that moves around with it is one
+   the reader has to look for. */
+.vlb__x{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);cursor:pointer;
+  padding:0;transition:background .18s ease}
+.vlb__x:hover{background:rgba(255,255,255,.20)}
+.vlb__x:focus-visible{outline:2px solid var(--on-dark);outline-offset:3px}
+/* Two bars crossed, the same geometric primitives the rest of the site draws
+   with. No icon set: see docs-internal/CLAUDE.md rule 2. */
+.vlb__x::before,.vlb__x::after{content:"";position:absolute;left:50%;top:50%;
+  width:17px;height:1.5px;background:var(--on-dark);border-radius:1px}
+.vlb__x::before{transform:translate(-50%,-50%) rotate(45deg)}
+.vlb__x::after{transform:translate(-50%,-50%) rotate(-45deg)}
+/* Hold the page still behind the dialog. Paired with the class js/main.js sets;
+   changing either name means changing both. */
+html.vlb-open{overflow:hidden}
+
 /* ---- clickable card surfaces --------------------------------------------
    The offer card promised a click it did not deliver. `.card` already carries
    cursor:pointer and position:relative, but the overlay that makes the whole

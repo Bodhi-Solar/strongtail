@@ -249,4 +249,154 @@
     }
   }
 
+  /* ---------------------------------------------------------- VIDEO
+     The founding partner video, on the partner detail pages only.
+
+     The card in the rail is a real link to the video on YouTube. This turns it
+     into a lightbox, and does it as an upgrade rather than as the mechanism: if
+     this file never loads, or the src was not a YouTube URL the generator could
+     parse, the anchor is still there and still plays the video. Same rule as the
+     rest of the page.
+
+     NOTHING IS REQUESTED FROM YOUTUBE UNTIL A CLICK. The poster is a local image
+     and the iframe is built here, on demand, so a reader who never presses play
+     never touches youtube.com and is handed no cookie by it. That is the whole
+     reason the card is a poster and a link rather than an embed, and it is worth
+     keeping: dropping an iframe into the page instead would load about a megabyte
+     of player on every partner page whether or not anyone watches.
+
+     autoplay=1 is not the autoplay `docs-internal/CLAUDE.md` rule 2 bans. That
+     rule governs page load, and nothing here moves until someone deliberately
+     presses a play control. Starting the video is what the press MEANS; making
+     them press play twice would be the bug.
+
+     nocookie is youtube.com's own privacy-enhanced host. rel=0 no longer removes
+     end-cards, it restricts them to the same channel, which is the behaviour we
+     want here anyway: that channel is Bodhi's, and what sits beside a partner
+     video is the rest of the Alliance's educational library.                 */
+  var vidCards = document.querySelectorAll('a.vid[data-yt]');
+
+  if (vidCards.length) {
+    var vlb = null;      /* the overlay, built once and reused */
+    var vlbFrame = null; /* the 9:16 plate the iframe goes into */
+    var vlbClose = null;
+    var vlbOpener = null; /* the card that opened it, so focus can go home */
+
+    function vlbBuild() {
+      vlb = document.createElement('div');
+      vlb.className = 'vlb';
+      vlb.setAttribute('role', 'dialog');
+      vlb.setAttribute('aria-modal', 'true');
+      vlb.hidden = true;
+
+      vlbFrame = document.createElement('div');
+      vlbFrame.className = 'vlb__frame';
+
+      vlbClose = document.createElement('button');
+      vlbClose.type = 'button';
+      vlbClose.className = 'vlb__x';
+      vlbClose.setAttribute('aria-label', 'Close video');
+
+      vlb.appendChild(vlbFrame);
+      vlb.appendChild(vlbClose);
+      document.body.appendChild(vlb);
+
+      vlbClose.addEventListener('click', vlbHide);
+
+      /* Backdrop only. A click that lands on the video itself is a click on the
+         player, not a request to leave. */
+      vlb.addEventListener('click', function (e) {
+        if (e.target === vlb) vlbHide();
+      });
+
+      /* Esc closes, and Tab cycles between the two things in here: the close
+         button and the player. Without the trap, tabbing walks straight out of
+         an open dialog into the page behind it, which is still scroll-locked. */
+      vlb.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          vlbHide();
+          return;
+        }
+
+        if (e.key !== 'Tab') return;
+
+        var stops = vlb.querySelectorAll('button, iframe');
+        if (!stops.length) return;
+
+        var first = stops[0];
+        var last = stops[stops.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+    }
+
+    function vlbHide() {
+      if (!vlb || vlb.hidden) return;
+
+      /* Removing the iframe is what actually stops the sound. Hiding it does not. */
+      vlbFrame.innerHTML = '';
+      vlb.hidden = true;
+      document.documentElement.classList.remove('vlb-open');
+
+      if (vlbOpener) {
+        vlbOpener.focus();
+        vlbOpener = null;
+      }
+    }
+
+    function vlbShow(card) {
+      var id = card.getAttribute('data-yt');
+      if (!id) return false;
+
+      if (!vlb) vlbBuild();
+
+      var frame = document.createElement('iframe');
+      frame.src =
+        'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
+        '?autoplay=1&rel=0&playsinline=1&modestbranding=1';
+      frame.setAttribute('title', card.getAttribute('aria-label') || 'Partner video');
+      frame.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; picture-in-picture; web-share');
+      frame.setAttribute('allowfullscreen', '');
+      frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+
+      vlbFrame.innerHTML = '';
+      vlbFrame.appendChild(frame);
+
+      vlb.setAttribute('aria-label', card.getAttribute('aria-label') || 'Partner video');
+      vlb.hidden = false;
+      document.documentElement.classList.add('vlb-open');
+
+      vlbOpener = card;
+      vlbClose.focus();
+      return true;
+    }
+
+    for (var vi = 0; vi < vidCards.length; vi++) {
+      /* An empty data-yt means the generator could not parse an id out of the
+         src. Leave that card entirely alone: it stays the plain link it already
+         is, which still reaches the video. */
+      if (!vidCards[vi].getAttribute('data-yt')) continue;
+
+      vidCards[vi].addEventListener('click', function (e) {
+        /* Let the modified clicks through. Someone holding a modifier is asking
+           for a new tab or window, and the href is a real YouTube URL, so the
+           right thing to do is nothing. */
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+        try {
+          if (vlbShow(this)) e.preventDefault();
+        } catch (err) {
+          /* Leave the anchor to do its job. A lightbox that fails to open is not
+             worth a partner video that will not play. */
+        }
+      });
+    }
+  }
+
 }());
