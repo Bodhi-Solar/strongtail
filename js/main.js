@@ -523,19 +523,12 @@
 
       var label = btn.querySelector('.vsound__label');
 
+      /* ONE src, built once. The sound is toggled on the running player rather than
+         by rebuilding this, which is what used to restart the video from zero every
+         time the button was pressed. */
       function src() {
-        var base = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?';
-
-        if (loud) {
-          /* Controls come back with the sound. Someone who has chosen to listen
-             should be able to pause and scrub, and .is-loud in the stylesheet is
-             what lets the pointer actually reach them. No loop: a deliberate watch
-             should end rather than start again. */
-          return base + 'autoplay=1&mute=0&start=0&controls=1&modestbranding=1&rel=0' +
-            '&playsinline=1&cc_load_policy=0';
-        }
-
-        return base + 'autoplay=1&mute=1&loop=1&playlist=' + encodeURIComponent(id) +
+        return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
+          '?autoplay=1&mute=1&loop=1&playlist=' + encodeURIComponent(id) +
           '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0' +
           '&iv_load_policy=3&cc_load_policy=0';
       }
@@ -581,10 +574,36 @@
         e.preventDefault();
         e.stopPropagation();
 
-        /* Destroy and recreate rather than pull in YouTube's IFrame API for one
-           button. The API is another script and another dependency. */
+        var f = host.querySelector('iframe');
+
+        /* Nothing mounted yet: reduced motion, or the observer has not fired. Mount
+           it now, since pressing the button is a request to hear it. */
+        if (!f) {
+          mountFrame();
+          f = host.querySelector('iframe');
+          if (!f) return;
+        }
+
+        /* SEAMLESS. Talk to the running player instead of rebuilding the iframe,
+           which is what used to restart the video from zero on every press. Same
+           postMessage channel enablejsapi opened for the captions, so this costs
+           nothing extra and still does not pull in YouTube's IFrame API.
+
+           Unmuting inside a click is a user gesture, which is what browsers require
+           before a video is allowed to make noise. */
         loud = !loud;
-        mountFrame();
+
+        try {
+          f.contentWindow.postMessage(
+            '{"event":"command","func":"' + (loud ? 'unMute' : 'mute') + '","args":[]}', '*');
+        } catch (err) {
+          /* Leave the label alone if the player would not listen, so the button
+             still describes what the reader is actually hearing. */
+          loud = !loud;
+          return;
+        }
+
+        host.classList.toggle('is-loud', loud);
         if (label) label.textContent = loud ? 'Mute' : 'Unmute';
         btn.setAttribute('aria-label', loud ? 'Mute the video' : 'Play the video with sound');
       });

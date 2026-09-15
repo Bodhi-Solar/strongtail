@@ -1218,15 +1218,20 @@ html.vlb-open{overflow:hidden}
 .wvid .wvid__poster,.wvid iframe{position:absolute;inset:0;width:100%;height:100%;display:block;border:0}
 .wvid .wvid__poster{object-fit:cover;z-index:1;transition:opacity .4s ease}
 .wvid.is-live .wvid__poster{opacity:0}
-/* THE PILLARBOX FIX. A 9:16 video inside YouTube's 16:9 player sits in a centred
-   9:16 region with black bars either side. Sizing the iframe to the container
-   would show those bars inside our frame, so the player is oversized instead and
-   .wvid's overflow:hidden crops it: for a 9:16 source the video's width inside
-   the player is 9/16 of the player height, so the player must be 256/81 of the
-   container width, which is the 316% below, pulled left by half the overflow.
-   pointer-events:none is deliberate. The iframe is decoration; .wvid__sound is
-   the only control, and the pill in the hero is how you watch it properly. */
-.wvid iframe{width:316%;height:100%;left:-108%;pointer-events:none;z-index:0}
+/* NO PILLARBOX, AND NO CROP NEEDED. The brief specified an oversized iframe,
+   316% wide pulled left by 108%, on the theory that a 9:16 video inside YouTube's
+   player sits in a centred region with black bars either side. Measured 15 Sept
+   2026 and that is not what happens: give the player a 9:16 BOX and the video
+   fills it exactly, 340x604 in a 340x604 frame, left edge at 0. The bars appear
+   when the player is 16:9, not when the video is.
+
+   Dropping the crop is not just simpler, it fixes a real artifact. Oversized, the
+   player was 1074px wide behind a 340px window, so anything YouTube draws near the
+   player edges, the video title especially, slid into view at the bottom left.
+   pointer-events:none stays: the iframe is decoration, the unmute button is the
+   only control here and clicking the card opens the lightbox, which is where the
+   real controls live. */
+.wvid iframe{width:100%;height:100%;left:0;pointer-events:none;z-index:0}
 /* One control, two hosts: the homepage rail and every partner card. It is
    positioned against .wvid or .vidwrap, both of which are position:relative. */
 .vsound{position:absolute;right:14px;bottom:14px;z-index:4;display:inline-flex;align-items:center;
@@ -1252,15 +1257,9 @@ html.vlb-open{overflow:hidden}
 .vid.is-live img,.vid.is-live .play{opacity:0}
 .vid .play{transition:opacity .4s ease;z-index:2}
 .vid .cap{z-index:2}
-/* Same oversize-and-crop as the homepage rail; see the note there for the 316%. */
-.vid iframe{position:absolute;top:0;width:316%;height:100%;left:-108%;border:0;display:block;
+/* A plain 9:16 box, same as the rail; see the note there for why there is no crop. */
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;
   pointer-events:none;z-index:0}
-/* THE CONTROLS ONLY WORK ONCE THE SOUND IS ON, and that is the whole point of
-   this pair. Muted, the player is decoration and must not swallow the click
-   that opens the lightbox. Unmuted, controls=1 is on the embed and the reader
-   has to be able to reach it, so the iframe takes pointer events back. Without
-   this line the unmute button hands over a player nobody can pause. */
-.vid.is-loud iframe,.wvid.is-loud iframe{pointer-events:auto}
 /* Top right on a partner card, because the bottom belongs to .cap: the speaker's
    name and line sit there and the button was landing on top of them. The homepage
    rail carries no caption, so it keeps the bottom corner. The burned-in wordmark
