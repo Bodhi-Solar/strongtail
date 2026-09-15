@@ -86,7 +86,27 @@
       <p class="lede">The Strong Tail Solar Alliance brings together companies across equipment,
       financing, technology, and services, so local and regional installers can lower costs and give
       more homeowners the benefits of solar ownership.</p>
-      <a class="btn btn--lg" href="#join">Become an Alliance installer</a>
+      <!-- The CTA and the Welcome pill share a row; .micro stays below it. The pill
+           is a <button>, not an anchor: it opens a dialog, it does not navigate, and
+           an href="#" would put a junk entry in the reader's history.
+
+           data-yt is the one place the video id lives on this page. js/main.js reads
+           it here and on #welcome-rail below, and hands it to the same lightbox the
+           partner cards use. Nothing is requested from youtube.com until it is
+           pressed. -->
+      <div class="hero-actions">
+        <a class="btn btn--lg" href="#join">Become an Alliance installer</a>
+        <button class="playpill" type="button" data-welcome-open data-yt="OXuf1GBqPTc"
+                aria-label="Play the welcome video, 1 minute 30 seconds">
+          <span class="disc" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          <span class="t">
+            <span class="t1">Welcome</span>
+            <span class="t2">1 MIN 30 SEC</span>
+          </span>
+        </button>
+      </div>
       <p class="micro">Preferred terms. Practical expertise. Free to join.</p>
     </div></div>
   </section>
@@ -249,24 +269,56 @@
         a shared commitment to help local and regional installers build businesses that last.</p>
       </div>
 
-      <p class="pact-label">The Strong Tail Compact</p>
-      <div class="pact">
-        <div class="row"><div class="num">1</div><div>
-          <p class="claim">We serve homeowners and installers, not just transactions.</p>
-          <p class="sup">Success means installer businesses that last and homeowners who remain satisfied.</p></div></div>
-        <div class="row"><div class="num">2</div><div>
-          <p class="claim">We believe in transparency, not surprises.</p>
-          <p class="sup">Clear pricing, terms, lead times, and performance data.</p></div></div>
-        <div class="row"><div class="num">3</div><div>
-          <p class="claim">We honor our commitments after the sale.</p>
-          <p class="sup">Our obligations don&rsquo;t disappear when the transaction is over.</p></div></div>
-        <div class="row"><div class="num">4</div><div>
-          <p class="claim">We build for the local and regional installer.</p>
-          <p class="sup">Local and regional installers deserve the pricing, access, and support extended to
-          the industry&rsquo;s largest accounts.</p></div></div>
-        <div class="row"><div class="num">5</div><div>
-          <p class="claim">We choose the durable business over the fast one.</p>
-          <p class="sup">We don&rsquo;t sell what we can&rsquo;t stand behind.</p></div></div>
+      <!-- The intro runs full width above; the split starts here, Compact left and
+           the welcome video right. The band is already ink, so a vertical video
+           needs no card, no border and no pillarbox fill: every other placement on
+           this page would have had to invent a container for it.
+
+           No label above the rail. A second yellow eyebrow competes with THE STRONG
+           TAIL COMPACT, and no caption under it either. Both were cut deliberately.
+
+           Below 900px .cols stacks and the rail moves ABOVE the Compact, so the
+           video lands mid-scroll as a break rather than after five commitments. -->
+      <div class="cols">
+        <div class="col-main">
+          <p class="pact-label">The Strong Tail Compact</p>
+          <div class="pact">
+            <div class="row"><div class="num">1</div><div>
+              <p class="claim">We serve homeowners and installers, not just transactions.</p>
+              <p class="sup">Success means installer businesses that last and homeowners who remain satisfied.</p></div></div>
+            <div class="row"><div class="num">2</div><div>
+              <p class="claim">We believe in transparency, not surprises.</p>
+              <p class="sup">Clear pricing, terms, lead times, and performance data.</p></div></div>
+            <div class="row"><div class="num">3</div><div>
+              <p class="claim">We honor our commitments after the sale.</p>
+              <p class="sup">Our obligations don&rsquo;t disappear when the transaction is over.</p></div></div>
+            <div class="row"><div class="num">4</div><div>
+              <p class="claim">We build for the local and regional installer.</p>
+              <p class="sup">Local and regional installers deserve the pricing, access, and support extended to
+              the industry&rsquo;s largest accounts.</p></div></div>
+            <div class="row"><div class="num">5</div><div>
+              <p class="claim">We choose the durable business over the fast one.</p>
+              <p class="sup">We don&rsquo;t sell what we can&rsquo;t stand behind.</p></div></div>
+          </div>
+        </div>
+
+        <div class="col-rail">
+          <!-- The poster is the partner card's, deliberately: it is the frame YouTube
+               uses as this video's thumbnail, so the homepage, Bodhi's partner page and
+               the channel all show one image. alt is empty because the button beside it
+               carries the accessible name.
+
+               js/main.js swaps in the muted looping embed once the band is near, then
+               adds .is-live to fade this out. Until then the poster is all that loads. -->
+          <div class="wvid" id="welcome-rail" data-yt="OXuf1GBqPTc">
+            <img class="wvid__poster" src="assets/video/bodhi-poster.jpg" alt=""
+                 width="540" height="960">
+            <button class="wvid__sound" type="button" aria-label="Play the welcome video with sound">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+              <span class="wvid__soundlabel">Unmute</span> &middot; 1:30
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>

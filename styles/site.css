@@ -1171,3 +1171,92 @@ html.vlb-open{overflow:hidden}
   .kit-demo,.kit-rules{grid-template-columns:1fr}
   .kit-swatch{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ====================== homepage welcome video ============================
+   The welcome video: a muted loop in the rail beside the Compact, and a pill
+   in the hero that opens the same video with sound in the shared .vlb
+   lightbox below.
+
+   NOT named .vid. That class is the partner detail pages' video card (see the
+   block above): a light gradient plate with a border, a hover lift and
+   cursor:pointer, built for a white page. One stylesheet serves every page
+   here, so reusing the name would drag all of that into a dark band. .wvid is
+   its own thing and shares nothing but the aspect ratio.
+
+   Likewise .col-main and .col-rail rather than the .main and .rail the brief
+   asked for: .rail is already global and carries grid placement plus an
+   order and a max-width below 1000px, and .main collides with the <main>
+   landmark. The names follow the .col-a / .col-b pair already on partner
+   pages.                                                                   */
+
+/* ---- the split: intro runs wide, Compact and video share the row below --- */
+/* 940 rather than the 820 above, so the H2 sets in two lines at 1440 instead
+   of stacking into a narrow column beside nothing. */
+.compact .intro{max-width:940px}
+.compact .intro .lede{max-width:none}
+.compact .cols{display:flex;gap:60px;align-items:flex-start}
+.compact .col-main{flex:1 1 auto;min-width:0}
+/* top:104px is 68px of stuck header plus 36px of air. THREE COUPLED NUMBERS:
+   the 68px is .site-header.stuck above, reached via the `scrollY > 420`
+   threshold in js/main.js. Change any one and this goes silently wrong, the
+   same contract the header block already warns about. */
+.compact .col-rail{flex:0 0 280px;position:sticky;top:104px}
+/* The column is the measure now, not the 860 set above. */
+.compact .pact{max-width:none}
+
+/* ---- the rail video ------------------------------------------------------ */
+.wvid{position:relative;width:100%;aspect-ratio:9/16;background:#000;overflow:hidden;
+  border-radius:16px;box-shadow:0 22px 54px rgba(0,0,0,.42)}
+.wvid .wvid__poster,.wvid iframe{position:absolute;inset:0;width:100%;height:100%;display:block;border:0}
+.wvid .wvid__poster{object-fit:cover;z-index:1;transition:opacity .4s ease}
+.wvid.is-live .wvid__poster{opacity:0}
+/* THE PILLARBOX FIX. A 9:16 video inside YouTube's 16:9 player sits in a centred
+   9:16 region with black bars either side. Sizing the iframe to the container
+   would show those bars inside our frame, so the player is oversized instead and
+   .wvid's overflow:hidden crops it: for a 9:16 source the video's width inside
+   the player is 9/16 of the player height, so the player must be 256/81 of the
+   container width, which is the 316% below, pulled left by half the overflow.
+   pointer-events:none is deliberate. The iframe is decoration; .wvid__sound is
+   the only control, and the pill in the hero is how you watch it properly. */
+.wvid iframe{width:316%;height:100%;left:-108%;pointer-events:none;z-index:0}
+.wvid__sound{position:absolute;right:14px;bottom:14px;z-index:4;display:inline-flex;align-items:center;
+  gap:7px;height:30px;padding:0 12px;border-radius:999px;font-family:var(--font);font-size:11.5px;
+  font-weight:600;letter-spacing:.03em;color:#fff;background:rgba(0,20,45,.55);
+  border:1px solid rgba(255,255,255,.26);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);cursor:pointer}
+.wvid__sound svg{width:11px;height:11px;fill:#fff}
+.wvid__sound:hover{background:rgba(0,20,45,.72)}
+.wvid__sound:focus-visible{outline:2px solid var(--on-dark);outline-offset:2px}
+
+/* ---- the hero pill ------------------------------------------------------- */
+.hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+/* Clear glass with no outline ring, matching the hero button treatment. No
+   accent bar, tick or rule anywhere near the H1. */
+.playpill{display:inline-flex;align-items:center;gap:13px;padding:7px 20px 7px 8px;border-radius:999px;
+  font-family:var(--font);color:var(--ink);cursor:pointer;
+  background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.75);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  transition:background .18s ease,transform .18s ease}
+.playpill:hover{background:rgba(255,255,255,.66);transform:translateY(-1px)}
+.playpill:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.playpill .disc{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:var(--ink);
+  display:flex;align-items:center;justify-content:center}
+.playpill .disc svg{width:13px;height:13px;fill:#fff;margin-left:2px}
+.playpill .t{text-align:left}
+.playpill .t1{display:block;font-size:14px;font-weight:600;line-height:1.2;letter-spacing:-.005em}
+.playpill .t2{display:block;font-size:11.5px;font-weight:500;line-height:1;letter-spacing:.04em;
+  color:var(--ink-soft);margin-top:4px}
+
+/* ---- stacking ------------------------------------------------------------
+   900 rather than the 620 the brief named. At 768 a 280px rail plus the 60px
+   gap leaves the Compact claims about 376px, which is a wall of wrapped type,
+   and 900 is already the breakpoint where the gutter shrinks and the nav
+   collapses. DOM order puts the rail second, so it is pulled ABOVE the Compact
+   here: the video reads as a break mid-scroll rather than an afterthought
+   below five commitments. */
+@media (max-width:900px){
+  .compact .cols{display:flex;flex-direction:column}
+  .compact .col-main{order:2}
+  .compact .col-rail{order:1;position:static;flex:none;width:100%;max-width:300px;
+    margin:0 auto var(--s6)}
+}

@@ -250,7 +250,9 @@
   }
 
   /* ---------------------------------------------------------- VIDEO
-     The founding partner video, on the partner detail pages only.
+     Two callers now. The founding partner video on the partner detail pages,
+     and the welcome video on the homepage: the pill in the hero opens the same
+     lightbox, and the rail beside the Compact runs its own muted loop.
 
      The card in the rail is a real link to the video on YouTube. This turns it
      into a lightbox, and does it as an upgrade rather than as the mechanism: if
@@ -275,8 +277,33 @@
      want here anyway: that channel is Bodhi's, and what sits beside a partner
      video is the rest of the Alliance's educational library.                 */
   var vidCards = document.querySelectorAll('a.vid[data-yt]');
+  var welcomePill = document.querySelector('[data-welcome-open]');
+  var welcomeRail = document.getElementById('welcome-rail');
 
-  if (vidCards.length) {
+  /* OPENED STRAIGHT OFF DISK, NOTHING HERE CAN PLAY. YouTube's player refuses to
+     configure itself when the embedding page's origin is null, which is exactly
+     what file:// gives it, and paints "Video player configuration error" over a
+     black box instead. No embed parameter fixes that: the page has to be served
+     over http or https for any of these embeds to work.
+
+     That matters here rather than being a curiosity, because these pages are
+     meant to open off disk. Asset paths are relative for that reason and
+     tools/qa.mjs renders them from file:// on purpose. So the pages keep
+     working, they just send you to YouTube instead of embedding it: the partner
+     cards are already real links and simply navigate, and the two homepage
+     controls open the watch page in a new tab. A broken player is worse than an
+     honest link.
+
+     To see the embeds locally, serve the folder:
+         python3 -m http.server 8765
+         open http://127.0.0.1:8765/                                          */
+  var ytEmbeddable = window.location.protocol !== 'file:';
+
+  function ytWatch(id) {
+    return 'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+  }
+
+  if (vidCards.length || welcomePill || welcomeRail) {
     var vlb = null;      /* the overlay, built once and reused */
     var vlbFrame = null; /* the 9:16 plate the iframe goes into */
     var vlbClose = null;
@@ -354,6 +381,12 @@
       var id = card.getAttribute('data-yt');
       if (!id) return false;
 
+      /* Refuse rather than open a dialog around a player that cannot start. A
+         partner card returning false here keeps its own href and target, so the
+         click just follows the link, which is the fallback the card was built
+         with in the first place. */
+      if (!ytEmbeddable) return false;
+
       if (!vlb) vlbBuild();
 
       var frame = document.createElement('iframe');
@@ -396,6 +429,115 @@
              worth a partner video that will not play. */
         }
       });
+    }
+
+    /* ------------------------------------------------ the hero Welcome pill
+       Straight into the same lightbox the partner cards use. vlbShow reads
+       data-yt and aria-label off whatever element it is handed, so the pill
+       needs nothing of its own. It is a button, so Enter and Space both fire
+       click for free and there is no href to suppress. */
+    if (welcomePill && welcomePill.getAttribute('data-yt')) {
+      welcomePill.addEventListener('click', function () {
+        try {
+          /* A button has no href of its own to fall back to, so off disk it
+             hands the reader to YouTube rather than opening a dialog that
+             cannot play. */
+          if (!vlbShow(this)) {
+            window.open(ytWatch(this.getAttribute('data-yt')), '_blank', 'noopener');
+          }
+        } catch (err) {
+          /* A failed lightbox must not take the rest of the page with it. */
+        }
+      });
+    }
+
+    /* ----------------------------------------------- the Compact band rail
+       A muted loop, which is the one place on this site anything plays by
+       itself. docs-internal/CLAUDE.md rule 2 was amended for it on 15 Sept
+       2026 and the two guardrails that bought the amendment are both here:
+
+       IT IS NOT LOADED ON PAGE LOAD. The observer holds the ~1MB player back
+       until the band is close, so a reader who never reaches section five
+       never pays for it and never touches youtube.com. The poster is what
+       they see until then.
+
+       AND IT CARRIES NO YOUTUBE CHROME. controls=0 plus pointer-events:none
+       in the stylesheet mean the iframe is decoration: the only control is
+       the unmute button, and the pill in the hero is how you watch it
+       properly. loop=1 does nothing on its own, playlist= is what actually
+       repeats a single video, so the two go together or neither works. */
+    if (welcomeRail && welcomeRail.getAttribute('data-yt')) {
+      var railId = welcomeRail.getAttribute('data-yt');
+      var railBtn = welcomeRail.querySelector('.wvid__sound');
+      var railLabel = welcomeRail.querySelector('.wvid__soundlabel');
+      var railLoud = false;
+
+      function railSrc(loud) {
+        var base = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(railId) + '?';
+        if (loud) {
+          /* Restore the controls when the sound comes on: someone who has chosen
+             to listen should be able to scrub and pause. No loop, because a
+             deliberate watch should end rather than start again. */
+          return base + 'autoplay=1&mute=0&start=0&controls=1&modestbranding=1&rel=0&playsinline=1';
+        }
+        return base + 'autoplay=1&mute=1&loop=1&playlist=' + encodeURIComponent(railId) +
+          '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3';
+      }
+
+      function railMount(loud) {
+        var old = welcomeRail.querySelector('iframe');
+        if (old) old.parentNode.removeChild(old);
+
+        var f = document.createElement('iframe');
+        f.src = railSrc(loud);
+        f.setAttribute('title', 'Welcome to the Strong Tail Solar Alliance');
+        f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+        f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        f.setAttribute('tabindex', '-1');
+        welcomeRail.appendChild(f);
+        welcomeRail.classList.add('is-live');
+      }
+
+      if (railBtn) {
+        railBtn.addEventListener('click', function () {
+          /* Off disk there is no player to unmute, so the button becomes the way
+             out to YouTube and the poster stays where it is. */
+          if (!ytEmbeddable) {
+            window.open(ytWatch(railId), '_blank', 'noopener');
+            return;
+          }
+
+          /* Destroy and recreate rather than pull in YouTube's IFrame API for one
+             button. The API is another script and another dependency, and this is
+             two lines. */
+          railLoud = !railLoud;
+          railMount(railLoud);
+          if (railLabel) railLabel.textContent = railLoud ? 'Mute' : 'Unmute';
+          railBtn.setAttribute('aria-label', railLoud
+            ? 'Mute the welcome video'
+            : 'Play the welcome video with sound');
+        });
+      }
+
+      /* Reduced motion gets the poster and the button and nothing moving. The
+         button still works, because pressing it is a choice rather than motion
+         the reader did not ask for. The lightbox is unaffected throughout, for
+         the same reason. */
+      var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (ytEmbeddable && !still && 'IntersectionObserver' in window) {
+        var railObs = new IntersectionObserver(function (entries) {
+          for (var i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting) {
+              railObs.disconnect();
+              railMount(false);
+              return;
+            }
+          }
+        }, { rootMargin: '200px 0px' });
+
+        railObs.observe(welcomeRail);
+      }
     }
   }
 
