@@ -60,7 +60,14 @@
   /* Remembered so a successful log can re-render the card from a fresh
      /lookup rather than patching the DOM and hoping it matches Airtable. */
   var lastQuery = '';
-  var allianceOn = false;
+  /* TWO flags, because the Worker computes `alliance` two different ways and the
+     page needs to tell them apart. The gate answers with the CONFIG, is the
+     Alliance half switched on. A search answers with the DATA, did the Alliance
+     index actually have rows this time. They disagree whenever the index is
+     empty or failed to build, and when they disagree the page has to say so
+     rather than look like a feature that was never built. */
+  var allianceOn = false;        /* this search */
+  var allianceConfigured = false; /* the gate */
 
   /* Character for character the Worker's PARTNERS list and the Airtable
      Activated options. Other is intro-call only: Activated is a six-option
@@ -129,7 +136,7 @@
       passcode = value;
       try { window.sessionStorage.setItem(STORE_KEY, value); } catch (e) {}
       say(gateNote, '');
-      applyAlliance(res.data);
+      applyAlliance(res.data, true);
       unlock();
     }).catch(function () {
       say(gateNote, 'Could not reach the lookup. Check your connection and try again.');
@@ -306,12 +313,30 @@
     /* "Shown under a result", singular. With five results there is no single
        row to log against, so the form stays down and says why. The id shape is
        checked against a closed pattern, the same discipline as TONES. */
-    if (allianceOn) {
-      if (rows.length === 1 && /^rec[A-Za-z0-9]{14}$/.test(String(rows[0].alliance_id || ''))) {
-        showLog(rows[0].alliance_id);
-      } else if (rows.length > 1) {
-        results.appendChild(message('Narrow to one installer to log a call or an enrollment.'));
+    /* EVERY path here accounts for itself. Two of them used to fall through in
+       silence, which is indistinguishable from a broken page: the status, the
+       name and the website render above regardless, so the reader sees a working
+       lookup and a missing form and has nothing to go on.
+
+       The id shape is checked against a closed pattern, the same discipline as
+       TONES. */
+    if (!allianceOn) {
+      /* The gate said the Alliance half is on and this search disagreed, so the
+         index is empty or failed to build. Say that, rather than silently
+         reverting to the page as it was before the Alliance table existed. */
+      if (allianceConfigured) {
+        results.appendChild(message(
+          'Alliance data is unavailable right now, so logging is off. The OneEthos ' +
+          'status above is still correct. Try again in a few minutes.'));
       }
+    } else if (rows.length > 1) {
+      results.appendChild(message('Narrow to one installer to log a call or an enrollment.'));
+    } else if (!/^rec[A-Za-z0-9]{14}$/.test(String(rows[0].alliance_id || ''))) {
+      results.appendChild(message(
+        'This installer has no Alliance record, so there is nothing to log against ' +
+        'yet. They show here because they are in the OneEthos table.'));
+    } else {
+      showLog(rows[0].alliance_id);
     }
 
     if (data.truncated) {
@@ -340,8 +365,16 @@
 
   var STEP_SOON = ['ic-step-log', 'ic-step-become'];
 
-  function applyAlliance(data) {
+  function applyAlliance(data, fromGate) {
     allianceOn = !!(data && data.alliance === true);
+
+    /* The rail steps describe whether the feature EXISTS, so only the gate gets
+       to write them. Driving them from a search would dim them mid-session on a
+       transient index failure and tell the reader the half is coming soon when
+       it is already here. */
+    if (!fromGate) return;
+    allianceConfigured = allianceOn;
+
     for (var i = 0; i < STEP_SOON.length; i++) {
       var el = document.getElementById(STEP_SOON[i]);
       if (!el) continue;
@@ -545,7 +578,7 @@
 
   if (stored) {
     ask('/lookup', { passcode: stored }).then(function (res) {
-      if (res.ok) { passcode = stored; applyAlliance(res.data); unlock(); }
+      if (res.ok) { passcode = stored; applyAlliance(res.data, true); unlock(); }
       else { try { window.sessionStorage.removeItem(STORE_KEY); } catch (e) {} }
     }).catch(function () { /* Leave the gate up. It is the correct state. */ });
   }
