@@ -1374,5 +1374,11 @@ html.vlb-open{overflow:hidden}
 .ic-back:hover{color:var(--accent-text);border-bottom-color:rgba(190,67,25,.36)}
 .ic-back:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 /* The line under the Alliance partner select. Says where the value lands, which
-   differs by what is ticked and is not guessable from a four-word label. */
-.ic-hint{margin:6px 0 0;color:var(--ink-soft)}
+   differs by what is ticked and is not guessable from a four-word label.
+
+   It carries .note-sm, so the size and colour are the form's existing fine print
+   at 12.5px rather than a fourth type size invented for one sentence. Only the
+   spacing is overridden: .note-sm's 14px top margin is meant for a note closing
+   a form, and this one belongs tight under the control it describes. Specificity
+   has to match .form .note-sm to win, hence the .form prefix. */
+.form .ic-hint{margin:6px 0 0}
