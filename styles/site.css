@@ -1373,3 +1373,6 @@ html.vlb-open{overflow:hidden}
   border-bottom:1px solid rgba(0,20,45,.22)}
 .ic-back:hover{color:var(--accent-text);border-bottom-color:rgba(190,67,25,.36)}
 .ic-back:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+/* The line under the Alliance partner select. Says where the value lands, which
+   differs by what is ticked and is not guessable from a four-word label. */
+.ic-hint{margin:6px 0 0;color:var(--ink-soft)}

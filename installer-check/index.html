@@ -158,8 +158,16 @@
                  Other is dropped from the list as soon as Enrollment is ticked,
                  because Activated is a six-option multi-select and the Worker
                  sends typecast:false. -->
-            <label for="ic-partner">Your company</label>
+            <!-- "Alliance partner", not "Your company". One select feeds two
+                 different Airtable fields: Intro call by, which is who made the
+                 call, and Activated, which is the offer the installer took up.
+                 "Your company" reads as metadata about the submitter, so
+                 choosing Damaris to log an enrollment and then finding Damaris
+                 under Activated came as a surprise. The label stays fixed
+                 because both boxes can be ticked; the hint below moves instead. -->
+            <label for="ic-partner">Alliance partner</label>
             <select id="ic-partner" name="partner"></select>
+            <p class="small ic-hint" id="ic-partner-hint"></p>
           </div>
           <div class="field">
             <label for="ic-date">Date</label>

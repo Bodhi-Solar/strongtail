@@ -56,6 +56,7 @@
   var byField = document.getElementById('ic-by');
   var logNote = document.getElementById('ic-log-note');
   var logFor = document.getElementById('ic-log-for');
+  var partnerHint = document.getElementById('ic-partner-hint');
   /* Set by render(), read by focusOne/unfocus. The list and the "several
      matched" prompt are both rebuilt on every search, so these are rebound
      rather than looked up once. */
@@ -583,8 +584,26 @@
        INSTALLER-CHECK.md, because three vocabularies for one event is exactly
        the sort of thing that wastes an afternoon later.
 
-       The label no longer changes. It is "Your company" in both states, since
-       both boxes can be ticked and there is no single kind to key off. */
+       THE LABEL STILL DOES NOT CHANGE, and that remains right: both boxes can be
+       ticked and there is no single kind to key off. What changed on 16 Sept 2026
+       is the label itself, "Your company" to "Alliance partner", and this hint
+       underneath, which CAN enumerate both because it is a sentence rather than a
+       caption.
+
+       The reason: this one select feeds two different Airtable fields. A call
+       writes it to `Intro call by`, where "your company" is a fair description. An
+       enrollment writes it to `Activated`, where it names the OFFER the installer
+       took up. Scott logged an enrollment, picked Damaris under "Your company",
+       and found Damaris sitting in the Activated column, which is correct and
+       entirely unguessable from the old label. */
+    if (partnerHint) {
+      partnerHint.textContent =
+        wantAct && callBox.checked
+          ? 'Recorded as who made the call, and as the offer the installer took up.'
+          : wantAct
+            ? 'Recorded as the offer the installer took up.'
+            : 'Recorded as who made the call.';
+    }
     detailsWrap.hidden = !wantAct;
   }
 
