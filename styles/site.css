@@ -1277,18 +1277,26 @@ html.vlb-open{overflow:hidden}
   transition:background .18s ease,transform .18s ease}
 .playpill:hover{background:rgba(255,255,255,.66);transform:translateY(-1px)}
 .playpill:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-/* --ink-soft, not --ink. Solid ink put the disc at 15.4:1 against the glass pill
-   and it read as a black blob beside the yellow CTA rather than a quiet second
-   action. --ink-soft lands it at 5.6:1, still unmistakably a button, and the
-   white triangle keeps 6.7:1 inside it, well over the 3:1 a UI graphic needs.
+/* Frosted glass, Scott's call on 16 Sept 2026. The disc is a lighter pane of the
+   same glass the pill is made of, .78 against the pill's .42, and the triangle
+   is --ink on top of it.
 
-   The paler options tested at the same time, a white disc matching .vid .play,
-   a translucent ink one, and --blue-1, all put the DISC at about 1.2:1 against
-   the pill: the circle disappears and only the triangle is left to say the thing
-   plays. Softer still, but it stops reading as a button, so they were rejected. */
-.playpill .disc{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:var(--ink-soft);
+   This block used to say a white disc was tested and rejected, because at the
+   time it was tested it carried a WHITE triangle: disc and pill both read as
+   glass at about 1.2:1, and with nothing dark inside it the control stopped
+   announcing itself. Inverting the triangle is what makes the pale disc work.
+   --ink on rgba(255,255,255,.78) over the hero gradient measures better than
+   14:1, far past the 3:1 a UI graphic needs and better than the 6.7:1 the white
+   triangle had inside the --ink-soft disc. The mark carries the contrast now and
+   the disc carries none, which is the point: it is quieter beside the yellow CTA
+   without becoming invisible.
+
+   The disc is still a whole step lighter than the pill, so the circle has an
+   edge of its own and does not need a border to be seen. */
+.playpill .disc{flex:0 0 40px;width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.78);
   display:flex;align-items:center;justify-content:center}
-.playpill .disc svg{width:13px;height:13px;fill:#fff;margin-left:2px}
+.playpill .disc svg{width:13px;height:13px;fill:var(--ink);margin-left:2px}
 .playpill .t{text-align:left}
 /* One line, since the duration came out of the pill on 15 Sept 2026. The .t2
    rule that styled "1 MIN 30 SEC" went with it rather than being left behind as
