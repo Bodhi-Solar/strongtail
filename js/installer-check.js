@@ -56,6 +56,17 @@
   var byField = document.getElementById('ic-by');
   var logNote = document.getElementById('ic-log-note');
   var logFor = document.getElementById('ic-log-for');
+  /* Set by render(), read by focusOne/unfocus. The list and the "several
+     matched" prompt are both rebuilt on every search, so these are rebound
+     rather than looked up once. */
+  var listEl = null;
+  var multiMsg = null;
+  var backBtn = null;
+  /* Survives the re-render that follows a successful log, so the reader stays on
+     the card they just wrote against and sees it come back with the new entry on
+     it. Cleared by a genuinely NEW search and by the way-back link, not by
+     render(), which runs in both cases and cannot tell them apart. */
+  var pickedId = '';
 
   var passcode = '';
   /* Remembered so a successful log can re-render the card from a fresh
@@ -152,6 +163,7 @@
     if (!q) { say(searchNote, 'Type a company name or a website.'); return; }
 
     lastQuery = q;
+    pickedId = '';
     say(searchNote, 'Checking', true);
     results.textContent = '';
 
@@ -248,6 +260,9 @@
 
     var list = document.createElement('ul');
     list.className = 'ic-list';
+    listEl = list;
+    multiMsg = null;
+    backBtn = null;
 
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i] || {};
@@ -343,14 +358,30 @@
       /* No longer "narrow to one installer". That asked the reader to retype the
          query when what they wanted was to point at the right row, and there was
          nothing to point at. Each loggable card now carries its own button. */
-      results.appendChild(message(
-        'Several installers matched. Choose the one you mean to log against.'));
+      multiMsg = message('Several installers matched. Choose the one you mean to log against.');
+      results.appendChild(multiMsg);
     } else if (!REC_ID.test(String(rows[0].alliance_id || ''))) {
       results.appendChild(message(
         'This installer has no Alliance record, so there is nothing to log against ' +
         'yet. They show here because they are in the OneEthos table.'));
     } else {
       showLog(rows[0].alliance_id);
+    }
+
+    /* Restore the choice after the re-render that follows a log. render() is the
+       same code path for a new search, which is why pickedId is cleared there
+       rather than here. The card is the confirmation: it comes back carrying the
+       entry that was just written. */
+    if (pickedId && rows.length > 1) {
+      for (var k = 0; k < rows.length; k++) {
+        if (String(rows[k].alliance_id || '') === pickedId) {
+          var card = list.children[k];
+          card.classList.add('ic-card--picked');
+          showLog(pickedId, String(rows[k].name || ''));
+          focusOne(card);
+          break;
+        }
+      }
     }
 
     if (data.truncated) {
@@ -364,6 +395,56 @@
      id crosses from the Worker into a write. */
   var REC_ID = /^rec[A-Za-z0-9]{14}$/;
 
+  /* Picking narrows the page to the card being logged against. Four near
+     identical cards above an open form is the state where a call gets written
+     against the wrong company, and the form's own "Logging against NAME" line is
+     easy to read past when the thing it is disagreeing with is still on screen.
+
+     Hidden, never removed: the reader has to be able to get back without
+     retyping the search, and rebuilding the list from a second /lookup to undo a
+     click would be a network round trip to show rows already in the DOM. */
+  function focusOne(item) {
+    if (!listEl) return;
+    var kids = listEl.children;
+    for (var i = 0; i < kids.length; i++) kids[i].hidden = kids[i] !== item;
+    if (multiMsg) multiMsg.hidden = true;
+
+    /* The card's own button has done its job and now describes the state the
+       reader is already in. */
+    var own = item.querySelector('.ic-pick');
+    if (own) own.hidden = true;
+
+    if (!backBtn) {
+      backBtn = document.createElement('button');
+      backBtn.type = 'button';
+      backBtn.className = 'tlink ic-back';
+      backBtn.addEventListener('click', unfocus);
+    }
+    /* Re-attach, not just create. render() empties #ic-results, which detaches
+       this button while the variable still points at it, so a check for
+       existence alone would silently lose the way back on the re-render that
+       follows a log. */
+    if (backBtn.parentNode !== results) results.appendChild(backBtn);
+    backBtn.textContent = 'Show all ' + kids.length + ' results';
+    backBtn.hidden = false;
+  }
+
+  function unfocus() {
+    if (!listEl) return;
+    var kids = listEl.children;
+    for (var i = 0; i < kids.length; i++) {
+      kids[i].hidden = false;
+      kids[i].classList.remove('ic-card--picked');
+      var b = kids[i].querySelector('.ic-pick');
+      if (b) b.hidden = false;
+    }
+    if (multiMsg) multiMsg.hidden = false;
+    if (backBtn) backBtn.hidden = true;
+    pickedId = '';
+    hideLog();
+    if (search) search.scrollIntoView({ block: 'nearest' });
+  }
+
   function pickButton(item, row) {
     var b = document.createElement('button');
     b.type = 'button';
@@ -373,7 +454,9 @@
       var was = results.querySelector('.ic-card--picked');
       if (was) was.classList.remove('ic-card--picked');
       item.classList.add('ic-card--picked');
+      pickedId = String(row.alliance_id);
       showLog(row.alliance_id, String(row.name || ''));
+      focusOne(item);
       /* Move the reader to the form rather than leaving it below the fold, and
          put the keyboard there too, since the click was a request to fill it. */
       logForm.scrollIntoView({ block: 'nearest' });
@@ -527,6 +610,7 @@
     if (logFor) { logFor.textContent = ''; logFor.hidden = true; }
     var picked = results.querySelector('.ic-card--picked');
     if (picked) picked.classList.remove('ic-card--picked');
+    if (backBtn) backBtn.hidden = true;
   }
 
   /* A closed month list, never new Date(str). Parsing '2026-09-20' as a Date

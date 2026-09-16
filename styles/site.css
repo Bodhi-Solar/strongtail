@@ -1363,3 +1363,13 @@ html.vlb-open{overflow:hidden}
    picked out of several; with a single result the card is directly above. */
 .ic-log-for{margin:0 0 var(--s3);color:var(--ink)}
 .ic-log-for[hidden]{display:none}
+/* .ic-list is a grid, so a hidden child still takes a track without this. The
+   UA's [hidden] rule is display:none, but stating it here keeps the behaviour
+   next to the layout that depends on it. */
+.ic-card[hidden],.ic-pick[hidden],.ic-msg[hidden],.ic-back[hidden]{display:none}
+/* The way back out of a picked card. .tlink is the kit's quiet text link; it is
+   a <button> because it changes what is on screen rather than going anywhere. */
+.ic-back{margin:14px 0 0;padding:0;background:none;border:0;cursor:pointer;
+  border-bottom:1px solid rgba(0,20,45,.22)}
+.ic-back:hover{color:var(--accent-text);border-bottom-color:rgba(190,67,25,.36)}
+.ic-back:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
