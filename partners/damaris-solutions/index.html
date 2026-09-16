@@ -168,6 +168,29 @@
         <!-- right: the partner in their own words, then who they are -->
         <aside class="rail" aria-labelledby="about-partner">
           
+          <!-- A real link to the video on YouTube, which js/main.js upgrades in
+               place to a lightbox. That order matters: with no JavaScript, a
+               blocked script or an src the generator could not read an id out of,
+               the anchor is still here and still plays the video.
+
+               Nothing is requested from youtube.com until someone clicks. The
+               poster is a local image and the iframe is built on demand, so a
+               reader who never presses play is handed no player and no cookie.
+
+               The poster carries its width and height because this card sits above
+               the fold, pulled up into the gradient band, and must not shift the
+               rail as it loads. Not lazy, for the same reason. -->
+          <div class="vidwrap">
+            <a class="vid" href="https://youtube.com/shorts/ryQ94iZXV8I" data-yt="ryQ94iZXV8I" target="_blank" rel="noopener" aria-label="Play video: Jordyn Dollarhide, Why Damaris Solutions joined the Alliance">
+              <img src="../../assets/video/damaris-solutions-poster.jpg" alt="" width="540" height="960">
+              <span class="play" aria-hidden="true"></span>
+              <span class="cap">
+                <span class="who">Jordyn Dollarhide</span>
+                <span class="rol">Why Damaris Solutions joined the Alliance</span>
+              </span>
+            </a>
+          </div>
+          
 
           <!-- No file yet, but the speaker is named: the labelled placeholder
                card from the approved mockup. It is a div, not a link, so it adds
