@@ -1302,3 +1302,33 @@ html.vlb-open{overflow:hidden}
   .compact .col-rail{order:1;position:static;flex:none;width:100%;max-width:340px;
     margin:0 auto var(--s6)}
 }
+
+/* ====================== terms of use (/terms/) ============================
+   Almost nothing, on purpose. The page is BUILD-SPEC's "the same components on
+   the white ground with a narrower measure": .offer-body and .offer-list carry
+   every paragraph and list, at the same 62ch the partner pages use, and the 18
+   section headings are .h2--tight. Nothing here describes what a paragraph
+   looks like; if a rule below starts to, the page has drifted off the kit.
+
+   Four rules, and each exists because a global does not reach this page:
+
+   h1,h2,h3,h4,p{margin:0} at the top of this file means an unclassed element
+   has no spacing at all, so the headings need theirs, and .h2--tight only sets
+   a bottom margin. The space BETWEEN sections has to come from somewhere.
+
+   .know li strong is scoped to .know, so the bold lead-ins this document uses,
+   "Governing law.", "Each Alliance partner sets its own terms.", would render
+   at body weight here without the last rule.                                */
+.terms-page .intro{max-width:62ch}
+.terms-page .intro .h1{margin:0 0 var(--s3)}
+.terms{max-width:62ch}
+/* One measure, set once here, and every heading, paragraph and list inside
+   inherits it. That is 657px rather than the 698px .offer-body reaches on a
+   partner page, because ch resolves against this container's 16px and against
+   the paragraph's own 17px there. The narrower column is the right end of that
+   range for eighteen sections of legal prose, and it keeps the headings on the
+   same left-to-right measure as the text under them, which they would not be if
+   they ran the full width of .wrap. */
+.terms h2{margin:var(--s6) 0 var(--s4)}
+.terms h2:first-child{margin-top:0}
+.terms strong{color:var(--ink);font-weight:600}
