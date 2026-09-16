@@ -1277,7 +1277,16 @@ html.vlb-open{overflow:hidden}
   transition:background .18s ease,transform .18s ease}
 .playpill:hover{background:rgba(255,255,255,.66);transform:translateY(-1px)}
 .playpill:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.playpill .disc{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:var(--ink);
+/* --ink-soft, not --ink. Solid ink put the disc at 15.4:1 against the glass pill
+   and it read as a black blob beside the yellow CTA rather than a quiet second
+   action. --ink-soft lands it at 5.6:1, still unmistakably a button, and the
+   white triangle keeps 6.7:1 inside it, well over the 3:1 a UI graphic needs.
+
+   The paler options tested at the same time, a white disc matching .vid .play,
+   a translucent ink one, and --blue-1, all put the DISC at about 1.2:1 against
+   the pill: the circle disappears and only the triangle is left to say the thing
+   plays. Softer still, but it stops reading as a button, so they were rejected. */
+.playpill .disc{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:var(--ink-soft);
   display:flex;align-items:center;justify-content:center}
 .playpill .disc svg{width:13px;height:13px;fill:#fff;margin-left:2px}
 .playpill .t{text-align:left}
