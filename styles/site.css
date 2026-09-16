@@ -1342,3 +1342,24 @@ html.vlb-open{overflow:hidden}
 .terms h2{margin:var(--s6) 0 var(--s4)}
 .terms h2:first-child{margin-top:0}
 .terms strong{color:var(--ink);font-weight:600}
+
+/* ---- installer check: picking one result out of several ------------------
+   Added 16 Sept 2026. Before this the log form appeared only for a single
+   result and the page said "narrow to one installer", which asked the reader to
+   retype the query. Partners testing it clicked the row they meant instead,
+   and the row was not a control, so nothing happened. Each loggable card now
+   carries its own button.
+
+   .btn.btn--sm is the kit's pill, unchanged. The only new rules are where it
+   sits and what a picked card looks like. */
+.ic-pick{margin-top:14px}
+/* Reads as chosen without moving anything: same border box, a yellow edge and a
+   tinted ground. It has to survive the .ic-card--yes/warn/no/info left border
+   above it, so it sets both. */
+.ic-card--picked{border-color:rgba(0,20,45,.24);background:var(--cream)}
+.ic-card--picked.ic-card--yes,.ic-card--picked.ic-card--warn,
+.ic-card--picked.ic-card--no,.ic-card--picked.ic-card--info{border-left-color:var(--yellow)}
+/* Names the installer the form will write against. Only filled when one was
+   picked out of several; with a single result the card is directly above. */
+.ic-log-for{margin:0 0 var(--s3);color:var(--ink)}
+.ic-log-for[hidden]{display:none}

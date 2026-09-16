@@ -55,6 +55,7 @@
   var detailsField = document.getElementById('ic-details');
   var byField = document.getElementById('ic-by');
   var logNote = document.getElementById('ic-log-note');
+  var logFor = document.getElementById('ic-log-for');
 
   var passcode = '';
   /* Remembered so a successful log can re-render the card from a fresh
@@ -305,6 +306,15 @@
         }
       }
 
+      /* A button per card once there is a choice to make. A real <button>, not a
+         click handler on the <li>: the card is a block of facts with its own
+         list inside it, so turning the whole thing into a control would bury
+         interactive content inside interactive content and give the keyboard one
+         enormous tab stop that reads out every fact before saying what it does. */
+      if (allianceOn && rows.length > 1 && REC_ID.test(String(row.alliance_id || ''))) {
+        item.appendChild(pickButton(item, row));
+      }
+
       list.appendChild(item);
     }
 
@@ -330,8 +340,12 @@
           'status above is still correct. Try again in a few minutes.'));
       }
     } else if (rows.length > 1) {
-      results.appendChild(message('Narrow to one installer to log a call or an enrollment.'));
-    } else if (!/^rec[A-Za-z0-9]{14}$/.test(String(rows[0].alliance_id || ''))) {
+      /* No longer "narrow to one installer". That asked the reader to retype the
+         query when what they wanted was to point at the right row, and there was
+         nothing to point at. Each loggable card now carries its own button. */
+      results.appendChild(message(
+        'Several installers matched. Choose the one you mean to log against.'));
+    } else if (!REC_ID.test(String(rows[0].alliance_id || ''))) {
       results.appendChild(message(
         'This installer has no Alliance record, so there is nothing to log against ' +
         'yet. They show here because they are in the OneEthos table.'));
@@ -344,6 +358,29 @@
         'More than five installers matched. Only the closest five are shown, so ' +
         'add a word or use the website to narrow it.'));
     }
+  }
+
+  /* One definition of the Airtable record id shape, checked everywhere a record
+     id crosses from the Worker into a write. */
+  var REC_ID = /^rec[A-Za-z0-9]{14}$/;
+
+  function pickButton(item, row) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'btn btn--sm ic-pick';
+    b.textContent = 'Log against this one';
+    b.addEventListener('click', function () {
+      var was = results.querySelector('.ic-card--picked');
+      if (was) was.classList.remove('ic-card--picked');
+      item.classList.add('ic-card--picked');
+      showLog(row.alliance_id, String(row.name || ''));
+      /* Move the reader to the form rather than leaving it below the fold, and
+         put the keyboard there too, since the click was a request to fill it. */
+      logForm.scrollIntoView({ block: 'nearest' });
+      var first = logForm.querySelector('input, select, textarea, button');
+      if (first) first.focus();
+    });
+    return b;
   }
 
   function message(text) {
@@ -468,10 +505,18 @@
     detailsWrap.hidden = !wantAct;
   }
 
-  function showLog(id) {
+  /* `name` is passed only when the reader PICKED this row out of several. With a
+     single result the form sits directly under the one card and naming it again
+     would be noise; with four on screen, not naming it is how you log a call
+     against the wrong company. */
+  function showLog(id, name) {
     logId = String(id);
     fillPartners();
     say(logNote, '');
+    if (logFor) {
+      logFor.textContent = name ? 'Logging against ' + name : '';
+      logFor.hidden = !name;
+    }
     logForm.hidden = false;
   }
 
@@ -479,6 +524,9 @@
     logId = '';
     logForm.hidden = true;
     say(logNote, '');
+    if (logFor) { logFor.textContent = ''; logFor.hidden = true; }
+    var picked = results.querySelector('.ic-card--picked');
+    if (picked) picked.classList.remove('ic-card--picked');
   }
 
   /* A closed month list, never new Date(str). Parsing '2026-09-20' as a Date

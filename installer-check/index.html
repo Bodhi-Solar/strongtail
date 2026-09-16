@@ -101,10 +101,12 @@
 
       <div class="ic-results" id="ic-results" aria-live="polite"></div>
 
-      <!-- Shown by js/installer-check.js only when a search returned exactly
-           ONE result that carries an Alliance record id. With five results
-           there is no single row to log against, and the doc says "shown under
-           a result", singular.
+      <!-- Shown by js/installer-check.js when a search returned exactly ONE
+           result that carries an Alliance record id, and from 16 Sept 2026 also
+           when the reader PICKS one out of several with the button on its card.
+           Before that the only instruction was "narrow to one installer", which
+           meant retyping the query; everyone's instinct was to click the right
+           row, and clicking did nothing.
 
            Every control here is the existing kit: .field with a label, and the
            standard pill. The two selects are the first on this site and inherit
@@ -112,6 +114,12 @@
            block at the end of site.css describes what any of them look like. -->
       <form class="form ic-form ic-log" id="ic-log" hidden novalidate>
         <p class="fh">Log a call or an enrollment</p>
+        <!-- Which installer this will be written against. Empty and hidden when
+             there was only one result, where the form sits under the single card
+             and the answer is already on screen. Filled when one was picked out
+             of several, where leaving it implicit would be a way to log against
+             the wrong company. -->
+        <p class="small ic-log-for" id="ic-log-for" hidden></p>
 
         <!-- Checkboxes, not a select, because a call that ends in an
              enrollment is the common case and used to cost two submissions.
