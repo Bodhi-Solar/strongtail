@@ -986,10 +986,18 @@ html.vlb-open{overflow:hidden}
    with more than one result: each card's dl is its own grid, so with auto a card
    carrying no Enrolled row gets a narrower label column than the card above it,
    and five stacked cards get five different value-column edges. Ragged left
-   edges are precisely what destroys a skim. 76px covers the longest label,
-   ONEETHOS, at .eyebrow's 10.5px and .20em tracking. If a longer label is ever
-   added, measure it and move this number. */
-.ic-facts{display:grid;grid-template-columns:76px minmax(0,1fr);
+   edges are precisely what destroys a skim. 79px covers the longest label,
+   ACTIVATED, at .eyebrow's 10.5px and .20em tracking. If a longer label is ever
+   added, measure it and move this number.
+
+   It was 76px for ONEETHOS until 22 Sept 2026, when ACTIVATED arrived and
+   ENROLLED became ACTIVITY. Measured rather than guessed, and the arithmetic is
+   written down so the next person does not have to rediscover it: a rendered
+   .eyebrow box is 2.1px wider than its glyphs, because letter-spacing is added
+   after the LAST character too. ONEETHOS measures 78.5 and needs 76.4, which is
+   where the old number came from. ACTIVATED measures 80.31 and needs 78.21.
+   Measure the box, subtract 2.1, round up. */
+.ic-facts{display:grid;grid-template-columns:79px minmax(0,1fr);
   column-gap:14px;row-gap:5px;margin:8px 0 0}
 /* Optical, not arithmetic. A 10.5px cap-height label against a 14.5px value
    sits visibly high on the shared grid row. Judge this rendered. */
@@ -1010,6 +1018,18 @@ html.vlb-open{overflow:hidden}
 
 /* Inside its own dd now, so the grid owns the spacing. */
 .ic-acts{list-style:none;margin:0;padding:0}
+
+/* An enrollment's details, under its entry rather than beside it: it is a
+   sentence somebody typed, where everything else on this card is a name, a
+   status or a date, and running it on the same line would read as part of the
+   entry instead of a note about it.
+
+   It CANNOT borrow .note-sm, which is the fine print this size belongs to: that
+   rule is scoped `.form .note-sm` and a result card is not in a form. So the
+   scale is restated here rather than invented, and must stay in step with it.
+   Not a fourth type size, the third one reached from the wrong side of a
+   selector. Colour comes from the .small on the <li>. */
+.ic-detail{display:block;margin:2px 0 0;font-size:12.5px;line-height:1.55}
 
 @media (max-width:400px){
   /* Below this the value column is under 130px and a status wraps to four

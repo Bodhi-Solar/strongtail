@@ -25,6 +25,11 @@
         not in the Worker. It is still textContent, it is still never a class
         name, and it is deliberately not filtered against PARTNERS. See
         interestLine(). Added 3 Sep 2026.
+     5. An enrollment's `details` is the first FREE TEXT on this page: every
+        other value is a name, a date or a status somebody picked from a list.
+        It is one partner's prose, shown to all of them. Same rules as the rest,
+        textContent and a cap, but it is the value most worth checking twice if
+        this renderer is ever rewritten. Added 22 Sept 2026.
    ========================================================================= */
 (function () {
   'use strict';
@@ -236,6 +241,12 @@
      label must not push five cards off the screen. */
   var MAX_INTEREST = 10;
 
+  /* An enrollment's details line. Longer than the 60 a partner NAME gets,
+     because this one is a sentence: the longest live example runs 98
+     characters. Still a cap, and against a malformed or pasted row rather than
+     an attacker, same as the two above. */
+  var MAX_DETAIL = 200;
+
   function interestLine(list) {
     if (!Array.isArray(list)) return '';
     var out = [];
@@ -305,20 +316,78 @@
         var interest = interestLine(row.interest);
         if (interest) fact(facts, 'Interest', interest, '');
 
+        /* interestLine is doing double duty here and the name is now half
+           right. What it actually is, and always was, is the page's one guard
+           for a list of partner names from Airtable: ten items, sixty
+           characters each, whitespace collapsed, joined for textContent. That
+           is exactly what Activated needs, and a second copy of it under a
+           better name would be a second thing to keep in step. */
+        var activated = interestLine(row.activated);
+        if (activated) fact(facts, 'Activated', activated, '');
+
+        /* ENROLLED became ACTIVITY on 22 Sept 2026. The intro call had been
+           reaching this page as a boolean since the beginning and nothing
+           displayed it, so a partner could read a whole card and not learn that
+           somebody had already spoken to this installer. One dated list answers
+           "what has happened here" in the order it happened, which two labels
+           either side of it could not. */
+        var entries = [];
+
+        /* Both halves can be missing on a row that ticks the box: rows logged
+           before the date and partner fields existed, and rows hand-ticked in
+           Airtable. Say the less rather than printing a gap. */
+        if (row.intro_call) {
+          var icb = String(row.intro_call_by || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+          var icd = String(row.intro_call_date || '');
+          entries.push({
+            date: icd,
+            text: 'Intro call' + (icb ? ', ' + icb : '') + (icd ? ', ' + fmtDate(icd) : '')
+          });
+        }
+
         var acts = (row && row.activations) || [];
-        if (acts.length) {
+        for (var j = 0; j < acts.length; j++) {
+          var pn = String(acts[j].partner || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+          var dt = String(acts[j].date || '');
+          entries.push({
+            date: dt,
+            text: 'Enrolled ' + pn + (dt ? ', ' + fmtDate(dt) : ''),
+            /* The only free text on this card, and the only value here written
+               by a partner rather than chosen from a list. Same treatment as
+               every other value, textContent and a cap, but a sentence's worth
+               of room rather than a label's. */
+            details: String(acts[j].details || '').replace(/\s+/g, ' ').trim().slice(0, MAX_DETAIL)
+          });
+        }
+
+        /* Oldest first, and anything undated last rather than sorted as if it
+           were the epoch. The comparator returns 0 for two equal dates, which
+           includes two empty ones, so it stays consistent. */
+        entries.sort(function (x, y) {
+          if (x.date === y.date) return 0;
+          if (!x.date) return 1;
+          if (!y.date) return -1;
+          return x.date < y.date ? -1 : 1;
+        });
+
+        if (entries.length) {
           var ul = document.createElement('ul');
           ul.className = 'ic-acts';
-          for (var j = 0; j < acts.length; j++) {
+          for (var k = 0; k < entries.length; k++) {
             var li = document.createElement('li');
             li.className = 'small';
-            li.textContent = String(acts[j].partner || '') + ', ' +
-                             fmtDate(String(acts[j].date || ''));
+            li.textContent = entries[k].text;
+            if (entries[k].details) {
+              var det = document.createElement('span');
+              det.className = 'ic-detail';
+              det.textContent = entries[k].details;
+              li.appendChild(det);
+            }
             ul.appendChild(li);
           }
-          fact(facts, 'Enrolled', '', '', ul);
+          fact(facts, 'Activity', '', '', ul);
         } else if (row.alliance_id) {
-          fact(facts, 'Enrolled', 'None logged yet', '');
+          fact(facts, 'Activity', 'None logged yet', '');
         }
       }
 
