@@ -652,6 +652,13 @@ html.vlb-open{overflow:hidden}
    exist. */
 .card--edu{cursor:auto}
 
+/* A recorded session can carry a secondary link beside its button, today the
+   Post-ITC playbook PDF. It is a .tlink for the type, but .card .tlink::after
+   above would stretch it over the whole card and swallow clicks on the button,
+   so the overlay is switched off here. Same reasoning as the cursor rule. */
+.card--edu .card-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.card--edu .tlink::after{content:none}
+
 /* ---- HubSpot v4 forms ----------------------------------------------------
    The embed is HubSpot's "developer" variant: it fetches server-rendered HTML
    and injects it with innerHTML, so this is ordinary CSS reaching ordinary
